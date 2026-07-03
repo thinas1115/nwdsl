@@ -1,0 +1,31 @@
+flowchart LR
+  subgraph sg_hq["本社"]
+    hq_rt02["hq-rt02<br>Cisco ISR4331"]
+    hq_rt01["hq-rt01<br>Cisco ISR4331"]
+    hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
+  end
+  subgraph sg_osk["大阪支店"]
+    osk_rt01["osk-rt01<br>Cisco ISR1100"]
+    osk_sw01["osk-sw01<br>Cisco Catalyst 1000"]
+  end
+  subgraph sg_ngy["名古屋営業所"]
+    ngy_rt01["ngy-rt01<br>Cisco ISR1100"]
+    ngy_sw01["ngy-sw01<br>Cisco Catalyst 1000"]
+  end
+  hq_rt02 ---|"IPsec バックアップVPN"| osk_rt01
+  hq_rt01 ---|"BGP (IP-VPN網内)"| osk_rt01
+  hq_rt01 ---|"BGP (IP-VPN網内)"| ngy_rt01
+
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class hq_rt02,osk_rt01,hq_rt01,ngy_rt01 role_router
+  class hq_sw01 role_l3switch
+  class osk_sw01,ngy_sw01 role_l2switch
+  linkStyle 0 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
+  linkStyle 1,2 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3

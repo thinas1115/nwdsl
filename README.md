@@ -2,25 +2,109 @@
 
 ネットワーク構成(拠点・機器・回線・接続)を **1つの YAML ソース**で記述し、そこから
 
-- 物理構成図 / 論理構成図(D2 → SVG/PNG、Mermaid)
-- 設計書向けの表(拠点一覧・機器一覧・回線一覧・接続一覧)
+- **複数種類の構成図**(物理 / 論理 / 全社概要 / 拠点詳細)を D2・Mermaid で生成
+- **設計書向けの表**(拠点・機器・IF・回線・接続・セグメント一覧)を Markdown で生成
 
-を生成するためのスキーマと CLI ツール。図と表が同一ソースから導出されるため、設計ドキュメント間の不整合が構造的に発生しない。
+するためのスキーマと CLI。図と表が同一ソースから導出されるため、設計ドキュメント間の不整合が構造的に発生しない。AI がパースしやすい形式なので、OpenSpec 等による仕様駆動のドキュメント生成の土台になる。
 
-> ステータス: 開発中。設計判断は [docs/adr/](docs/adr/) を参照。
+## 何が解決されるか
 
-## なぜ作ったか
+| 課題 | nwdsl の回答 |
+|---|---|
+| 構成図は用途別に描き分けが必要(全社概要/拠点詳細/物理/論理)だが、既存ダイアグラムDSLは意味情報を持てない | トポロジ定義(事実)と `views`(見せ方の宣言)を分離。レイヤ選択・拠点フィルタ・拠点畳み込みで1ソースから複数の図を導出 |
+| 機器間の「線」には複数の意味がある | `links[].type` で4種を区別: `lan-cable`(構内配線)/ `wan-circuit`(キャリア回線)/ `logical`(論理隣接)/ `tunnel`(オーバーレイ) |
+| 回線契約の管理情報が図に埋もれる | NetBox の思想に倣い `circuits`(契約: 事業者・回線番号・帯域・状態)を結線から分離 |
+| 図と表の不整合 | 表の「接続先」「回線収容先」も links から導出。手書き二重管理が発生しない |
 
-- 既存ダイアグラム DSL(Mermaid 等)は「全社概要図/拠点詳細図/物理図/論理図」の描き分けに必要な意味情報を持てない
-- 機器間の「線」には複数の意味がある(構内 LAN ケーブル / キャリア契約回線 / 論理隣接 / VPN トンネル)が、これを区別できる記述形式がない
-- 拠点・回線契約・機器といった業務エンティティを AI が確実にパースできる形式で保持し、OpenSpec による仕様駆動ドキュメント生成の入力にしたい
+## サンプル出力
 
-先行事例(NetBox / netlab / Containerlab / D2 / Mermaid / RFC 8345)の調査と「新 DSL を作る」判断の根拠は [ADR-0001](docs/adr/0001-prior-art-survey.md) / [ADR-0002](docs/adr/0002-new-yaml-dsl.md) を参照。
+`examples/sample-corp/network.yaml`(3拠点 + IP-VPN + インターネットVPNバックアップ + HSRP冗長)からの生成例:
+
+| 全社物理構成図 | 全社WAN概要図 (`collapse_sites`) |
+|---|---|
+| ![物理構成図](examples/sample-corp/generated/physical-all.svg) | ![WAN概要図](examples/sample-corp/generated/wan-overview.svg) |
+
+| 全社論理構成図 | 本社詳細図 (`include_sites`) |
+|---|---|
+| ![論理構成図](examples/sample-corp/generated/logical-all.svg) | ![本社詳細図](examples/sample-corp/generated/hq-physical.svg) |
+
+生成された表: [examples/sample-corp/generated/tables.md](examples/sample-corp/generated/tables.md)
+
+## クイックスタート
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\pip install -e .
+
+nwdsl validate examples\sample-corp\network.yaml         # 整合性検査
+nwdsl render   examples\sample-corp\network.yaml -o out  # 図ソース生成 (.d2 / .mmd)
+nwdsl tables   examples\sample-corp\network.yaml -o out\tables.md
+nwdsl schema   -o nwdsl.schema.json                      # エディタ補完用 JSON Schema
+```
+
+SVG 化には [D2](https://github.com/terrastruct/d2/releases)(単一バイナリ)を使う:
+
+```powershell
+d2 --layout=elk out\physical-all.d2 out\physical-all.svg
+```
+
+Mermaid 出力(.mmd)は GitHub / Obsidian にそのまま貼れる。詳細図は D2、概要図・埋め込みは Mermaid の使い分けを推奨。
+
+## 記述例(抜粋)
+
+```yaml
+nwdsl: "0.1"
+network: {name: sample-corp}
+
+sites:
+  - {id: hq, name: 本社}
+  - {id: osk, name: 大阪支店}
+
+devices:
+  - id: hq-rt01
+    site: hq
+    role: router
+    platform: Cisco ISR4331
+    interfaces:
+      - {name: Gi0/0/0, description: IP-VPNアクセス回線}
+
+clouds:
+  - {id: ipvpn, name: NTT Com IP-VPN網, kind: wan}
+
+circuits:
+  - {id: cct-ipvpn-hq, provider: NTTコミュニケーションズ, service: IP-VPN, bandwidth: 100M}
+
+links:
+  - type: wan-circuit                       # 線の意味を必ず宣言する
+    endpoints: ["hq-rt01:Gi0/0/0", "ipvpn"] # 契約(circuits)と結線(links)は分離
+    circuit: cct-ipvpn-hq
+
+views:
+  - id: wan-overview
+    title: 全社WAN概要図
+    layers: [wan-circuit, tunnel]
+    collapse_sites: true                    # 拠点を1ノードに畳む
+```
 
 ## ドキュメント
 
-- [docs/tutorial.md](docs/tutorial.md) — チュートリアル(最小構成から段階的に)
-- [docs/reference.md](docs/reference.md) — 全フィールドリファレンス
-- [docs/adr/](docs/adr/) — 設計判断記録
-- [docs/openspec-integration.md](docs/openspec-integration.md) — OpenSpec 統合ガイド
-- [examples/](examples/) — サンプル構成
+- [チュートリアル](docs/tutorial.md) — 最小構成から30分で(全ステップ実機検証済み)
+- [リファレンス](docs/reference.md) — 全フィールド・バリデーション規則・CLI
+- [OpenSpec 統合ガイド](docs/openspec-integration.md) — 仕様駆動ドキュメント生成への組み込み
+- [設計判断記録 (ADR)](docs/adr/) — 先行事例調査、新DSL策定の判断、スキーマ設計の根拠
+- [調査ログ](docs/notes/phase0-survey-log.md) — 検討過程の記録
+
+## リポジトリ構成
+
+```
+src/nwdsl/          # model(スキーマ) / validate / graph(ビュー解決) / render_d2 / render_mermaid / tables / cli
+tests/              # pytest (サンプル正常系 + 異常系)
+examples/sample-corp/   # サンプル構成と生成物一式
+schema/nwdsl.schema.json
+docs/
+```
+
+## 動作環境
+
+- Python 3.11+ (pydantic v2, PyYAML)
+- 図のSVG化: D2 v0.7+ (dagre/ELK同梱の単一バイナリ)

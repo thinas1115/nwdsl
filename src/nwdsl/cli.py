@@ -92,6 +92,7 @@ def cmd_tables(args: argparse.Namespace) -> int:
         return 1
     md = render_tables(doc, args.section or None)
     if args.out:
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(md, encoding="utf-8")
         print(f"wrote {args.out}")
     else:
@@ -102,6 +103,7 @@ def cmd_tables(args: argparse.Namespace) -> int:
 def cmd_schema(args: argparse.Namespace) -> int:
     schema = json.dumps(Document.model_json_schema(), ensure_ascii=False, indent=2)
     if args.out:
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(schema + "\n", encoding="utf-8")
         print(f"wrote {args.out}")
     else:

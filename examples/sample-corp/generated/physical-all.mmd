@@ -1,0 +1,40 @@
+flowchart LR
+  subgraph sg_hq["本社"]
+    hq_rt01["hq-rt01<br>Cisco ISR4331"]
+    hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
+    hq_rt02["hq-rt02<br>Cisco ISR4331"]
+  end
+  subgraph sg_osk["大阪支店"]
+    osk_rt01["osk-rt01<br>Cisco ISR1100"]
+    osk_sw01["osk-sw01<br>Cisco Catalyst 1000"]
+  end
+  subgraph sg_ngy["名古屋営業所"]
+    ngy_rt01["ngy-rt01<br>Cisco ISR1100"]
+    ngy_sw01["ngy-sw01<br>Cisco Catalyst 1000"]
+  end
+  ipvpn(("NTT Com IP-VPN網"))
+  internet(("インターネット"))
+  hq_rt01 ---|"Gi0/0/1 - Gi1/0/1"| hq_sw01
+  hq_rt02 ---|"Gi0/0/1 - Gi1/0/2"| hq_sw01
+  osk_rt01 ---|"Gi0/1/0 - Gi1/0/1"| osk_sw01
+  ngy_rt01 ---|"Gi0/1/0 - Gi1/0/1"| ngy_sw01
+  hq_rt01 ---|"NTTコミュニケーションズ IP-VPN 100M"| ipvpn
+  osk_rt01 ---|"NTTコミュニケーションズ IP-VPN 50M"| ipvpn
+  ngy_rt01 ---|"NTTコミュニケーションズ IP-VPN 50M"| ipvpn
+  hq_rt02 ---|"NTT東日本 フレッツ光ネクスト + OCN 1G"| internet
+  osk_rt01 ---|"NTT西日本 フレッツ光ネクスト + OCN 1G"| internet
+
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class hq_rt01,hq_rt02,osk_rt01,ngy_rt01 role_router
+  class hq_sw01 role_l3switch
+  class osk_sw01,ngy_sw01 role_l2switch
+  class ipvpn,internet node_cloud
+  linkStyle 0,1,2,3 stroke:#4a4a4a,stroke-width:2px
+  linkStyle 4,5,6,7,8 stroke:#1a73e8,stroke-width:4px
