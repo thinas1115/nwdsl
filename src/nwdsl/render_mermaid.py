@@ -58,7 +58,7 @@ def _node_decl(node: RenderNode) -> str:
 
 
 def render_mermaid(graph: RenderGraph) -> str:
-    lines: list[str] = ["flowchart LR"]
+    lines: list[str] = ["flowchart TB"]
 
     grouped: dict[str, list[RenderNode]] = {}
     ungrouped: list[RenderNode] = []

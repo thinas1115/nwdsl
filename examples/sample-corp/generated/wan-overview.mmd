@@ -1,14 +1,14 @@
-flowchart LR
+flowchart TB
   site__hq["本社"]
   cloud__ipvpn(("NTT Com IP-VPN網"))
   site__osk["大阪支店"]
   site__ngy["名古屋営業所"]
   cloud__internet(("インターネット"))
-  site__hq ---|"NTTコミュニケーションズ IP-VPN 100M"| cloud__ipvpn
-  site__osk ---|"NTTコミュニケーションズ IP-VPN 50M"| cloud__ipvpn
-  site__ngy ---|"NTTコミュニケーションズ IP-VPN 50M"| cloud__ipvpn
-  site__hq ---|"NTT東日本 フレッツ光ネクスト + OCN 1G"| cloud__internet
-  site__osk ---|"NTT西日本 フレッツ光ネクスト + OCN 1G"| cloud__internet
+  cloud__ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M"| site__hq
+  cloud__ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M"| site__osk
+  cloud__ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M"| site__ngy
+  cloud__internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G"| site__hq
+  cloud__internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G"| site__osk
   site__hq ---|"IPsec バックアップVPN"| site__osk
 
   classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340

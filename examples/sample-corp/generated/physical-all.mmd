@@ -1,4 +1,4 @@
-flowchart LR
+flowchart TB
   subgraph sg_hq["本社"]
     hq_rt01["hq-rt01<br>Cisco ISR4331"]
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
@@ -18,11 +18,11 @@ flowchart LR
   hq_rt02 ---|"Gi0/0/1 - Gi1/0/2"| hq_sw01
   osk_rt01 ---|"Gi0/1/0 - Gi1/0/1"| osk_sw01
   ngy_rt01 ---|"Gi0/1/0 - Gi1/0/1"| ngy_sw01
-  hq_rt01 ---|"NTTコミュニケーションズ IP-VPN 100M"| ipvpn
-  osk_rt01 ---|"NTTコミュニケーションズ IP-VPN 50M"| ipvpn
-  ngy_rt01 ---|"NTTコミュニケーションズ IP-VPN 50M"| ipvpn
-  hq_rt02 ---|"NTT東日本 フレッツ光ネクスト + OCN 1G"| internet
-  osk_rt01 ---|"NTT西日本 フレッツ光ネクスト + OCN 1G"| internet
+  ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M"| hq_rt01
+  ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M"| osk_rt01
+  ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M"| ngy_rt01
+  internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G"| hq_rt02
+  internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G"| osk_rt01
 
   classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
   classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340

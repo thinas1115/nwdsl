@@ -1,0 +1,66 @@
+flowchart TB
+  subgraph sg_hq["本社"]
+    hq_rt01["hq-rt01<br>Cisco ISR4451"]
+    hq_rt02["hq-rt02<br>Cisco ISR4451"]
+    hq_fw01["hq-fw01<br>Palo Alto PA-3410"]
+    hq_fw02["hq-fw02<br>Palo Alto PA-3410"]
+    hq_core01["hq-core01<br>Catalyst 9500"]
+    hq_core02["hq-core02<br>Catalyst 9500"]
+    hq_dist01["hq-dist01<br>Catalyst 9300"]
+    hq_dist02["hq-dist02<br>Catalyst 9300"]
+    hq_acc_1f01["hq-acc-1f01<br>Catalyst 1000"]
+    hq_acc_1f02["hq-acc-1f02<br>Catalyst 1000"]
+    hq_acc_2f01["hq-acc-2f01<br>Catalyst 1000"]
+    hq_acc_2f02["hq-acc-2f02<br>Catalyst 1000"]
+    hq_srv_sw01["hq-srv-sw01<br>Catalyst 9200"]
+    hq_srv01["hq-srv01<br>PowerEdge R660"]
+    hq_srv02["hq-srv02<br>PowerEdge R660"]
+    hq_dmz_sw01["hq-dmz-sw01<br>Catalyst 1000"]
+    hq_dmz_srv01["hq-dmz-srv01<br>公開Web"]
+  end
+  subgraph sg_osk["大阪支店"]
+    osk_rt01["osk-rt01<br>Cisco ISR1100"]
+    osk_sw01["osk-sw01<br>Catalyst 1000"]
+  end
+  ipvpn(("NTT Com IP-VPN網"))
+  internet(("インターネット"))
+  ipvpn ---|"NTT Com IP-VPN 100M"| hq_rt01
+  internet ---|"NTT東 フレッツ光 1G"| hq_rt02
+  ipvpn ---|"NTT Com IP-VPN 50M"| osk_rt01
+  hq_rt01 ---|"Gi0/0/1 - eth1/1"| hq_fw01
+  hq_rt02 ---|"Gi0/0/1 - eth1/1"| hq_fw02
+  hq_fw01 ---|"eth1/2 - Te1/0/1"| hq_core01
+  hq_fw02 ---|"eth1/2 - Te1/0/1"| hq_core02
+  hq_core01 ---|"Te1/0/2 - Te1/0/2"| hq_core02
+  hq_core01 ---|"Te1/0/3 - Te1/1/1"| hq_dist01
+  hq_core02 ---|"Te1/0/3 - Te1/1/2"| hq_dist01
+  hq_core01 ---|"Te1/0/4 - Te1/1/1"| hq_dist02
+  hq_core02 ---|"Te1/0/4 - Te1/1/2"| hq_dist02
+  hq_dist01 ---|"Gi1/0/1 - Gi1/0/1"| hq_acc_1f01
+  hq_dist01 ---|"Gi1/0/2 - Gi1/0/1"| hq_acc_1f02
+  hq_dist02 ---|"Gi1/0/1 - Gi1/0/1"| hq_acc_2f01
+  hq_dist02 ---|"Gi1/0/2 - Gi1/0/1"| hq_acc_2f02
+  hq_core01 ---|"Te1/0/5 - Te1/0/1"| hq_srv_sw01
+  hq_core02 ---|"Te1/0/5 - Te1/0/2"| hq_srv_sw01
+  hq_srv_sw01 ---|"Gi1/0/1 - eno1"| hq_srv01
+  hq_srv_sw01 ---|"Gi1/0/2 - eno1"| hq_srv02
+  hq_fw01 ---|"eth1/3 - Gi1/0/1"| hq_dmz_sw01
+  hq_dmz_sw01 ---|"Gi1/0/2 - eno1"| hq_dmz_srv01
+  osk_rt01 ---|"Gi0/1/0 - Gi1/0/1"| osk_sw01
+
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class hq_rt01,hq_rt02,osk_rt01 role_router
+  class ipvpn,internet node_cloud
+  class hq_fw01,hq_fw02 role_firewall
+  class hq_core01,hq_core02,hq_dist01,hq_dist02 role_l3switch
+  class hq_acc_1f01,hq_acc_1f02,hq_acc_2f01,hq_acc_2f02,hq_srv_sw01,hq_dmz_sw01,osk_sw01 role_l2switch
+  class hq_srv01,hq_srv02,hq_dmz_srv01 role_other
+  linkStyle 0,1,2 stroke:#1a73e8,stroke-width:4px
+  linkStyle 3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 stroke:#4a4a4a,stroke-width:2px

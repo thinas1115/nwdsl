@@ -1,7 +1,7 @@
 title: |md
   # 全社WAN概要図
 | {near: top-center}
-direction: right
+direction: down
 
 classes: {
   role-router: {style.fill: "#e8f0fe"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
@@ -25,9 +25,9 @@ n_site__osk: "大阪支店" {class: node-site}
 n_site__ngy: "名古屋営業所" {class: node-site}
 n_cloud__internet: "　インターネット　" {class: node-cloud}
 
-n_site__hq -- n_cloud__ipvpn: "NTTコミュニケーションズ IP-VPN 100M" {class: edge-wan-circuit}
-n_site__osk -- n_cloud__ipvpn: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit}
-n_site__ngy -- n_cloud__ipvpn: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit}
-n_site__hq -- n_cloud__internet: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit}
-n_site__osk -- n_cloud__internet: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit}
+n_cloud__ipvpn -- n_site__hq: "NTTコミュニケーションズ IP-VPN 100M" {class: edge-wan-circuit}
+n_cloud__ipvpn -- n_site__osk: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit}
+n_cloud__ipvpn -- n_site__ngy: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit}
+n_cloud__internet -- n_site__hq: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit}
+n_cloud__internet -- n_site__osk: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit}
 n_site__hq -- n_site__osk: "IPsec バックアップVPN" {class: edge-tunnel}

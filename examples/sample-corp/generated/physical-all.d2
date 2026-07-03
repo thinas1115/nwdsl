@@ -1,7 +1,7 @@
 title: |md
   # 全社物理構成図
 | {near: top-center}
-direction: right
+direction: down
 
 classes: {
   role-router: {style.fill: "#e8f0fe"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
@@ -45,8 +45,8 @@ s_hq.n_hq_rt01 -- s_hq.n_hq_sw01: "Gi0/0/1 - Gi1/0/1" {class: edge-lan-cable}
 s_hq.n_hq_rt02 -- s_hq.n_hq_sw01: "Gi0/0/1 - Gi1/0/2" {class: edge-lan-cable}
 s_osk.n_osk_rt01 -- s_osk.n_osk_sw01: "Gi0/1/0 - Gi1/0/1" {class: edge-lan-cable}
 s_ngy.n_ngy_rt01 -- s_ngy.n_ngy_sw01: "Gi0/1/0 - Gi1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_rt01 -- n_ipvpn: "NTTコミュニケーションズ IP-VPN 100M" {class: edge-wan-circuit; source-arrowhead.label: "Gi0/0/0"}
-s_osk.n_osk_rt01 -- n_ipvpn: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit; source-arrowhead.label: "Gi0/0/0"}
-s_ngy.n_ngy_rt01 -- n_ipvpn: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit; source-arrowhead.label: "Gi0/0/0"}
-s_hq.n_hq_rt02 -- n_internet: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit; source-arrowhead.label: "Gi0/0/0"}
-s_osk.n_osk_rt01 -- n_internet: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit; source-arrowhead.label: "Gi0/0/1"}
+n_ipvpn -- s_hq.n_hq_rt01: "NTTコミュニケーションズ IP-VPN 100M" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
+n_ipvpn -- s_osk.n_osk_rt01: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
+n_ipvpn -- s_ngy.n_ngy_rt01: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
+n_internet -- s_hq.n_hq_rt02: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
+n_internet -- s_osk.n_osk_rt01: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/1"}

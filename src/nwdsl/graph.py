@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -161,4 +162,49 @@ def resolve_view(doc: Document, view: View) -> RenderGraph:
 
     graph.nodes = list(nodes.values())
     graph.groups = [(sid, site_by_id[sid].name) for sid in used_sites if sid in site_by_id]
+    _orient_edges(doc, graph)
     return graph
+
+
+def _orient_edges(doc: Document, graph: RenderGraph) -> None:
+    """全エッジを「WAN側 → LAN側」の順に揃える。
+
+    ELK (layered) は無向エッジでも記述順 (source→target) をランク方向として
+    使うことを実測で確認済み (ADR-0005)。クラウドを起点にマルチソースBFSで
+    各ノードのWAN距離を求め、エッジの端点を距離の小さい側→大きい側に並べる。
+    これと direction: down の組み合わせで「WANが上・LANが下へ降りる」層構造が
+    tier 指定なしで保証される。
+    """
+    sources = [n.id for n in graph.nodes if n.kind == "cloud"]
+    if not sources:
+        # クラウドが図に無いビュー (論理図等) では WAN 境界機器を起点にする
+        wan_devices: set[str] = set()
+        for link in doc.links:
+            if link.type == "wan-circuit":
+                for ep in link.endpoints:
+                    node_id, _ = parse_endpoint(ep)
+                    wan_devices.add(node_id)
+        node_ids = {n.id for n in graph.nodes}
+        sources = sorted(wan_devices & node_ids)
+    if not sources:
+        return
+
+    adjacency: dict[str, set[str]] = defaultdict(set)
+    for edge in graph.edges:
+        adjacency[edge.src].add(edge.dst)
+        adjacency[edge.dst].add(edge.src)
+
+    dist: dict[str, int] = {s: 0 for s in sources}
+    queue = deque(sources)
+    while queue:
+        current = queue.popleft()
+        for neighbor in adjacency[current]:
+            if neighbor not in dist:
+                dist[neighbor] = dist[current] + 1
+                queue.append(neighbor)
+
+    unreachable = float("inf")
+    for edge in graph.edges:
+        if dist.get(edge.src, unreachable) > dist.get(edge.dst, unreachable):
+            edge.src, edge.dst = edge.dst, edge.src
+            edge.src_label, edge.dst_label = edge.dst_label, edge.src_label

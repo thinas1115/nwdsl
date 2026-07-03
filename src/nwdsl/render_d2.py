@@ -61,7 +61,9 @@ def _node_class(node: RenderNode) -> str:
 def render_d2(graph: RenderGraph) -> str:
     lines: list[str] = []
     lines.append(f'title: |md\n  # {graph.title}\n| {{near: top-center}}')
-    lines.append("direction: right")
+    # WAN(クラウド)を上・LANを下に描く。エッジは graph 側で WAN側→LAN側 に
+    # 向き付けされており、ELK がその向きをランクに使う (ADR-0005)
+    lines.append("direction: down")
     lines.append("")
     lines.append(_NODE_CLASSES)
 

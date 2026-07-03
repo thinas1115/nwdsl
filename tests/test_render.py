@@ -66,9 +66,32 @@ def test_wan_circuit_edge_label_and_endpoint_labels(doc):
     assert "Gi0/0/0" in (labeled.src_label or "") or "Gi0/0/0" in (labeled.dst_label or "")
 
 
+def test_edges_oriented_wan_to_lan(doc):
+    """全エッジがWAN側→LAN側に向き付けされる (ADR-0005)。"""
+    g = resolve_view(doc, _view(doc, "physical-all"))
+    # クラウドが端点のエッジは必ずクラウドが src
+    for e in g.edges:
+        if e.dst in ("ipvpn", "internet"):
+            raise AssertionError(f"cloud must be src: {e.src} -- {e.dst}")
+    # LAN配線はルーター(WAN距離1)が src、スイッチ(距離2)が dst
+    lan = [e for e in g.edges if e.type == "lan-cable"]
+    assert ("hq-rt01", "hq-sw01") in [(e.src, e.dst) for e in lan]
+    # 向きの入替時に端点小ラベルも一緒に動いている (IF名は機器側)
+    wan = next(e for e in g.edges if e.src == "ipvpn" and e.dst == "hq-rt01")
+    assert wan.dst_label == "Gi0/0/0" and wan.src_label is None
+
+
+def test_orientation_fallback_without_clouds(doc):
+    """クラウドを含まないビューではWAN境界機器を起点に向き付けする。"""
+    g = resolve_view(doc, _view(doc, "logical-all"))
+    tunnel = next(e for e in g.edges if e.type == "tunnel")
+    # hq-rt02 / osk-rt01 はともにWAN境界(距離0)なので向きは安定 (入替なし)
+    assert {tunnel.src, tunnel.dst} == {"hq-rt02", "osk-rt01"}
+
+
 def test_d2_output_structure(doc):
     out = render_d2(resolve_view(doc, _view(doc, "physical-all")))
-    assert "direction: right" in out
+    assert "direction: down" in out
     assert 's_hq: "本社"' in out
     assert "class: edge-wan-circuit" in out
     assert "shape: cloud" in out
@@ -82,7 +105,7 @@ def test_d2_output_structure(doc):
 
 def test_mermaid_output_structure(doc):
     out = render_mermaid(resolve_view(doc, _view(doc, "wan-overview")))
-    assert out.startswith("flowchart LR")
+    assert out.startswith("flowchart TB")
     assert 'site__hq["本社"]' in out
     assert "linkStyle" in out and "stroke:#1a73e8" in out
     assert "((" in out  # cloud ノード

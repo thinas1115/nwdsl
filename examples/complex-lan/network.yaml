@@ -1,0 +1,225 @@
+# complex-lan: 本社LANを多段化した構成 (レイアウト破綻の検証用)
+#   WAN境界(ルーター冗長) → FW冗長 → コアL3冗長 → ディストリ → アクセス複数 → サーバ/DMZ
+nwdsl: "0.1"
+
+network:
+  name: complex-lan-corp
+  description: 本社LAN多段構成の検証サンプル
+
+sites:
+  - id: hq
+    name: 本社
+    location: 東京
+  - id: osk
+    name: 大阪支店
+
+devices:
+  # ---- WAN境界ルーター (冗長) ----
+  - id: hq-rt01
+    site: hq
+    role: router
+    platform: Cisco ISR4451
+    redundancy_group: hq-wan
+    interfaces:
+      - {name: Gi0/0/0, description: IP-VPNアクセス回線}
+      - {name: Gi0/0/1, description: FW01へ}
+  - id: hq-rt02
+    site: hq
+    role: router
+    platform: Cisco ISR4451
+    redundancy_group: hq-wan
+    interfaces:
+      - {name: Gi0/0/0, description: インターネット回線}
+      - {name: Gi0/0/1, description: FW02へ}
+
+  # ---- ファイアウォール (冗長) ----
+  - id: hq-fw01
+    site: hq
+    role: firewall
+    platform: Palo Alto PA-3410
+    redundancy_group: hq-fw
+    interfaces:
+      - {name: eth1/1, description: rt01へ}
+      - {name: eth1/2, description: コアSW01へ}
+      - {name: eth1/3, description: DMZへ}
+  - id: hq-fw02
+    site: hq
+    role: firewall
+    platform: Palo Alto PA-3410
+    redundancy_group: hq-fw
+    interfaces:
+      - {name: eth1/1, description: rt02へ}
+      - {name: eth1/2, description: コアSW02へ}
+
+  # ---- コアL3スイッチ (冗長) ----
+  - id: hq-core01
+    site: hq
+    role: l3switch
+    platform: Catalyst 9500
+    redundancy_group: hq-core
+    interfaces:
+      - {name: Te1/0/1, description: FW01へ}
+      - {name: Te1/0/2, description: コア間リンク}
+      - {name: Te1/0/3, description: ディストリ01へ}
+      - {name: Te1/0/4, description: ディストリ02へ}
+      - {name: Te1/0/5, description: サーバSWへ}
+  - id: hq-core02
+    site: hq
+    role: l3switch
+    platform: Catalyst 9500
+    redundancy_group: hq-core
+    interfaces:
+      - {name: Te1/0/1, description: FW02へ}
+      - {name: Te1/0/2, description: コア間リンク}
+      - {name: Te1/0/3, description: ディストリ01へ}
+      - {name: Te1/0/4, description: ディストリ02へ}
+      - {name: Te1/0/5, description: サーバSWへ}
+
+  # ---- ディストリビューションスイッチ ----
+  - id: hq-dist01
+    site: hq
+    role: l3switch
+    platform: Catalyst 9300
+    interfaces:
+      - {name: Te1/1/1, description: コア01へ}
+      - {name: Te1/1/2, description: コア02へ}
+      - {name: Gi1/0/1, description: アクセス1F-01へ}
+      - {name: Gi1/0/2, description: アクセス1F-02へ}
+  - id: hq-dist02
+    site: hq
+    role: l3switch
+    platform: Catalyst 9300
+    interfaces:
+      - {name: Te1/1/1, description: コア01へ}
+      - {name: Te1/1/2, description: コア02へ}
+      - {name: Gi1/0/1, description: アクセス2F-01へ}
+      - {name: Gi1/0/2, description: アクセス2F-02へ}
+
+  # ---- アクセススイッチ (フロア別) ----
+  - id: hq-acc-1f01
+    site: hq
+    role: l2switch
+    platform: Catalyst 1000
+    interfaces: [{name: Gi1/0/1, description: ディストリ01へ}]
+  - id: hq-acc-1f02
+    site: hq
+    role: l2switch
+    platform: Catalyst 1000
+    interfaces: [{name: Gi1/0/1, description: ディストリ01へ}]
+  - id: hq-acc-2f01
+    site: hq
+    role: l2switch
+    platform: Catalyst 1000
+    interfaces: [{name: Gi1/0/1, description: ディストリ02へ}]
+  - id: hq-acc-2f02
+    site: hq
+    role: l2switch
+    platform: Catalyst 1000
+    interfaces: [{name: Gi1/0/1, description: ディストリ02へ}]
+
+  # ---- サーバスイッチ + サーバ ----
+  - id: hq-srv-sw01
+    site: hq
+    role: l2switch
+    platform: Catalyst 9200
+    interfaces:
+      - {name: Te1/0/1, description: コア01へ}
+      - {name: Te1/0/2, description: コア02へ}
+      - {name: Gi1/0/1, description: サーバ01へ}
+      - {name: Gi1/0/2, description: サーバ02へ}
+  - id: hq-srv01
+    site: hq
+    role: server
+    platform: PowerEdge R660
+    interfaces: [{name: eno1, description: サーバSWへ}]
+  - id: hq-srv02
+    site: hq
+    role: server
+    platform: PowerEdge R660
+    interfaces: [{name: eno1, description: サーバSWへ}]
+
+  # ---- DMZ ----
+  - id: hq-dmz-sw01
+    site: hq
+    role: l2switch
+    platform: Catalyst 1000
+    interfaces:
+      - {name: Gi1/0/1, description: FW01へ}
+      - {name: Gi1/0/2, description: 公開サーバへ}
+  - id: hq-dmz-srv01
+    site: hq
+    role: server
+    platform: 公開Web
+    interfaces: [{name: eno1, description: DMZ-SWへ}]
+
+  # ---- 大阪支店 (シンプル) ----
+  - id: osk-rt01
+    site: osk
+    role: router
+    platform: Cisco ISR1100
+    interfaces:
+      - {name: Gi0/0/0, description: IP-VPNアクセス回線}
+      - {name: Gi0/1/0, description: LAN}
+  - id: osk-sw01
+    site: osk
+    role: l2switch
+    platform: Catalyst 1000
+    interfaces: [{name: Gi1/0/1, description: rt01へ}]
+
+clouds:
+  - {id: ipvpn, name: NTT Com IP-VPN網, kind: wan}
+  - {id: internet, name: インターネット, kind: internet}
+
+circuits:
+  - {id: cct-ipvpn-hq, provider: NTT Com, service: IP-VPN, circuit_id: N-1, bandwidth: 100M}
+  - {id: cct-inet-hq, provider: NTT東, service: フレッツ光, circuit_id: C-1, bandwidth: 1G}
+  - {id: cct-ipvpn-osk, provider: NTT Com, service: IP-VPN, circuit_id: N-2, bandwidth: 50M}
+
+links:
+  # WAN
+  - {type: wan-circuit, endpoints: ["hq-rt01:Gi0/0/0", "ipvpn"], circuit: cct-ipvpn-hq}
+  - {type: wan-circuit, endpoints: ["hq-rt02:Gi0/0/0", "internet"], circuit: cct-inet-hq}
+  - {type: wan-circuit, endpoints: ["osk-rt01:Gi0/0/0", "ipvpn"], circuit: cct-ipvpn-osk}
+
+  # WAN境界 → FW
+  - {type: lan-cable, endpoints: ["hq-rt01:Gi0/0/1", "hq-fw01:eth1/1"]}
+  - {type: lan-cable, endpoints: ["hq-rt02:Gi0/0/1", "hq-fw02:eth1/1"]}
+
+  # FW → コア
+  - {type: lan-cable, endpoints: ["hq-fw01:eth1/2", "hq-core01:Te1/0/1"]}
+  - {type: lan-cable, endpoints: ["hq-fw02:eth1/2", "hq-core02:Te1/0/1"]}
+
+  # コア間 + コア → ディストリ (フルメッシュ)
+  - {type: lan-cable, endpoints: ["hq-core01:Te1/0/2", "hq-core02:Te1/0/2"]}
+  - {type: lan-cable, endpoints: ["hq-core01:Te1/0/3", "hq-dist01:Te1/1/1"]}
+  - {type: lan-cable, endpoints: ["hq-core02:Te1/0/3", "hq-dist01:Te1/1/2"]}
+  - {type: lan-cable, endpoints: ["hq-core01:Te1/0/4", "hq-dist02:Te1/1/1"]}
+  - {type: lan-cable, endpoints: ["hq-core02:Te1/0/4", "hq-dist02:Te1/1/2"]}
+
+  # ディストリ → アクセス
+  - {type: lan-cable, endpoints: ["hq-dist01:Gi1/0/1", "hq-acc-1f01:Gi1/0/1"]}
+  - {type: lan-cable, endpoints: ["hq-dist01:Gi1/0/2", "hq-acc-1f02:Gi1/0/1"]}
+  - {type: lan-cable, endpoints: ["hq-dist02:Gi1/0/1", "hq-acc-2f01:Gi1/0/1"]}
+  - {type: lan-cable, endpoints: ["hq-dist02:Gi1/0/2", "hq-acc-2f02:Gi1/0/1"]}
+
+  # コア → サーバSW → サーバ
+  - {type: lan-cable, endpoints: ["hq-core01:Te1/0/5", "hq-srv-sw01:Te1/0/1"]}
+  - {type: lan-cable, endpoints: ["hq-core02:Te1/0/5", "hq-srv-sw01:Te1/0/2"]}
+  - {type: lan-cable, endpoints: ["hq-srv-sw01:Gi1/0/1", "hq-srv01:eno1"]}
+  - {type: lan-cable, endpoints: ["hq-srv-sw01:Gi1/0/2", "hq-srv02:eno1"]}
+
+  # DMZ
+  - {type: lan-cable, endpoints: ["hq-fw01:eth1/3", "hq-dmz-sw01:Gi1/0/1"]}
+  - {type: lan-cable, endpoints: ["hq-dmz-sw01:Gi1/0/2", "hq-dmz-srv01:eno1"]}
+
+  # 大阪
+  - {type: lan-cable, endpoints: ["osk-rt01:Gi0/1/0", "osk-sw01:Gi1/0/1"]}
+
+views:
+  - id: physical-all
+    title: 全社物理構成図
+    layers: [lan-cable, wan-circuit]
+  - id: hq-physical
+    title: 本社 物理構成図
+    layers: [lan-cable, wan-circuit]
+    include_sites: [hq]
