@@ -1,0 +1,25 @@
+[project]
+name = "nwdsl"
+version = "0.1.0"
+description = "ネットワーク構成記述DSL: YAMLソースから構成図(D2/Mermaid)と設計書向け表(Markdown)を生成する"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.7",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+nwdsl = "nwdsl.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
