@@ -212,6 +212,34 @@ segments:
     ipv4: 10.3.10.0/24
     name: 名古屋LAN
 
+paths:
+  - id: hq-osk-normal
+    title: 本社→大阪 (正常時)
+    hops:
+      - node: hq-sw01
+      - node: hq-rt01
+        protocol: HSRP
+        note: active側GW
+      - node: ipvpn
+        protocol: BGP
+        note: IP-VPN網経由
+      - node: osk-rt01
+      - node: osk-sw01
+
+  - id: hq-osk-backup
+    title: 本社→大阪 (IP-VPN障害時)
+    failure: [ipvpn]
+    fallback_of: hq-osk-normal
+    hops:
+      - node: hq-sw01
+      - node: hq-rt02
+        protocol: HSRP
+        note: standbyがactive昇格
+      - node: osk-rt01
+        protocol: BGP
+        note: IPsecトンネルへ経路切替
+      - node: osk-sw01
+
 views:
   - id: physical-all
     title: 全社物理構成図
@@ -227,3 +255,11 @@ views:
     title: 本社 物理構成図
     layers: [lan-cable, wan-circuit]
     include_sites: [hq]
+  - id: path-normal
+    title: 通信経路 本社→大阪 (正常時)
+    type: path
+    path: hq-osk-normal
+  - id: path-ipvpn-fail
+    title: 通信経路 本社→大阪 (IP-VPN障害時)
+    type: path
+    path: hq-osk-backup

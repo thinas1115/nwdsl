@@ -41,10 +41,32 @@ def _label(text: str) -> str:
 
 
 def _node_label(node: RenderNode) -> str:
+    label = node.label
+    if node.emphasis == "failed":
+        label = f"✕障害\n{label}"
     # cloud 形状はCJKラベルの幅を詰めすぎて文字がはみ出すため余白を足す
     if node.kind == "cloud":
-        return f"　{node.label}　"
-    return node.label
+        return f"　{label}　"
+    return label
+
+
+def _node_attrs(node: RenderNode) -> str:
+    attrs = [f"class: {_node_class(node)}"]
+    if node.emphasis == "dim":
+        attrs.append("style.opacity: 0.3")
+    elif node.emphasis == "failed":
+        attrs.append('style.stroke: "#c5221f"')
+        attrs.append('style.fill: "#fce8e6"')
+        attrs.append("style.stroke-width: 3")
+    return "; ".join(attrs)
+
+
+_EDGE_EMPHASIS_STYLES = {
+    "path": ['style.stroke: "#c5221f"', "style.stroke-width: 4", "style.animated: true"],
+    "disabled": ['style.stroke: "#9aa0a6"', "style.stroke-dash: 4", "style.opacity: 0.4"],
+    "dim": ["style.opacity: 0.15"],
+    "failed": ['style.stroke: "#c5221f"', "style.stroke-dash: 4", "style.opacity: 0.55"],
+}
 
 
 def _node_class(node: RenderNode) -> str:
@@ -87,14 +109,14 @@ def render_d2(graph: RenderGraph) -> str:
         for node in members:
             nkey = f"n_{_key(node.id)}"
             node_path[node.id] = f"{gkey}.{nkey}"
-            lines.append(f'  {nkey}: "{_label(_node_label(node))}" {{class: {_node_class(node)}}}')
+            lines.append(f'  {nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node)}}}')
         lines.append("}")
         lines.append("")
 
     for node in ungrouped:
         nkey = f"n_{_key(node.id)}"
         node_path[node.id] = nkey
-        lines.append(f'{nkey}: "{_label(_node_label(node))}" {{class: {_node_class(node)}}}')
+        lines.append(f'{nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node)}}}')
     if ungrouped:
         lines.append("")
 
@@ -109,6 +131,8 @@ def render_d2(graph: RenderGraph) -> str:
             attrs.append(f'source-arrowhead.label: "{_label(edge.src_label)}"')
         if edge.dst_label:
             attrs.append(f'target-arrowhead.label: "{_label(edge.dst_label)}"')
-        lines.append(f"{src} -- {dst}{label} {{{'; '.join(attrs)}}}")
+        attrs.extend(_EDGE_EMPHASIS_STYLES.get(edge.emphasis, []))
+        connector = "->" if edge.directed else "--"
+        lines.append(f"{src} {connector} {dst}{label} {{{'; '.join(attrs)}}}")
 
     return "\n".join(lines) + "\n"

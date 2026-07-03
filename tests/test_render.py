@@ -120,3 +120,31 @@ def test_all_views_render_without_error(doc):
     for view in doc.views:
         g = resolve_view(doc, view)
         assert render_d2(g) and render_mermaid(g)
+
+
+def test_path_view_overlay(doc):
+    g = resolve_view(doc, _view(doc, "path-ipvpn-fail"))
+    nodes = {n.id: n for n in g.nodes}
+    # 障害コンポーネントは failed、経路外は dim、経路上は通常
+    assert nodes["ipvpn"].emphasis == "failed"
+    assert nodes["internet"].emphasis == "dim"      # 経路外
+    assert nodes["hq-rt01"].emphasis is None        # fallback経路上は淡色化しない
+    assert nodes["hq-rt02"].emphasis is None
+    # 経路エッジ: ホップ順に directed + seq
+    path_edges = sorted((e for e in g.edges if e.emphasis == "path"), key=lambda e: e.seq)
+    assert [(e.src, e.dst) for e in path_edges] == [
+        ("hq-sw01", "hq-rt02"), ("hq-rt02", "osk-rt01"), ("osk-rt01", "osk-sw01")]
+    assert all(e.directed for e in path_edges)
+    assert "HSRP" in path_edges[0].label
+    # 無効化された正常経路 (fallback_of) は disabled
+    assert any(e.emphasis == "disabled" for e in g.edges)
+    # 障害回線のエッジは failed
+    assert any(e.emphasis == "failed" and e.circuit == "cct-ipvpn-hq" for e in g.edges)
+
+
+def test_path_view_d2_output(doc):
+    out = render_d2(resolve_view(doc, _view(doc, "path-ipvpn-fail")))
+    assert "style.animated: true" in out
+    assert " -> " in out          # 経路は矢印付き
+    assert "✕障害" in out          # 障害ラベル
+    assert "style.opacity: 0.3" in out  # 淡色化ノード

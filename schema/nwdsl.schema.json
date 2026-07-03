@@ -376,6 +376,121 @@
       "title": "NetworkMeta",
       "type": "object"
     },
+    "Path": {
+      "additionalProperties": false,
+      "description": "通信経路 (正常時/障害時のトラフィックの通り道)。\n\n経路は作成者が明示する (ルーティング計算による自動導出はしない)。\n隣接ホップ間に実在の link があることをバリデータが検査する。",
+      "properties": {
+        "id": {
+          "description": "経路ID (ファイル内で一意)",
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "経路の表示名",
+          "title": "Title"
+        },
+        "failure": {
+          "description": "この経路が前提とする障害コンポーネント (device/cloud/circuit のID)。図で赤✕表示",
+          "items": {
+            "type": "string"
+          },
+          "title": "Failure",
+          "type": "array"
+        },
+        "fallback_of": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "正常時経路のID。指定すると当該経路が灰破線で併記される",
+          "title": "Fallback Of"
+        },
+        "hops": {
+          "description": "始点から終点までの順序付きホップ列",
+          "items": {
+            "$ref": "#/$defs/PathHop"
+          },
+          "minItems": 2,
+          "title": "Hops",
+          "type": "array"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "補足",
+          "title": "Description"
+        }
+      },
+      "required": [
+        "id",
+        "hops"
+      ],
+      "title": "Path",
+      "type": "object"
+    },
+    "PathHop": {
+      "additionalProperties": false,
+      "description": "通信経路の1ホップ。node は devices / clouds の ID。",
+      "properties": {
+        "node": {
+          "description": "ホップのノードID (device または cloud)",
+          "title": "Node",
+          "type": "string"
+        },
+        "protocol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "このホップへの到達を決めるプロトコル (例: HSRP, BGP, OSPF)",
+          "title": "Protocol"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "経路選択の理由・補足 (図のラベルに表示)",
+          "title": "Note"
+        }
+      },
+      "required": [
+        "node"
+      ],
+      "title": "PathHop",
+      "type": "object"
+    },
     "Segment": {
       "additionalProperties": false,
       "description": "L3セグメント (VLAN / サブネット)。論理構成図とIP設計表の情報源。",
@@ -513,6 +628,29 @@
           "title": "Title",
           "type": "string"
         },
+        "type": {
+          "default": "topology",
+          "description": "topology=構成図 / path=経路ハイライト図",
+          "enum": [
+            "topology",
+            "path"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "type: path のとき対象の経路ID (paths を参照)",
+          "title": "Path"
+        },
         "layers": {
           "description": "図に含める接続種別",
           "items": {
@@ -638,6 +776,13 @@
         "$ref": "#/$defs/Segment"
       },
       "title": "Segments",
+      "type": "array"
+    },
+    "paths": {
+      "items": {
+        "$ref": "#/$defs/Path"
+      },
+      "title": "Paths",
       "type": "array"
     },
     "views": {

@@ -179,6 +179,42 @@ def validate_document(doc: Document) -> list[Issue]:
                                 f"circuit '{cct.id}' が{n}本の link から参照されています "
                                 f"(1契約=1結線。複数回線は circuits を分けてください)"))
 
+    # ---- paths ----
+    _check_duplicates(issues, [p.id for p in doc.paths], "paths")
+    path_ids = {p.id for p in doc.paths}
+    node_ids = set(device_by_id) | cloud_ids
+    # 隣接判定用: 全link (全type) のノードペア
+    adjacent: set[frozenset[str]] = set()
+    for link in doc.links:
+        a, _ = parse_endpoint(link.endpoints[0])
+        b, _ = parse_endpoint(link.endpoints[1])
+        adjacent.add(frozenset((a, b)))
+
+    for path in doc.paths:
+        for hop in path.hops:
+            if hop.node not in node_ids:
+                issues.append(Issue("error", "ref.path-node",
+                                    f"path '{path.id}' のホップ '{hop.node}' が devices/clouds に存在しません"))
+        for prev, nxt in zip(path.hops, path.hops[1:]):
+            pair = frozenset((prev.node, nxt.node))
+            if prev.node == nxt.node:
+                issues.append(Issue("error", "path.hop-duplicate",
+                                    f"path '{path.id}': 連続ホップが同一ノードです ({prev.node})"))
+            elif prev.node in node_ids and nxt.node in node_ids and pair not in adjacent:
+                issues.append(Issue("error", "path.hop-not-adjacent",
+                                    f"path '{path.id}': '{prev.node}' と '{nxt.node}' を直接結ぶ link がありません"))
+        for comp in path.failure:
+            if comp not in node_ids and comp not in circuit_by_id:
+                issues.append(Issue("error", "ref.path-failure",
+                                    f"path '{path.id}' の failure '{comp}' が devices/clouds/circuits に存在しません"))
+        if path.fallback_of is not None:
+            if path.fallback_of not in path_ids:
+                issues.append(Issue("error", "ref.path-fallback",
+                                    f"path '{path.id}' の fallback_of '{path.fallback_of}' が paths に存在しません"))
+            elif path.fallback_of == path.id:
+                issues.append(Issue("error", "ref.path-fallback",
+                                    f"path '{path.id}' の fallback_of が自分自身を指しています"))
+
     # ---- views ----
     for view in doc.views:
         for attr in ("include_sites", "exclude_sites"):
@@ -187,6 +223,16 @@ def validate_document(doc: Document) -> list[Issue]:
                 if sid not in site_ids:
                     issues.append(Issue("error", "ref.view-site",
                                         f"view '{view.id}' の {attr} '{sid}' が sites に存在しません"))
+        if view.type == "path":
+            if view.path is None:
+                issues.append(Issue("error", "view.path-required",
+                                    f"view '{view.id}': type: path には path (経路ID) が必須です"))
+            elif view.path not in path_ids:
+                issues.append(Issue("error", "ref.view-path",
+                                    f"view '{view.id}' の path '{view.path}' が paths に存在しません"))
+        elif view.path is not None:
+            issues.append(Issue("error", "view.path-forbidden",
+                                f"view '{view.id}': path は type: path のビューでのみ指定できます"))
 
     return issues
 

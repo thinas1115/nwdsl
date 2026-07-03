@@ -17,7 +17,16 @@ _EDGE_STYLES = {
     "logical": "stroke:#188038,stroke-width:2px,stroke-dasharray:3 3",
 }
 
+_EDGE_EMPHASIS_STYLES = {
+    "path": "stroke:#c5221f,stroke-width:4px",
+    "disabled": "stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4",
+    "dim": "stroke:#e8eaed,stroke-width:1px",
+    "failed": "stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4",
+}
+
 _CLASS_DEFS = """\
+classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
 classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
 classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
 classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
@@ -39,6 +48,10 @@ def _label(text: str) -> str:
 
 
 def _node_class(node: RenderNode) -> str:
+    if node.emphasis == "dim":
+        return "node_dim"
+    if node.emphasis == "failed":
+        return "node_failed"
     if node.kind == "cloud":
         return "node_cloud"
     if node.kind == "site":
@@ -51,7 +64,8 @@ def _node_class(node: RenderNode) -> str:
 
 def _node_decl(node: RenderNode) -> str:
     key = _key(node.id)
-    label = _label(node.label)
+    raw = f"✕障害\n{node.label}" if node.emphasis == "failed" else node.label
+    label = _label(raw)
     if node.kind == "cloud":
         return f'{key}(("{label}"))'
     return f'{key}["{label}"]'
@@ -82,10 +96,15 @@ def render_mermaid(graph: RenderGraph) -> str:
         class_members.setdefault(_node_class(node), []).append(_key(node.id))
 
     edge_indices: dict[str, list[int]] = {}
+    emphasis_indices: dict[str, list[int]] = {}
     for i, edge in enumerate(graph.edges):
         label = f'|"{_label(edge.label)}"|' if edge.label else ""
-        lines.append(f"  {_key(edge.src)} ---{label} {_key(edge.dst)}")
-        edge_indices.setdefault(edge.type, []).append(i)
+        connector = "-->" if edge.directed else "---"
+        lines.append(f"  {_key(edge.src)} {connector}{label} {_key(edge.dst)}")
+        if edge.emphasis is not None:
+            emphasis_indices.setdefault(edge.emphasis, []).append(i)
+        else:
+            edge_indices.setdefault(edge.type, []).append(i)
 
     lines.append("")
     lines.extend(f"  {line}" for line in _CLASS_DEFS.splitlines())
@@ -93,5 +112,7 @@ def render_mermaid(graph: RenderGraph) -> str:
         lines.append(f"  class {','.join(members)} {cls}")
     for etype, idxs in edge_indices.items():
         lines.append(f"  linkStyle {','.join(map(str, idxs))} {_EDGE_STYLES[etype]}")
+    for emphasis, idxs in emphasis_indices.items():
+        lines.append(f"  linkStyle {','.join(map(str, idxs))} {_EDGE_EMPHASIS_STYLES[emphasis]}")
 
     return "\n".join(lines) + "\n"

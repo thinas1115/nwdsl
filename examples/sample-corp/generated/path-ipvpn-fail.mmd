@@ -4,12 +4,23 @@ flowchart TB
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
     hq_rt02["hq-rt02<br>Cisco ISR4331"]
   end
-  ipvpn(("NTT Com IP-VPN網"))
+  subgraph sg_osk["大阪支店"]
+    osk_rt01["osk-rt01<br>Cisco ISR1100"]
+    osk_sw01["osk-sw01<br>Cisco Catalyst 1000"]
+  end
+  ipvpn(("✕障害<br>NTT Com IP-VPN網"))
   internet(("インターネット"))
+  ngy_rt01["ngy-rt01<br>(名古屋営業所)"]
   hq_rt01 ---|"Gi0/0/1 - Gi1/0/1"| hq_sw01
-  hq_rt02 ---|"Gi0/0/1 - Gi1/0/2"| hq_sw01
+  hq_sw01 -->|"① HSRP standbyがactive昇格"| hq_rt02
+  osk_rt01 -->|"③"| osk_sw01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M"| hq_rt01
+  ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M"| osk_rt01
   internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G"| hq_rt02
+  internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G"| osk_rt01
+  hq_rt02 -->|"② BGP IPsecトンネルへ経路切替"| osk_rt01
+  hq_rt01 ---|"BGP (IP-VPN網内)"| osk_rt01
+  hq_rt01 ---|"BGP (IP-VPN網内)"| ngy_rt01
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
   classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
@@ -21,8 +32,12 @@ flowchart TB
   classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
   classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
-  class hq_rt01,hq_rt02 role_router
+  class hq_rt01,hq_rt02,osk_rt01 role_router
   class hq_sw01 role_l3switch
-  class ipvpn,internet node_cloud
-  linkStyle 0,1 stroke:#4a4a4a,stroke-width:2px
-  linkStyle 2,3 stroke:#1a73e8,stroke-width:4px
+  class osk_sw01 role_l2switch
+  class ipvpn node_failed
+  class internet,ngy_rt01 node_dim
+  linkStyle 0 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 1,2,7 stroke:#c5221f,stroke-width:4px
+  linkStyle 3,4 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 5,6,8,9 stroke:#e8eaed,stroke-width:1px

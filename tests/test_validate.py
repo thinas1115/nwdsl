@@ -165,6 +165,44 @@ def test_duplicate_device_cloud_id(tmp_path):
     assert "dup.id" in _codes(validate_document(doc))
 
 
+def test_path_hop_not_adjacent(tmp_path):
+    doc = _load(tmp_path, """
+    links:
+      - type: lan-cable
+        endpoints: ["rt1:ge0", "rt1:ge1"]
+    paths:
+      - id: p1
+        hops: [{node: rt1}, {node: rt2}]   # rt1-rt2 を結ぶ link が無い
+    """)
+    assert "path.hop-not-adjacent" in _codes(validate_document(doc))
+
+
+def test_path_unknown_hop_and_failure(tmp_path):
+    doc = _load(tmp_path, """
+    links:
+      - type: logical
+        endpoints: ["rt1", "rt2"]
+    paths:
+      - id: p1
+        failure: [ghost-circuit]
+        hops: [{node: rt1}, {node: ghost}]
+    """)
+    codes = _codes(validate_document(doc))
+    assert "ref.path-node" in codes
+    assert "ref.path-failure" in codes
+
+
+def test_path_view_requires_path(tmp_path):
+    doc = _load(tmp_path, """
+    views:
+      - {id: v1, title: t, type: path}
+      - {id: v2, title: t, path: nowhere}
+    """)
+    codes = _codes(validate_document(doc))
+    assert "view.path-required" in codes
+    assert "view.path-forbidden" in codes
+
+
 def test_bad_cidr_rejected(tmp_path):
     with pytest.raises(LoadError):
         _load(tmp_path, """

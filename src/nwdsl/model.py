@@ -138,11 +138,43 @@ class Segment(StrictModel):
         return v
 
 
+class PathHop(StrictModel):
+    """通信経路の1ホップ。node は devices / clouds の ID。"""
+
+    node: str = Field(description="ホップのノードID (device または cloud)")
+    protocol: Optional[str] = Field(
+        default=None, description="このホップへの到達を決めるプロトコル (例: HSRP, BGP, OSPF)")
+    note: Optional[str] = Field(
+        default=None, description="経路選択の理由・補足 (図のラベルに表示)")
+
+
+class Path(StrictModel):
+    """通信経路 (正常時/障害時のトラフィックの通り道)。
+
+    経路は作成者が明示する (ルーティング計算による自動導出はしない)。
+    隣接ホップ間に実在の link があることをバリデータが検査する。
+    """
+
+    id: str = Field(description="経路ID (ファイル内で一意)")
+    title: Optional[str] = Field(default=None, description="経路の表示名")
+    failure: list[str] = Field(
+        default_factory=list,
+        description="この経路が前提とする障害コンポーネント (device/cloud/circuit のID)。図で赤✕表示")
+    fallback_of: Optional[str] = Field(
+        default=None, description="正常時経路のID。指定すると当該経路が灰破線で併記される")
+    hops: list[PathHop] = Field(min_length=2, description="始点から終点までの順序付きホップ列")
+    description: Optional[str] = Field(default=None, description="補足")
+
+
 class View(StrictModel):
     """図の描き分け定義。フィルタと抽象度のみを宣言し、座標・色は持たない。"""
 
     id: str = Field(description="ビューID (ファイル内で一意)")
     title: str = Field(description="図のタイトル")
+    type: Literal["topology", "path"] = Field(
+        default="topology", description="topology=構成図 / path=経路ハイライト図")
+    path: Optional[str] = Field(
+        default=None, description="type: path のとき対象の経路ID (paths を参照)")
     layers: list[LinkType] = Field(
         default_factory=lambda: ["lan-cable", "wan-circuit", "logical", "tunnel"],
         description="図に含める接続種別")
@@ -165,6 +197,7 @@ class Document(StrictModel):
     circuits: list[Circuit] = Field(default_factory=list)
     links: list[Link] = Field(default_factory=list)
     segments: list[Segment] = Field(default_factory=list)
+    paths: list[Path] = Field(default_factory=list)
     views: list[View] = Field(default_factory=list)
 
     @field_validator("nwdsl")

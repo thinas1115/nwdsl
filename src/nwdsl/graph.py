@@ -23,6 +23,7 @@ class RenderNode:
     kind: str                    # "device" | "cloud" | "site" | "external-device"
     role: Optional[str] = None   # device の role / cloud の kind
     site: Optional[str] = None   # 所属拠点 (コンテナ描画用。None はグループ外)
+    emphasis: Optional[str] = None  # 経路ビュー用: None(通常) | "dim" | "failed"
 
 
 @dataclass
@@ -33,6 +34,10 @@ class RenderEdge:
     label: Optional[str] = None
     src_label: Optional[str] = None  # 端点付近に描く小ラベル (IF名)
     dst_label: Optional[str] = None
+    circuit: Optional[str] = None    # 経由回線ID (障害マーク用)
+    emphasis: Optional[str] = None   # None | "path" | "disabled" | "dim" | "failed"
+    seq: Optional[int] = None        # 経路上のホップ番号 (1始まり)
+    directed: bool = False           # True なら矢印付きで描く
 
 
 @dataclass
@@ -68,6 +73,13 @@ def _edge_label(doc: Document, link, ifnames: dict[str, Optional[str]]) -> Optio
 
 
 def resolve_view(doc: Document, view: View) -> RenderGraph:
+    """View を描画用中間グラフに解決する (type により分岐)。"""
+    if view.type == "path":
+        return _resolve_path_view(doc, view)
+    return _resolve_topology_view(doc, view)
+
+
+def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
     site_by_id = {s.id: s for s in doc.sites}
     device_by_id = {d.id: d for d in doc.devices}
     cloud_by_id = {c.id: c for c in doc.clouds}
@@ -147,7 +159,7 @@ def resolve_view(doc: Document, view: View) -> RenderGraph:
                     cloud = cloud_by_id[node_id]
                     add_node(RenderNode(id=node_id, label=cloud.name, kind="cloud", role=cloud.kind))
             edge = RenderEdge(ep_nodes[0], ep_nodes[1], link.type,
-                              _edge_label(doc, link, ifnames))
+                              _edge_label(doc, link, ifnames), circuit=link.circuit)
             if link.type == "wan-circuit":
                 # IF名は中央ラベルに混ぜず機器側端点の小ラベルにする (ラベル重なり対策)
                 edge.src_label = ifnames.get(ep_nodes[0])
@@ -208,3 +220,94 @@ def _orient_edges(doc: Document, graph: RenderGraph) -> None:
         if dist.get(edge.src, unreachable) > dist.get(edge.dst, unreachable):
             edge.src, edge.dst = edge.dst, edge.src
             edge.src_label, edge.dst_label = edge.dst_label, edge.src_label
+
+
+_SEQ_MARKS = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳"
+
+
+def _seq_mark(index: int) -> str:
+    return _SEQ_MARKS[index] if index < len(_SEQ_MARKS) else f"({index + 1})"
+
+
+def _resolve_path_view(doc: Document, view: View) -> RenderGraph:
+    """経路ビュー: トポロジ図の上に経路ハイライトを重ねる。
+
+    - 経路上のノード/エッジ: 通常表示 + 赤太線・ホップ番号・注記
+    - fallback_of の経路 (無効化された正常経路): 灰破線
+    - failure のコンポーネント: 赤✕ (回線なら該当エッジを赤破線)
+    - それ以外: 淡色化
+    """
+    path = next(p for p in doc.paths if p.id == view.path)
+    fallback = next((p for p in doc.paths if p.id == path.fallback_of), None)
+
+    device_by_id = {d.id: d for d in doc.devices}
+    hop_nodes: list[str] = [h.node for h in path.hops]
+    all_path_nodes = set(hop_nodes) | ({h.node for h in fallback.hops} if fallback else set())
+
+    # 経路・障害に関係する拠点だけを描く (無関係拠点のノイズを避ける)
+    involved_sites = {device_by_id[n].site for n in all_path_nodes if n in device_by_id}
+    involved_sites |= {device_by_id[c].site for c in path.failure if c in device_by_id}
+
+    base_view = View(
+        id=view.id, title=view.title,
+        layers=["lan-cable", "wan-circuit", "logical", "tunnel"],
+        include_sites=sorted(involved_sites) or None)
+    graph = _resolve_topology_view(doc, base_view)
+    graph.title = view.title
+
+    # --- ノードの強調/淡色化 ---
+    failed_nodes = set(path.failure)
+    for node in graph.nodes:
+        if node.id in failed_nodes:
+            node.emphasis = "failed"
+        elif node.id not in all_path_nodes:
+            node.emphasis = "dim"
+
+    # --- エッジ索引 (無向) ---
+    edges_by_pair: dict[frozenset[str], list[RenderEdge]] = {}
+    for edge in graph.edges:
+        edges_by_pair.setdefault(frozenset((edge.src, edge.dst)), []).append(edge)
+
+    def _mark_pair(a: str, b: str, emphasis: str) -> Optional[RenderEdge]:
+        for candidate in edges_by_pair.get(frozenset((a, b)), []):
+            if candidate.emphasis is None:
+                candidate.emphasis = emphasis
+                return candidate
+        return None
+
+    # --- 障害回線・障害ノードに接続するWANエッジを赤破線に ---
+    failed_circuits = {c for c in path.failure}
+    for edge in graph.edges:
+        if edge.circuit is not None and edge.circuit in failed_circuits:
+            edge.emphasis = "failed"
+        elif failed_nodes and (edge.src in failed_nodes or edge.dst in failed_nodes):
+            edge.emphasis = "failed"
+
+    # --- fallback (無効化された正常経路) を灰破線に ---
+    if fallback is not None:
+        for prev, nxt in zip(fallback.hops, fallback.hops[1:]):
+            _mark_pair(prev.node, nxt.node, "disabled")
+
+    # --- 経路本体を強調 (向き・ホップ番号・注記付き) ---
+    for i, (prev, nxt) in enumerate(zip(path.hops, path.hops[1:])):
+        edge = None
+        for candidate in edges_by_pair.get(frozenset((prev.node, nxt.node)), []):
+            if candidate.emphasis in (None, "failed", "disabled"):
+                edge = candidate
+                break
+        if edge is None:
+            continue  # バリデータが隣接性を保証するため通常到達しない
+        edge.emphasis = "path"
+        edge.seq = i + 1
+        edge.directed = True
+        if edge.src != prev.node:  # 経路の進行方向に向きを合わせる
+            edge.src, edge.dst = edge.dst, edge.src
+            edge.src_label, edge.dst_label = edge.dst_label, edge.src_label
+        annotation = " ".join(x for x in (nxt.protocol, nxt.note) if x)
+        edge.label = f"{_seq_mark(i)} {annotation}".strip()
+
+    # --- 残りのエッジは淡色化 ---
+    for edge in graph.edges:
+        if edge.emphasis is None:
+            edge.emphasis = "dim"
+    return graph
