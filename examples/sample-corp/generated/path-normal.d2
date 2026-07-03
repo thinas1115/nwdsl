@@ -21,6 +21,7 @@ classes: {
 
 s_hq: "本社" {
   class: group-site
+  label.near: outside-top-left
   n_hq_rt01: "hq-rt01\nCisco ISR4331" {class: role-router}
   n_hq_sw01: "hq-sw01\nCisco Catalyst 9300" {class: role-l3switch}
   n_hq_rt02: "hq-rt02\nCisco ISR4331" {class: role-router; style.opacity: 0.3}
@@ -28,6 +29,7 @@ s_hq: "本社" {
 
 s_osk: "大阪支店" {
   class: group-site
+  label.near: outside-top-left
   n_osk_rt01: "osk-rt01\nCisco ISR1100" {class: role-router}
   n_osk_sw01: "osk-sw01\nCisco Catalyst 1000" {class: role-l2switch}
 }
@@ -36,13 +38,13 @@ n_ipvpn: "　NTT Com IP-VPN網　" {class: node-cloud}
 n_internet: "　インターネット　" {class: node-cloud; style.opacity: 0.3}
 n_ngy_rt01: "ngy-rt01\n(名古屋営業所)" {class: node-external; style.opacity: 0.3}
 
-s_hq.n_hq_sw01 -> s_hq.n_hq_rt01: "① HSRP active側GW" {class: edge-lan-cable; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-s_hq.n_hq_rt02 -- s_hq.n_hq_sw01: "Gi0/0/1 - Gi1/0/2" {class: edge-lan-cable; style.opacity: 0.15}
-s_osk.n_osk_rt01 -> s_osk.n_osk_sw01: "④" {class: edge-lan-cable; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-s_hq.n_hq_rt01 -> n_ipvpn: "② BGP IP-VPN網経由" {class: edge-wan-circuit; source-arrowhead.label: "Gi0/0/0"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-n_ipvpn -> s_osk.n_osk_rt01: "③" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-n_internet -- s_hq.n_hq_rt02: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"; style.opacity: 0.15}
-n_internet -- s_osk.n_osk_rt01: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/1"; style.opacity: 0.15}
+s_hq.n_hq_sw01 -> s_hq.n_hq_rt01: "① HSRP active側GW" {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/1"; target-arrowhead.label: "Gi0/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"; style.opacity: 0.15}
+s_osk.n_osk_rt01 -> s_osk.n_osk_sw01: "④" {class: edge-lan-cable; source-arrowhead.label: "Gi0/1/0"; target-arrowhead.label: "Gi1/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hq.n_hq_rt01 -> n_ipvpn: "② BGP IP-VPN網経由" {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+n_ipvpn -> s_osk.n_osk_rt01: "③" {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+n_internet -- s_hq.n_hq_rt02: "NTT東日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/0)" {class: edge-wan-circuit; style.opacity: 0.15}
+n_internet -- s_osk.n_osk_rt01: "NTT西日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/1)" {class: edge-wan-circuit; style.opacity: 0.15}
 s_hq.n_hq_rt02 -- s_osk.n_osk_rt01: "IPsec バックアップVPN" {class: edge-tunnel; style.opacity: 0.15}
 s_hq.n_hq_rt01 -- s_osk.n_osk_rt01: "BGP (IP-VPN網内)" {class: edge-logical; style.opacity: 0.15}
 s_hq.n_hq_rt01 -- n_ngy_rt01: "BGP (IP-VPN網内)" {class: edge-logical; style.opacity: 0.15}

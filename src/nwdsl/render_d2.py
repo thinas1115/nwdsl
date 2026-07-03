@@ -50,8 +50,10 @@ def _node_label(node: RenderNode) -> str:
     return label
 
 
-def _node_attrs(node: RenderNode) -> str:
+def _node_attrs(node: RenderNode, min_width: int | None = None) -> str:
     attrs = [f"class: {_node_class(node)}"]
+    if min_width is not None:
+        attrs.append(f"width: {min_width}")
     if node.emphasis == "dim":
         attrs.append("style.opacity: 0.3")
     elif node.emphasis == "failed":
@@ -80,6 +82,27 @@ def _node_class(node: RenderNode) -> str:
     return f"role-{role}"
 
 
+def _min_widths(graph: RenderGraph) -> dict[str, int]:
+    """接続本数に応じたノードの最小幅。
+
+    direction: down では流入エッジが上辺・流出エッジが下辺に付き、D2は端点
+    ラベル (IF名) を接続点そばに置く。辺の幅が足りないとラベル同士が密着する
+    ことを実測で確認したため、片辺のエッジ数 × ラベル幅ぶんの幅を確保する。
+    """
+    in_deg: dict[str, int] = {}
+    out_deg: dict[str, int] = {}
+    for edge in graph.edges:
+        if edge.src_label or edge.dst_label:
+            out_deg[edge.src] = out_deg.get(edge.src, 0) + 1
+            in_deg[edge.dst] = in_deg.get(edge.dst, 0) + 1
+    widths: dict[str, int] = {}
+    for node in graph.nodes:
+        lanes = max(in_deg.get(node.id, 0), out_deg.get(node.id, 0))
+        if lanes >= 2:
+            widths[node.id] = max(170, 90 * lanes)
+    return widths
+
+
 def render_d2(graph: RenderGraph) -> str:
     lines: list[str] = []
     lines.append(f'title: |md\n  # {graph.title}\n| {{near: top-center}}')
@@ -90,6 +113,7 @@ def render_d2(graph: RenderGraph) -> str:
     lines.append(_NODE_CLASSES)
 
     node_path: dict[str, str] = {}  # node.id -> D2 参照パス
+    min_widths = _min_widths(graph)
 
     grouped: dict[str, list[RenderNode]] = {}
     ungrouped: list[RenderNode] = []
@@ -106,17 +130,20 @@ def render_d2(graph: RenderGraph) -> str:
         gkey = f"s_{_key(site_id)}"
         lines.append(f'{gkey}: "{_label(site_label)}" {{')
         lines.append("  class: group-site")
+        # WAN線が上からコンテナに入るため、タイトルは線の通り道の外 (外側左上) に置く。
+        # 内側配置や外側中央では狭い拠点でIFラベル・回線と衝突することを実測で確認済み
+        lines.append("  label.near: outside-top-left")
         for node in members:
             nkey = f"n_{_key(node.id)}"
             node_path[node.id] = f"{gkey}.{nkey}"
-            lines.append(f'  {nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node)}}}')
+            lines.append(f'  {nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node, min_widths.get(node.id))}}}')
         lines.append("}")
         lines.append("")
 
     for node in ungrouped:
         nkey = f"n_{_key(node.id)}"
         node_path[node.id] = nkey
-        lines.append(f'{nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node)}}}')
+        lines.append(f'{nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node, min_widths.get(node.id))}}}')
     if ungrouped:
         lines.append("")
 

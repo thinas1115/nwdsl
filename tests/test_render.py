@@ -58,12 +58,13 @@ def test_cross_boundary_link_shows_external_device(doc):
     assert "大阪支店" in ext[0].label
 
 
-def test_wan_circuit_edge_label_and_endpoint_labels(doc):
+def test_wan_circuit_edge_label_format(doc):
     g = resolve_view(doc, _view(doc, "physical-all"))
     wan = [e for e in g.edges if e.type == "wan-circuit"]
     labeled = next(e for e in wan if "IP-VPN" in (e.label or "") and "100M" in e.label)
-    assert "\n" not in labeled.label  # 回線ラベルは1行
-    assert "Gi0/0/0" in (labeled.src_label or "") or "Gi0/0/0" in (labeled.dst_label or "")
+    line1, line2 = labeled.label.split("\n")
+    assert "\n" not in line1          # 回線情報は1行
+    assert line2 == "(Gi0/0/0)"       # 2行目に機器側IF
 
 
 def test_edges_oriented_wan_to_lan(doc):
@@ -76,9 +77,13 @@ def test_edges_oriented_wan_to_lan(doc):
     # LAN配線はルーター(WAN距離1)が src、スイッチ(距離2)が dst
     lan = [e for e in g.edges if e.type == "lan-cable"]
     assert ("hq-rt01", "hq-sw01") in [(e.src, e.dst) for e in lan]
-    # 向きの入替時に端点小ラベルも一緒に動いている (IF名は機器側)
+    # LAN配線のIF名は両端の機器側小ラベルに分散配置される
+    rt_sw = next(e for e in lan if (e.src, e.dst) == ("hq-rt01", "hq-sw01"))
+    assert rt_sw.src_label == "Gi0/0/1" and rt_sw.dst_label == "Gi1/0/1"
+    # WAN回線のIF名は中央ラベルの2行目 (端点ラベルは使わない)
     wan = next(e for e in g.edges if e.src == "ipvpn" and e.dst == "hq-rt01")
-    assert wan.dst_label == "Gi0/0/0" and wan.src_label is None
+    assert "(Gi0/0/0)" in wan.label
+    assert wan.src_label is None and wan.dst_label is None
 
 
 def test_orientation_fallback_without_clouds(doc):
@@ -92,6 +97,7 @@ def test_orientation_fallback_without_clouds(doc):
 def test_d2_output_structure(doc):
     out = render_d2(resolve_view(doc, _view(doc, "physical-all")))
     assert "direction: down" in out
+    assert "label.near: outside-top-left" in out  # 拠点タイトルを線の通り道から退避
     assert 's_hq: "本社"' in out
     assert "class: edge-wan-circuit" in out
     assert "shape: cloud" in out

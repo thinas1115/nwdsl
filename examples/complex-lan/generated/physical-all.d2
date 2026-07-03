@@ -21,19 +21,20 @@ classes: {
 
 s_hq: "本社" {
   class: group-site
+  label.near: outside-top-left
   n_hq_rt01: "hq-rt01\nCisco ISR4451" {class: role-router}
   n_hq_rt02: "hq-rt02\nCisco ISR4451" {class: role-router}
-  n_hq_fw01: "hq-fw01\nPalo Alto PA-3410" {class: role-firewall}
+  n_hq_fw01: "hq-fw01\nPalo Alto PA-3410" {class: role-firewall; width: 180}
   n_hq_fw02: "hq-fw02\nPalo Alto PA-3410" {class: role-firewall}
-  n_hq_core01: "hq-core01\nCatalyst 9500" {class: role-l3switch}
-  n_hq_core02: "hq-core02\nCatalyst 9500" {class: role-l3switch}
-  n_hq_dist01: "hq-dist01\nCatalyst 9300" {class: role-l3switch}
-  n_hq_dist02: "hq-dist02\nCatalyst 9300" {class: role-l3switch}
+  n_hq_core01: "hq-core01\nCatalyst 9500" {class: role-l3switch; width: 360}
+  n_hq_core02: "hq-core02\nCatalyst 9500" {class: role-l3switch; width: 270}
+  n_hq_dist01: "hq-dist01\nCatalyst 9300" {class: role-l3switch; width: 180}
+  n_hq_dist02: "hq-dist02\nCatalyst 9300" {class: role-l3switch; width: 180}
   n_hq_acc_1f01: "hq-acc-1f01\nCatalyst 1000" {class: role-l2switch}
   n_hq_acc_1f02: "hq-acc-1f02\nCatalyst 1000" {class: role-l2switch}
   n_hq_acc_2f01: "hq-acc-2f01\nCatalyst 1000" {class: role-l2switch}
   n_hq_acc_2f02: "hq-acc-2f02\nCatalyst 1000" {class: role-l2switch}
-  n_hq_srv_sw01: "hq-srv-sw01\nCatalyst 9200" {class: role-l2switch}
+  n_hq_srv_sw01: "hq-srv-sw01\nCatalyst 9200" {class: role-l2switch; width: 180}
   n_hq_srv01: "hq-srv01\nPowerEdge R660" {class: role-other}
   n_hq_srv02: "hq-srv02\nPowerEdge R660" {class: role-other}
   n_hq_dmz_sw01: "hq-dmz-sw01\nCatalyst 1000" {class: role-l2switch}
@@ -42,6 +43,7 @@ s_hq: "本社" {
 
 s_osk: "大阪支店" {
   class: group-site
+  label.near: outside-top-left
   n_osk_rt01: "osk-rt01\nCisco ISR1100" {class: role-router}
   n_osk_sw01: "osk-sw01\nCatalyst 1000" {class: role-l2switch}
 }
@@ -49,26 +51,26 @@ s_osk: "大阪支店" {
 n_ipvpn: "　NTT Com IP-VPN網　" {class: node-cloud}
 n_internet: "　インターネット　" {class: node-cloud}
 
-n_ipvpn -- s_hq.n_hq_rt01: "NTT Com IP-VPN 100M" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
-n_internet -- s_hq.n_hq_rt02: "NTT東 フレッツ光 1G" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
-n_ipvpn -- s_osk.n_osk_rt01: "NTT Com IP-VPN 50M" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
-s_hq.n_hq_rt01 -- s_hq.n_hq_fw01: "Gi0/0/1 - eth1/1" {class: edge-lan-cable}
-s_hq.n_hq_rt02 -- s_hq.n_hq_fw02: "Gi0/0/1 - eth1/1" {class: edge-lan-cable}
-s_hq.n_hq_fw01 -- s_hq.n_hq_core01: "eth1/2 - Te1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_fw02 -- s_hq.n_hq_core02: "eth1/2 - Te1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_core01 -- s_hq.n_hq_core02: "Te1/0/2 - Te1/0/2" {class: edge-lan-cable}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist01: "Te1/0/3 - Te1/1/1" {class: edge-lan-cable}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist01: "Te1/0/3 - Te1/1/2" {class: edge-lan-cable}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist02: "Te1/0/4 - Te1/1/1" {class: edge-lan-cable}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist02: "Te1/0/4 - Te1/1/2" {class: edge-lan-cable}
-s_hq.n_hq_dist01 -- s_hq.n_hq_acc_1f01: "Gi1/0/1 - Gi1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_dist01 -- s_hq.n_hq_acc_1f02: "Gi1/0/2 - Gi1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_dist02 -- s_hq.n_hq_acc_2f01: "Gi1/0/1 - Gi1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_dist02 -- s_hq.n_hq_acc_2f02: "Gi1/0/2 - Gi1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_core01 -- s_hq.n_hq_srv_sw01: "Te1/0/5 - Te1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_core02 -- s_hq.n_hq_srv_sw01: "Te1/0/5 - Te1/0/2" {class: edge-lan-cable}
-s_hq.n_hq_srv_sw01 -- s_hq.n_hq_srv01: "Gi1/0/1 - eno1" {class: edge-lan-cable}
-s_hq.n_hq_srv_sw01 -- s_hq.n_hq_srv02: "Gi1/0/2 - eno1" {class: edge-lan-cable}
-s_hq.n_hq_fw01 -- s_hq.n_hq_dmz_sw01: "eth1/3 - Gi1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_dmz_sw01 -- s_hq.n_hq_dmz_srv01: "Gi1/0/2 - eno1" {class: edge-lan-cable}
-s_osk.n_osk_rt01 -- s_osk.n_osk_sw01: "Gi0/1/0 - Gi1/0/1" {class: edge-lan-cable}
+n_ipvpn -- s_hq.n_hq_rt01: "NTT Com IP-VPN 100M\n(Gi0/0/0)" {class: edge-wan-circuit}
+n_internet -- s_hq.n_hq_rt02: "NTT東 フレッツ光 1G\n(Gi0/0/0)" {class: edge-wan-circuit}
+n_ipvpn -- s_osk.n_osk_rt01: "NTT Com IP-VPN 50M\n(Gi0/0/0)" {class: edge-wan-circuit}
+s_hq.n_hq_rt01 -- s_hq.n_hq_fw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "eth1/1"}
+s_hq.n_hq_rt02 -- s_hq.n_hq_fw02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "eth1/1"}
+s_hq.n_hq_fw01 -- s_hq.n_hq_core01 {class: edge-lan-cable; source-arrowhead.label: "eth1/2"; target-arrowhead.label: "Te1/0/1"}
+s_hq.n_hq_fw02 -- s_hq.n_hq_core02 {class: edge-lan-cable; source-arrowhead.label: "eth1/2"; target-arrowhead.label: "Te1/0/1"}
+s_hq.n_hq_core01 -- s_hq.n_hq_core02 {class: edge-lan-cable; source-arrowhead.label: "Te1/0/2"; target-arrowhead.label: "Te1/0/2"}
+s_hq.n_hq_core01 -- s_hq.n_hq_dist01 {class: edge-lan-cable; source-arrowhead.label: "Te1/0/3"; target-arrowhead.label: "Te1/1/1"}
+s_hq.n_hq_core02 -- s_hq.n_hq_dist01 {class: edge-lan-cable; source-arrowhead.label: "Te1/0/3"; target-arrowhead.label: "Te1/1/2"}
+s_hq.n_hq_core01 -- s_hq.n_hq_dist02 {class: edge-lan-cable; source-arrowhead.label: "Te1/0/4"; target-arrowhead.label: "Te1/1/1"}
+s_hq.n_hq_core02 -- s_hq.n_hq_dist02 {class: edge-lan-cable; source-arrowhead.label: "Te1/0/4"; target-arrowhead.label: "Te1/1/2"}
+s_hq.n_hq_dist01 -- s_hq.n_hq_acc_1f01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/1"; target-arrowhead.label: "Gi1/0/1"}
+s_hq.n_hq_dist01 -- s_hq.n_hq_acc_1f02 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/2"; target-arrowhead.label: "Gi1/0/1"}
+s_hq.n_hq_dist02 -- s_hq.n_hq_acc_2f01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/1"; target-arrowhead.label: "Gi1/0/1"}
+s_hq.n_hq_dist02 -- s_hq.n_hq_acc_2f02 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/2"; target-arrowhead.label: "Gi1/0/1"}
+s_hq.n_hq_core01 -- s_hq.n_hq_srv_sw01 {class: edge-lan-cable; source-arrowhead.label: "Te1/0/5"; target-arrowhead.label: "Te1/0/1"}
+s_hq.n_hq_core02 -- s_hq.n_hq_srv_sw01 {class: edge-lan-cable; source-arrowhead.label: "Te1/0/5"; target-arrowhead.label: "Te1/0/2"}
+s_hq.n_hq_srv_sw01 -- s_hq.n_hq_srv01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/1"; target-arrowhead.label: "eno1"}
+s_hq.n_hq_srv_sw01 -- s_hq.n_hq_srv02 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/2"; target-arrowhead.label: "eno1"}
+s_hq.n_hq_fw01 -- s_hq.n_hq_dmz_sw01 {class: edge-lan-cable; source-arrowhead.label: "eth1/3"; target-arrowhead.label: "Gi1/0/1"}
+s_hq.n_hq_dmz_sw01 -- s_hq.n_hq_dmz_srv01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/2"; target-arrowhead.label: "eno1"}
+s_osk.n_osk_rt01 -- s_osk.n_osk_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1/0"; target-arrowhead.label: "Gi1/0/1"}

@@ -21,6 +21,7 @@ classes: {
 
 s_hq: "本社" {
   class: group-site
+  label.near: outside-top-left
   n_hq_rt02: "hq-rt02\nCisco ISR4331" {class: role-router}
   n_hq_rt01: "hq-rt01\nCisco ISR4331" {class: role-router}
   n_hq_sw01: "hq-sw01\nCisco Catalyst 9300" {class: role-l3switch}
@@ -28,12 +29,14 @@ s_hq: "本社" {
 
 s_osk: "大阪支店" {
   class: group-site
+  label.near: outside-top-left
   n_osk_rt01: "osk-rt01\nCisco ISR1100" {class: role-router}
   n_osk_sw01: "osk-sw01\nCisco Catalyst 1000" {class: role-l2switch}
 }
 
 s_ngy: "名古屋営業所" {
   class: group-site
+  label.near: outside-top-left
   n_ngy_rt01: "ngy-rt01\nCisco ISR1100" {class: role-router}
   n_ngy_sw01: "ngy-sw01\nCisco Catalyst 1000" {class: role-l2switch}
 }

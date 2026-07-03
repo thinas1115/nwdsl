@@ -21,15 +21,16 @@ classes: {
 
 s_hq: "本社" {
   class: group-site
+  label.near: outside-top-left
   n_hq_rt01: "hq-rt01\nCisco ISR4331" {class: role-router}
-  n_hq_sw01: "hq-sw01\nCisco Catalyst 9300" {class: role-l3switch}
+  n_hq_sw01: "hq-sw01\nCisco Catalyst 9300" {class: role-l3switch; width: 180}
   n_hq_rt02: "hq-rt02\nCisco ISR4331" {class: role-router}
 }
 
 n_ipvpn: "　NTT Com IP-VPN網　" {class: node-cloud}
 n_internet: "　インターネット　" {class: node-cloud}
 
-s_hq.n_hq_rt01 -- s_hq.n_hq_sw01: "Gi0/0/1 - Gi1/0/1" {class: edge-lan-cable}
-s_hq.n_hq_rt02 -- s_hq.n_hq_sw01: "Gi0/0/1 - Gi1/0/2" {class: edge-lan-cable}
-n_ipvpn -- s_hq.n_hq_rt01: "NTTコミュニケーションズ IP-VPN 100M" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
-n_internet -- s_hq.n_hq_rt02: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit; target-arrowhead.label: "Gi0/0/0"}
+s_hq.n_hq_rt01 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/1"}
+s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"}
+n_ipvpn -- s_hq.n_hq_rt01: "NTTコミュニケーションズ IP-VPN 100M\n(Gi0/0/0)" {class: edge-wan-circuit}
+n_internet -- s_hq.n_hq_rt02: "NTT東日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/0)" {class: edge-wan-circuit}

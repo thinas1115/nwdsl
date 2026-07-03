@@ -63,11 +63,16 @@ def _device_label(doc: Document, device_id: str) -> str:
 
 def _edge_label(doc: Document, link, ifnames: dict[str, Optional[str]]) -> Optional[str]:
     if link.type == "lan-cable":
-        names = [n for n in ifnames.values() if n]
-        return " - ".join(names) if names else link.description
+        # IF名は両端の機器側小ラベルに置くため中央ラベルは説明のみ
+        return link.description
     if link.type == "wan-circuit":
         circuit = next((c for c in doc.circuits if c.id == link.circuit), None)
-        return _circuit_label(circuit) if circuit else (link.circuit or "")
+        label = _circuit_label(circuit) if circuit else (link.circuit or "")
+        dev_if = [n for n in ifnames.values() if n]
+        if dev_if:
+            # 縦レイアウトではWAN線同士が空間的に分離するため2行目にIFを添えられる
+            label += f"\n({' - '.join(dev_if)})"
+        return label
     # tunnel / logical
     return link.description or link.type
 
@@ -160,8 +165,9 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                     add_node(RenderNode(id=node_id, label=cloud.name, kind="cloud", role=cloud.kind))
             edge = RenderEdge(ep_nodes[0], ep_nodes[1], link.type,
                               _edge_label(doc, link, ifnames), circuit=link.circuit)
-            if link.type == "wan-circuit":
-                # IF名は中央ラベルに混ぜず機器側端点の小ラベルにする (ラベル重なり対策)
+            if link.type == "lan-cable":
+                # IF名は各機器の接続点そばに分散配置する (平行エッジの中央ラベル同士の
+                # 衝突、および1機器に複数WANが刺さる場合の端点ラベル密着を実測して選択)
                 edge.src_label = ifnames.get(ep_nodes[0])
                 edge.dst_label = ifnames.get(ep_nodes[1])
             graph.edges.append(edge)
