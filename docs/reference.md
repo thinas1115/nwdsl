@@ -115,6 +115,27 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 | `ipv4` | string | - | ネットワークアドレス (例: `10.1.10.0/24`。ホストビットが立っていると構文エラー) |
 | `description` | string | - | 補足 |
 
+## paths (通信経路)
+
+正常時/障害時のトラフィックの通り道。作成者が明示し、隣接ホップ間に実在の link があることをバリデータが保証する(設計根拠は [ADR-0006](adr/0006-path-visualization.md))。
+
+| フィールド | 型 | 必須 | 説明 |
+|---|---|---|---|
+| `id` | string | ✓ | 経路ID (一意) |
+| `title` | string | - | 経路の表示名 |
+| `hops` | list | ✓ | 始点→終点の順序付きホップ列 (2件以上) |
+| `failure` | list | - | この経路が前提とする障害コンポーネント (device/cloud/circuit のID)。図で赤✕表示 |
+| `fallback_of` | string | - | 正常時経路のID。指定すると当該経路が灰破線で併記される |
+| `description` | string | - | 補足 |
+
+### paths[].hops
+
+| フィールド | 型 | 必須 | 説明 |
+|---|---|---|---|
+| `node` | string | ✓ | ホップのノードID (device または cloud) |
+| `protocol` | string | - | このホップへの到達を決めるプロトコル (例: HSRP, BGP)。線ラベルに表示 |
+| `note` | string | - | 経路選択の理由 (例: standbyがactive昇格)。線ラベルに表示 |
+
 ## views (描き分け定義)
 
 ビューは「事実」ではなく「見せ方」の宣言。座標・色は書けない(描画スタイルは role / type から機械的に決まる)。
@@ -123,6 +144,8 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 |---|---|---|---|
 | `id` | string | ✓ | ビューID (= 出力ファイル名) |
 | `title` | string | ✓ | 図のタイトル |
+| `type` | enum | - | `topology` (default) / `path` (経路ハイライト図) |
+| `path` | string | - | `type: path` のとき対象の経路ID (必須)。経路・障害に関係する拠点だけが描かれ、経路が赤太線+ホップ番号+プロトコル注記で強調される |
 | `layers` | list | - | 含める接続種別 (省略時は全種別) |
 | `include_sites` | list | - | この拠点だけ描く。範囲外の対向機器は「機器ID (拠点名)」の破線ノードで境界表示 |
 | `exclude_sites` | list | - | 除外する拠点 |
@@ -146,6 +169,9 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 | `link.wan-endpoint` / `link.wan-same-site` | error | wan-circuit の端点制約違反 |
 | `link.overlay-endpoint` | error | logical/tunnel の端点に cloud |
 | `link.port-reuse` | error | 同一物理ポートを複数の物理linkが使用 |
+| `ref.path-node` / `ref.path-failure` / `ref.path-fallback` | error | 経路の参照先が存在しない |
+| `path.hop-not-adjacent` / `path.hop-duplicate` | error | 隣接ホップを結ぶ link が無い / 連続ホップが同一 |
+| `view.path-required` / `view.path-forbidden` / `ref.view-path` | error | view の type と path 指定の不整合 |
 | `circuit.multi-use` | error | 1つの回線契約を複数linkが参照 (1契約=1結線) |
 | `circuit.unused` | warning | active な回線がどのlinkからも未参照 |
 | `circuit.decommissioned` | warning | 廃止済み回線を参照 |

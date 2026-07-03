@@ -15,6 +15,8 @@
 | 機器間の「線」には複数の意味がある | `links[].type` で4種を区別: `lan-cable`(構内配線)/ `wan-circuit`(キャリア回線)/ `logical`(論理隣接)/ `tunnel`(オーバーレイ) |
 | 回線契約の管理情報が図に埋もれる | NetBox の思想に倣い `circuits`(契約: 事業者・回線番号・帯域・状態)を結線から分離 |
 | 図と表の不整合 | 表の「接続先」「回線収容先」も links から導出。手書き二重管理が発生しない |
+| 図の配置が意味と一致しない | クラウド起点BFSでエッジを向き付けし「WANが上・LANが下」を構造的に保証([ADR-0005](docs/adr/0005-layout-bfs-orientation.md))。複雑な多段LANでもスケール |
+| 正常時/障害時の通信経路を示せない | `paths` にホップ列+プロトコル注記を明示し、経路図(赤太線+ホップ番号、障害✕、迂回表示)を生成([ADR-0006](docs/adr/0006-path-visualization.md)) |
 
 ## サンプル出力
 
@@ -27,6 +29,10 @@
 | 全社論理構成図 | 本社詳細図 (`include_sites`) |
 |---|---|
 | ![論理構成図](examples/sample-corp/generated/logical-all.svg) | ![本社詳細図](examples/sample-corp/generated/hq-physical.svg) |
+
+| 通信経路図 正常時 (`type: path`) | 通信経路図 IP-VPN障害時 (`failure` + `fallback_of`) |
+|---|---|
+| ![正常時経路](examples/sample-corp/generated/path-normal.svg) | ![障害時経路](examples/sample-corp/generated/path-ipvpn-fail.svg) |
 
 生成された表: [examples/sample-corp/generated/tables.md](examples/sample-corp/generated/tables.md)
 
