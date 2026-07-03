@@ -1,0 +1,229 @@
+# sample-corp: 3拠点 + IP-VPN + インターネットVPNバックアップの構成例
+nwdsl: "0.1"
+
+network:
+  name: sample-corp
+  description: サンプル株式会社 全社ネットワーク
+
+sites:
+  - id: hq
+    name: 本社
+    location: 東京都千代田区
+  - id: osk
+    name: 大阪支店
+    location: 大阪府大阪市
+  - id: ngy
+    name: 名古屋営業所
+    location: 愛知県名古屋市
+
+devices:
+  # ---- 本社 ----
+  - id: hq-rt01
+    site: hq
+    role: router
+    platform: Cisco ISR4331
+    redundancy_group: hq-wan-rt
+    interfaces:
+      - name: Gi0/0/0
+        description: IP-VPNアクセス回線
+        ipv4: 172.16.255.1/30
+      - name: Gi0/0/1
+        description: コアSWへ (HSRP VIP 10.1.0.1)
+        ipv4: 10.1.0.2/24
+  - id: hq-rt02
+    site: hq
+    role: router
+    platform: Cisco ISR4331
+    redundancy_group: hq-wan-rt
+    interfaces:
+      - name: Gi0/0/0
+        description: インターネット回線 (IPsec用)
+        ipv4: 203.0.113.10/29
+      - name: Gi0/0/1
+        description: コアSWへ (HSRP VIP 10.1.0.1)
+        ipv4: 10.1.0.3/24
+      - name: Tunnel0
+        description: 大阪向けIPsecトンネル
+        ipv4: 172.31.0.1/30
+  - id: hq-sw01
+    site: hq
+    role: l3switch
+    platform: Cisco Catalyst 9300
+    interfaces:
+      - name: Gi1/0/1
+        description: hq-rt01へ
+      - name: Gi1/0/2
+        description: hq-rt02へ
+      - name: Vlan10
+        description: サーバセグメントGW
+        ipv4: 10.1.10.1/24
+        segment: hq-server
+      - name: Vlan20
+        description: クライアントセグメントGW
+        ipv4: 10.1.20.1/24
+        segment: hq-client
+
+  # ---- 大阪支店 ----
+  - id: osk-rt01
+    site: osk
+    role: router
+    platform: Cisco ISR1100
+    interfaces:
+      - name: Gi0/0/0
+        description: IP-VPNアクセス回線
+        ipv4: 172.16.255.5/30
+      - name: Gi0/0/1
+        description: インターネット回線 (IPsec用)
+        ipv4: 198.51.100.10/30
+      - name: Gi0/1/0
+        description: フロアSWへ
+        ipv4: 10.2.10.1/24
+      - name: Tunnel0
+        description: 本社向けIPsecトンネル
+        ipv4: 172.31.0.2/30
+  - id: osk-sw01
+    site: osk
+    role: l2switch
+    platform: Cisco Catalyst 1000
+    interfaces:
+      - name: Gi1/0/1
+        description: osk-rt01へ
+
+  # ---- 名古屋営業所 ----
+  - id: ngy-rt01
+    site: ngy
+    role: router
+    platform: Cisco ISR1100
+    interfaces:
+      - name: Gi0/0/0
+        description: IP-VPNアクセス回線
+        ipv4: 172.16.255.9/30
+      - name: Gi0/1/0
+        description: フロアSWへ
+        ipv4: 10.3.10.1/24
+  - id: ngy-sw01
+    site: ngy
+    role: l2switch
+    platform: Cisco Catalyst 1000
+    interfaces:
+      - name: Gi1/0/1
+        description: ngy-rt01へ
+
+clouds:
+  - id: ipvpn
+    name: NTT Com IP-VPN網
+    kind: wan
+  - id: internet
+    name: インターネット
+    kind: internet
+
+circuits:
+  - id: cct-ipvpn-hq
+    provider: NTTコミュニケーションズ
+    service: IP-VPN
+    circuit_id: N-100001
+    bandwidth: 100M
+    status: active
+  - id: cct-ipvpn-osk
+    provider: NTTコミュニケーションズ
+    service: IP-VPN
+    circuit_id: N-100002
+    bandwidth: 50M
+    status: active
+  - id: cct-ipvpn-ngy
+    provider: NTTコミュニケーションズ
+    service: IP-VPN
+    circuit_id: N-100003
+    bandwidth: 50M
+    status: active
+  - id: cct-inet-hq
+    provider: NTT東日本
+    service: フレッツ光ネクスト + OCN
+    circuit_id: CAF-200001
+    bandwidth: 1G
+    status: active
+  - id: cct-inet-osk
+    provider: NTT西日本
+    service: フレッツ光ネクスト + OCN
+    circuit_id: CAF-200002
+    bandwidth: 1G
+    status: active
+
+links:
+  # ---- 構内LAN配線 ----
+  - type: lan-cable
+    endpoints: ["hq-rt01:Gi0/0/1", "hq-sw01:Gi1/0/1"]
+  - type: lan-cable
+    endpoints: ["hq-rt02:Gi0/0/1", "hq-sw01:Gi1/0/2"]
+  - type: lan-cable
+    endpoints: ["osk-rt01:Gi0/1/0", "osk-sw01:Gi1/0/1"]
+  - type: lan-cable
+    endpoints: ["ngy-rt01:Gi0/1/0", "ngy-sw01:Gi1/0/1"]
+
+  # ---- WANアクセス回線 ----
+  - type: wan-circuit
+    endpoints: ["hq-rt01:Gi0/0/0", "ipvpn"]
+    circuit: cct-ipvpn-hq
+  - type: wan-circuit
+    endpoints: ["osk-rt01:Gi0/0/0", "ipvpn"]
+    circuit: cct-ipvpn-osk
+  - type: wan-circuit
+    endpoints: ["ngy-rt01:Gi0/0/0", "ipvpn"]
+    circuit: cct-ipvpn-ngy
+  - type: wan-circuit
+    endpoints: ["hq-rt02:Gi0/0/0", "internet"]
+    circuit: cct-inet-hq
+  - type: wan-circuit
+    endpoints: ["osk-rt01:Gi0/0/1", "internet"]
+    circuit: cct-inet-osk
+
+  # ---- オーバーレイ ----
+  - type: tunnel
+    endpoints: ["hq-rt02:Tunnel0", "osk-rt01:Tunnel0"]
+    description: IPsec バックアップVPN
+
+  # ---- 論理隣接 (IP-VPN上のBGPピア) ----
+  - type: logical
+    endpoints: ["hq-rt01", "osk-rt01"]
+    description: BGP (IP-VPN網内)
+  - type: logical
+    endpoints: ["hq-rt01", "ngy-rt01"]
+    description: BGP (IP-VPN網内)
+
+segments:
+  - id: hq-server
+    site: hq
+    vlan: 10
+    ipv4: 10.1.10.0/24
+    name: 本社サーバ
+  - id: hq-client
+    site: hq
+    vlan: 20
+    ipv4: 10.1.20.0/24
+    name: 本社クライアント
+  - id: osk-lan
+    site: osk
+    vlan: 1
+    ipv4: 10.2.10.0/24
+    name: 大阪LAN
+  - id: ngy-lan
+    site: ngy
+    vlan: 1
+    ipv4: 10.3.10.0/24
+    name: 名古屋LAN
+
+views:
+  - id: physical-all
+    title: 全社物理構成図
+    layers: [lan-cable, wan-circuit]
+  - id: wan-overview
+    title: 全社WAN概要図
+    layers: [wan-circuit, tunnel]
+    collapse_sites: true
+  - id: logical-all
+    title: 全社論理構成図
+    layers: [logical, tunnel]
+  - id: hq-physical
+    title: 本社 物理構成図
+    layers: [lan-cable, wan-circuit]
+    include_sites: [hq]
