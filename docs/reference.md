@@ -152,12 +152,19 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 
 ## CLI
 
+コピペで動く実行例(リポジトリ直下、`pip install -e .` 済みの前提。自分のファイルに使うときはパスを差し替える):
+
+```powershell
+nwdsl validate examples\sample-corp\network.yaml            # 整合性検査
+nwdsl validate examples\sample-corp\network.yaml --strict   # 警告もエラー扱い
+nwdsl render   examples\sample-corp\network.yaml -o diagrams                # 全ビュー出力
+nwdsl render   examples\sample-corp\network.yaml -o diagrams --view wan-overview --format d2
+nwdsl tables   examples\sample-corp\network.yaml -o diagrams\tables.md      # 6表すべて
+nwdsl tables   examples\sample-corp\network.yaml --section circuits         # 回線一覧のみ標準出力
+nwdsl schema   -o nwdsl.schema.json
 ```
-nwdsl validate <file> [--strict]
-nwdsl render   <file> [-o DIR] [--view ID]... [--format d2|mermaid|all]
-nwdsl tables   <file> [-o FILE] [--section sites|devices|interfaces|circuits|links|segments]...
-nwdsl schema   [-o FILE]
-```
+
+`--view` / `--section` は複数回指定できる。`--format` は `d2` / `mermaid` / `all`(既定)。
 
 D2 出力の描画: `d2 --layout=elk <view>.d2 <view>.svg`(ELKレイアウト推奨)。
 PNG が必要なら Windows では Edge のヘッドレスで変換できる:
