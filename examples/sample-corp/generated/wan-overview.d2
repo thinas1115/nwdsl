@@ -13,6 +13,7 @@ classes: {
   node-site: {style.fill: "#fff8e1"; style.stroke: "#b58105"; style.font-color: "#4a3a08"}
   node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
   group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
   edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
   edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
   edge-tunnel: {style.stroke: "#7b1fa2"; style.stroke-width: 2; style.stroke-dash: 5}
@@ -25,9 +26,19 @@ n_site__osk: "大阪支店" {class: node-site}
 n_site__ngy: "名古屋営業所" {class: node-site}
 n_cloud__internet: "　インターネット　" {class: node-cloud}
 
-n_cloud__ipvpn -- n_site__hq: "NTTコミュニケーションズ IP-VPN 100M" {class: edge-wan-circuit}
-n_cloud__ipvpn -- n_site__osk: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit}
-n_cloud__ipvpn -- n_site__ngy: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-wan-circuit}
-n_cloud__internet -- n_site__hq: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit}
-n_cloud__internet -- n_site__osk: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-wan-circuit}
+lbl_0: "NTTコミュニケーションズ IP-VPN 100M" {class: edge-label}
+n_cloud__ipvpn -- lbl_0 {class: edge-wan-circuit}
+lbl_0 -- n_site__hq {class: edge-wan-circuit}
+lbl_1: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-label}
+n_cloud__ipvpn -- lbl_1 {class: edge-wan-circuit}
+lbl_1 -- n_site__osk {class: edge-wan-circuit}
+lbl_2: "NTTコミュニケーションズ IP-VPN 50M" {class: edge-label}
+n_cloud__ipvpn -- lbl_2 {class: edge-wan-circuit}
+lbl_2 -- n_site__ngy {class: edge-wan-circuit}
+lbl_3: "NTT東日本 フレッツ光ネクスト + OCN 1G" {class: edge-label}
+n_cloud__internet -- lbl_3 {class: edge-wan-circuit}
+lbl_3 -- n_site__hq {class: edge-wan-circuit}
+lbl_4: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-label}
+n_cloud__internet -- lbl_4 {class: edge-wan-circuit}
+lbl_4 -- n_site__osk {class: edge-wan-circuit}
 n_site__hq -- n_site__osk: "IPsec バックアップVPN" {class: edge-tunnel}

@@ -21,6 +21,7 @@ classes: {
   node-site: {style.fill: "#fff8e1"; style.stroke: "#b58105"; style.font-color: "#4a3a08"}
   node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
   group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
   edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
   edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
   edge-tunnel: {style.stroke: "#7b1fa2"; style.stroke-width: 2; style.stroke-dash: 5}
@@ -147,18 +148,39 @@ def render_d2(graph: RenderGraph) -> str:
     if ungrouped:
         lines.append("")
 
-    for edge in graph.edges:
+    for i, edge in enumerate(graph.edges):
         src = node_path.get(edge.src)
         dst = node_path.get(edge.dst)
         if src is None or dst is None:
             continue
-        label = f': "{_label(edge.label)}"' if edge.label else ""
         attrs = [f"class: edge-{edge.type}"]
         if edge.src_label:
             attrs.append(f'source-arrowhead.label: "{_label(edge.src_label)}"')
         if edge.dst_label:
             attrs.append(f'target-arrowhead.label: "{_label(edge.dst_label)}"')
         attrs.extend(_EDGE_EMPHASIS_STYLES.get(edge.emphasis, []))
+
+        if edge.type == "wan-circuit" and edge.label:
+            # 回線ラベルはエッジ中央ラベルではなく透明枠ノードとして実体化する。
+            # ELK はエッジラベルの領域を予約しないため隣接エッジのラベル同士が
+            # 衝突しうるが、ノードにすればノード間隔が保証される (ADR-0005 補遺)
+            lkey = f"lbl_{i}"
+            lbl_attrs = ["class: edge-label"]
+            if edge.emphasis == "dim":
+                lbl_attrs.append("style.opacity: 0.15")
+            elif edge.emphasis in ("disabled", "failed"):
+                lbl_attrs.append("style.opacity: 0.5")
+            elif edge.emphasis == "path":
+                lbl_attrs.append('style.font-color: "#c5221f"')
+                lbl_attrs.append("style.bold: true")
+            lines.append(f'{lkey}: "{_label(edge.label)}" {{{"; ".join(lbl_attrs)}}}')
+            tail = "->" if edge.directed else "--"
+            joined = "; ".join(attrs)
+            lines.append(f"{src} -- {lkey} {{{joined}}}")
+            lines.append(f"{lkey} {tail} {dst} {{{joined}}}")
+            continue
+
+        label = f': "{_label(edge.label)}"' if edge.label else ""
         connector = "->" if edge.directed else "--"
         lines.append(f"{src} {connector} {dst}{label} {{{'; '.join(attrs)}}}")
 

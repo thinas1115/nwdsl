@@ -1,5 +1,5 @@
 title: |md
-  # 全社論理構成図
+  # 全社WAN概要図
 | {near: top-center}
 direction: down
 
@@ -20,28 +20,26 @@ classes: {
   edge-logical: {style.stroke: "#188038"; style.stroke-width: 2; style.stroke-dash: 3}
 }
 
-s_hq: "本社" {
-  class: group-site
-  label.near: outside-top-left
-  n_hq_rt02: "hq-rt02\nCisco ISR4331" {class: role-router}
-  n_hq_rt01: "hq-rt01\nCisco ISR4331" {class: role-router}
-  n_hq_sw01: "hq-sw01\nCisco Catalyst 9300" {class: role-l3switch}
-}
+n_site__hq: "本社" {class: node-site}
+n_cloud__ipvpn: "　IP-VPN網　" {class: node-cloud}
+n_site__osk: "大阪支社" {class: node-site}
+n_site__ngy: "名古屋営業所" {class: node-site}
+n_cloud__internet: "　インターネット　" {class: node-cloud}
 
-s_osk: "大阪支店" {
-  class: group-site
-  label.near: outside-top-left
-  n_osk_rt01: "osk-rt01\nCisco ISR1100" {class: role-router}
-  n_osk_sw01: "osk-sw01\nCisco Catalyst 1000" {class: role-l2switch}
-}
-
-s_ngy: "名古屋営業所" {
-  class: group-site
-  label.near: outside-top-left
-  n_ngy_rt01: "ngy-rt01\nCisco ISR1100" {class: role-router}
-  n_ngy_sw01: "ngy-sw01\nCisco Catalyst 1000" {class: role-l2switch}
-}
-
-s_hq.n_hq_rt02 -- s_osk.n_osk_rt01: "IPsec バックアップVPN" {class: edge-tunnel}
-s_hq.n_hq_rt01 -- s_osk.n_osk_rt01: "BGP (IP-VPN網内)" {class: edge-logical}
-s_hq.n_hq_rt01 -- s_ngy.n_ngy_rt01: "BGP (IP-VPN網内)" {class: edge-logical}
+lbl_0: "NTT Com IP-VPN 1G" {class: edge-label}
+n_cloud__ipvpn -- lbl_0 {class: edge-wan-circuit}
+lbl_0 -- n_site__hq {class: edge-wan-circuit}
+lbl_1: "NTT Com IP-VPN 200M" {class: edge-label}
+n_cloud__ipvpn -- lbl_1 {class: edge-wan-circuit}
+lbl_1 -- n_site__osk {class: edge-wan-circuit}
+lbl_2: "NTT Com IP-VPN 100M" {class: edge-label}
+n_cloud__ipvpn -- lbl_2 {class: edge-wan-circuit}
+lbl_2 -- n_site__ngy {class: edge-wan-circuit}
+lbl_3: "NTT東 フレッツ光 + OCN 1G" {class: edge-label}
+n_cloud__internet -- lbl_3 {class: edge-wan-circuit}
+lbl_3 -- n_site__hq {class: edge-wan-circuit}
+lbl_4: "NTT西 フレッツ光 + OCN 1G" {class: edge-label}
+n_cloud__internet -- lbl_4 {class: edge-wan-circuit}
+lbl_4 -- n_site__osk {class: edge-wan-circuit}
+n_site__hq -- n_site__osk: "BGP" {class: edge-logical}
+n_site__hq -- n_site__ngy: "BGP" {class: edge-logical}

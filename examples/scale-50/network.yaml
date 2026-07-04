@@ -1,0 +1,684 @@
+# このファイルは generate.py により生成 (手編集しない)
+nwdsl: '0.1'
+network:
+  name: scale-50
+  description: 3拠点・50台の描画スケール検証
+sites:
+- id: hq
+  name: 本社
+  location: 東京
+- id: osk
+  name: 大阪支社
+  location: 大阪
+- id: ngy
+  name: 名古屋営業所
+  location: 名古屋
+devices:
+- id: hq-rt01
+  site: hq
+  role: router
+  platform: Cisco ISR4451
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: WANアクセス回線
+  redundancy_group: hq-wan
+- id: hq-fw01
+  site: hq
+  role: firewall
+  platform: PA-3410
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  redundancy_group: hq-fw
+- id: hq-core01
+  site: hq
+  role: l3switch
+  platform: Catalyst 9500
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+  - name: Gi0/5
+  - name: Gi0/6
+  - name: Gi0/7
+  redundancy_group: hq-core
+- id: hq-srvsw01
+  site: hq
+  role: l2switch
+  platform: Catalyst 9200
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+- id: hq-rt02
+  site: hq
+  role: router
+  platform: Cisco ISR4451
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: WANアクセス回線
+  redundancy_group: hq-wan
+- id: hq-fw02
+  site: hq
+  role: firewall
+  platform: PA-3410
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  redundancy_group: hq-fw
+- id: hq-core02
+  site: hq
+  role: l3switch
+  platform: Catalyst 9500
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+  - name: Gi0/5
+  - name: Gi0/6
+  - name: Gi0/7
+  redundancy_group: hq-core
+- id: hq-srvsw02
+  site: hq
+  role: l2switch
+  platform: Catalyst 9200
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+- id: hq-dist01
+  site: hq
+  role: l3switch
+  platform: Catalyst 9300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+  - name: Gi0/5
+- id: hq-dist02
+  site: hq
+  role: l3switch
+  platform: Catalyst 9300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+  - name: Gi0/5
+- id: hq-dist03
+  site: hq
+  role: l3switch
+  platform: Catalyst 9300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+  - name: Gi0/5
+- id: hq-dist04
+  site: hq
+  role: l3switch
+  platform: Catalyst 9300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+- id: hq-acc01
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc02
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc03
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc04
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc05
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc06
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc07
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc08
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc09
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-acc10
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: hq-srv01
+  site: hq
+  role: server
+  platform: PowerEdge R660
+  interfaces:
+  - name: Gi0/1
+- id: hq-srv02
+  site: hq
+  role: server
+  platform: PowerEdge R660
+  interfaces:
+  - name: Gi0/1
+- id: hq-srv03
+  site: hq
+  role: server
+  platform: PowerEdge R660
+  interfaces:
+  - name: Gi0/1
+- id: hq-srv04
+  site: hq
+  role: server
+  platform: PowerEdge R660
+  interfaces:
+  - name: Gi0/1
+- id: hq-dmzsw01
+  site: hq
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+- id: hq-dmzsrv01
+  site: hq
+  role: server
+  platform: 公開Web
+  interfaces:
+  - name: Gi0/1
+- id: hq-dmzsrv02
+  site: hq
+  role: server
+  platform: 公開DNS
+  interfaces:
+  - name: Gi0/1
+- id: osk-rt01
+  site: osk
+  role: router
+  platform: Cisco ISR4331
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: WANアクセス回線
+- id: osk-rt02
+  site: osk
+  role: router
+  platform: Cisco ISR4331
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: WANアクセス回線
+- id: osk-core01
+  site: osk
+  role: l3switch
+  platform: Catalyst 9300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+  - name: Gi0/5
+  - name: Gi0/6
+  - name: Gi0/7
+  - name: Gi0/8
+  - name: Gi0/9
+  - name: Gi0/10
+  - name: Gi0/11
+- id: osk-acc01
+  site: osk
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: osk-acc02
+  site: osk
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: osk-acc03
+  site: osk
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: osk-acc04
+  site: osk
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: osk-acc05
+  site: osk
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: osk-acc06
+  site: osk
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: osk-srv01
+  site: osk
+  role: server
+  platform: PowerEdge R450
+  interfaces:
+  - name: Gi0/1
+- id: osk-srv02
+  site: osk
+  role: server
+  platform: PowerEdge R450
+  interfaces:
+  - name: Gi0/1
+- id: osk-srv03
+  site: osk
+  role: server
+  platform: PowerEdge R450
+  interfaces:
+  - name: Gi0/1
+- id: ngy-rt01
+  site: ngy
+  role: router
+  platform: Cisco ISR1100
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: WANアクセス回線
+- id: ngy-sw01
+  site: ngy
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+  - name: Gi0/4
+  - name: Gi0/5
+  - name: Gi0/6
+  - name: Gi0/7
+  - name: Gi0/8
+- id: ngy-acc01
+  site: ngy
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: ngy-acc02
+  site: ngy
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: ngy-acc03
+  site: ngy
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: ngy-acc04
+  site: ngy
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: ngy-acc05
+  site: ngy
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: ngy-srv01
+  site: ngy
+  role: server
+  platform: PowerEdge R450
+  interfaces:
+  - name: Gi0/1
+- id: ngy-srv02
+  site: ngy
+  role: server
+  platform: PowerEdge R450
+  interfaces:
+  - name: Gi0/1
+clouds:
+- id: ipvpn
+  name: IP-VPN網
+  kind: wan
+- id: internet
+  name: インターネット
+  kind: internet
+circuits:
+- id: cct-ipvpn-hq
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-ipvpn-osk
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 200M
+- id: cct-ipvpn-ngy
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-inet-hq
+  provider: NTT東
+  service: フレッツ光 + OCN
+  bandwidth: 1G
+- id: cct-inet-osk
+  provider: NTT西
+  service: フレッツ光 + OCN
+  bandwidth: 1G
+links:
+- type: lan-cable
+  endpoints:
+  - hq-rt01:Gi0/1
+  - hq-fw01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-rt02:Gi0/1
+  - hq-fw02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-fw01:Gi0/2
+  - hq-core01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-fw02:Gi0/2
+  - hq-core02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-core01:Gi0/2
+  - hq-core02:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hq-core01:Gi0/3
+  - hq-dist01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-core02:Gi0/3
+  - hq-dist01:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hq-core01:Gi0/4
+  - hq-dist02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-core02:Gi0/4
+  - hq-dist02:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hq-core01:Gi0/5
+  - hq-dist03:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-core02:Gi0/5
+  - hq-dist03:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hq-core01:Gi0/6
+  - hq-dist04:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-core02:Gi0/6
+  - hq-dist04:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hq-dist01:Gi0/3
+  - hq-acc01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist01:Gi0/4
+  - hq-acc02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist01:Gi0/5
+  - hq-acc03:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist02:Gi0/3
+  - hq-acc04:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist02:Gi0/4
+  - hq-acc05:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist02:Gi0/5
+  - hq-acc06:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist03:Gi0/3
+  - hq-acc07:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist03:Gi0/4
+  - hq-acc08:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist03:Gi0/5
+  - hq-acc09:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dist04:Gi0/3
+  - hq-acc10:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-core01:Gi0/7
+  - hq-srvsw01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-core02:Gi0/7
+  - hq-srvsw02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-srvsw01:Gi0/2
+  - hq-srvsw02:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hq-srvsw01:Gi0/3
+  - hq-srv01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-srvsw01:Gi0/4
+  - hq-srv02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-srvsw02:Gi0/3
+  - hq-srv03:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-srvsw02:Gi0/4
+  - hq-srv04:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-fw01:Gi0/3
+  - hq-dmzsw01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dmzsw01:Gi0/2
+  - hq-dmzsrv01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hq-dmzsw01:Gi0/3
+  - hq-dmzsrv02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-rt01:Gi0/1
+  - osk-core01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-rt02:Gi0/1
+  - osk-core01:Gi0/2
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/3
+  - osk-acc01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/4
+  - osk-acc02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/5
+  - osk-acc03:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/6
+  - osk-acc04:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/7
+  - osk-acc05:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/8
+  - osk-acc06:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/9
+  - osk-srv01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/10
+  - osk-srv02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - osk-core01:Gi0/11
+  - osk-srv03:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-rt01:Gi0/1
+  - ngy-sw01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-sw01:Gi0/2
+  - ngy-acc01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-sw01:Gi0/3
+  - ngy-acc02:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-sw01:Gi0/4
+  - ngy-acc03:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-sw01:Gi0/5
+  - ngy-acc04:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-sw01:Gi0/6
+  - ngy-acc05:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-sw01:Gi0/7
+  - ngy-srv01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - ngy-sw01:Gi0/8
+  - ngy-srv02:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - hq-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-ipvpn-hq
+- type: wan-circuit
+  endpoints:
+  - osk-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-ipvpn-osk
+- type: wan-circuit
+  endpoints:
+  - ngy-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-ipvpn-ngy
+- type: wan-circuit
+  endpoints:
+  - hq-rt02:Gi0/2
+  - internet
+  circuit: cct-inet-hq
+- type: wan-circuit
+  endpoints:
+  - osk-rt02:Gi0/2
+  - internet
+  circuit: cct-inet-osk
+- type: logical
+  endpoints:
+  - hq-rt01
+  - osk-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hq-rt01
+  - ngy-rt01
+  description: BGP
+views:
+- id: physical-all
+  title: 全社物理構成図 (50台)
+  layers:
+  - lan-cable
+  - wan-circuit
+- id: hq-physical
+  title: 本社 物理構成図 (29台)
+  layers:
+  - lan-cable
+  - wan-circuit
+  include_sites:
+  - hq
+- id: osk-physical
+  title: 大阪支社 物理構成図
+  layers:
+  - lan-cable
+  - wan-circuit
+  include_sites:
+  - osk
+- id: wan-overview
+  title: 全社WAN概要図
+  layers:
+  - wan-circuit
+  - logical
+  collapse_sites: true
