@@ -11,7 +11,10 @@ def test_render_minimal_sample_without_d2():
     assert "direction: down" in r["d2"]
     assert r["mermaid"].startswith("flowchart TB")
     assert "## 回線一覧" in r["tables"]
-    assert r["svg"] is None and r["d2_available"] is False
+    # D2バイナリが無くても内蔵SVGエンジンでプレビューが出る (ADR-0008)
+    assert r["d2_available"] is False
+    assert r["engine"] == "svg"
+    assert r["svg"].startswith("<svg")
 
 
 def test_render_yaml_syntax_error():
