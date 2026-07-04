@@ -105,20 +105,44 @@ for n in range(1, 6):
 for n in range(1, 3):
     cable("ngy-sw01", f"ngy-srv0{n}")
 
-# ---- L3: セグメントとGW (論理構成図用) ----
+# ---- L3: セグメント/GW/ルーティング隣接 (論理構成図用) ----
 segments = [
-    {"id": "hq-lan", "site": "hq", "vlan": 100, "ipv4": "10.50.10.0/24", "name": "本社ユーザ"},
+    {"id": "hq-srv", "site": "hq", "vlan": 20, "ipv4": "10.50.20.0/24", "name": "本社サーバ"},
     {"id": "osk-lan", "site": "osk", "vlan": 100, "ipv4": "10.51.10.0/24", "name": "大阪ユーザ"},
     {"id": "ngy-lan", "site": "ngy", "vlan": 100, "ipv4": "10.52.10.0/24", "name": "名古屋ユーザ"},
 ]
-for dev_id, seg_id, gw_ip in (
-        ("hq-core01", "hq-lan", "10.50.10.2/24"),
-        ("hq-core02", "hq-lan", "10.50.10.3/24"),
-        ("osk-core01", "osk-lan", "10.51.10.1/24"),
-        ("ngy-rt01", "ngy-lan", "10.52.10.1/24")):
+for fl in range(1, 5):  # 本社はディストリ単位のフロアセグメント
+    segments.append({"id": f"hq-fl{fl}", "site": "hq", "vlan": 100 + fl,
+                     "ipv4": f"10.50.{10 + fl}.0/24", "name": f"本社{fl}Fユーザ"})
+    rec = next(d for d in devices if d["id"] == f"hq-dist0{fl}")
+    rec["interfaces"].append({"name": f"Vlan{100 + fl}", "description": "フロアGW",
+                              "ipv4": f"10.50.{10 + fl}.1/24", "segment": f"hq-fl{fl}"})
+for dev_id, seg_id, vlan, gw_ip in (
+        ("hq-core01", "hq-srv", 20, "10.50.20.2/24"),
+        ("hq-core02", "hq-srv", 20, "10.50.20.3/24"),
+        ("osk-core01", "osk-lan", 100, "10.51.10.1/24"),
+        ("ngy-rt01", "ngy-lan", 100, "10.52.10.1/24")):
     rec = next(d for d in devices if d["id"] == dev_id)
-    rec["interfaces"].append({"name": "Vlan100", "description": "ユーザセグメントGW",
+    rec["interfaces"].append({"name": f"Vlan{vlan}", "description": "セグメントGW",
                               "ipv4": gw_ip, "segment": seg_id})
+
+
+def ospf(a: str, b: str) -> None:
+    links.append({"type": "logical", "endpoints": [a, b], "description": "OSPF Area0"})
+
+
+# 本社: rt→fw→core→dist のルーティング階層
+ospf("hq-rt01", "hq-fw01")
+ospf("hq-rt02", "hq-fw02")
+ospf("hq-fw01", "hq-core01")
+ospf("hq-fw02", "hq-core02")
+ospf("hq-core01", "hq-core02")
+for n in range(1, 5):
+    ospf("hq-core01", f"hq-dist0{n}")
+    ospf("hq-core02", f"hq-dist0{n}")
+# 大阪: ルーター2台→コア
+ospf("osk-rt01", "osk-core01")
+ospf("osk-rt02", "osk-core01")
 
 # ---- WAN ----
 wan("hq-rt01", "ipvpn", "cct-ipvpn-hq")

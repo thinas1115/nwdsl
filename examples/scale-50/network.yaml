@@ -44,10 +44,10 @@ devices:
   - name: Gi0/5
   - name: Gi0/6
   - name: Gi0/7
-  - name: Vlan100
-    description: ユーザセグメントGW
-    ipv4: 10.50.10.2/24
-    segment: hq-lan
+  - name: Vlan20
+    description: セグメントGW
+    ipv4: 10.50.20.2/24
+    segment: hq-srv
   redundancy_group: hq-core
 - id: hq-srvsw01
   site: hq
@@ -87,10 +87,10 @@ devices:
   - name: Gi0/5
   - name: Gi0/6
   - name: Gi0/7
-  - name: Vlan100
-    description: ユーザセグメントGW
-    ipv4: 10.50.10.3/24
-    segment: hq-lan
+  - name: Vlan20
+    description: セグメントGW
+    ipv4: 10.50.20.3/24
+    segment: hq-srv
   redundancy_group: hq-core
 - id: hq-srvsw02
   site: hq
@@ -111,6 +111,10 @@ devices:
   - name: Gi0/3
   - name: Gi0/4
   - name: Gi0/5
+  - name: Vlan101
+    description: フロアGW
+    ipv4: 10.50.11.1/24
+    segment: hq-fl1
 - id: hq-dist02
   site: hq
   role: l3switch
@@ -121,6 +125,10 @@ devices:
   - name: Gi0/3
   - name: Gi0/4
   - name: Gi0/5
+  - name: Vlan102
+    description: フロアGW
+    ipv4: 10.50.12.1/24
+    segment: hq-fl2
 - id: hq-dist03
   site: hq
   role: l3switch
@@ -131,6 +139,10 @@ devices:
   - name: Gi0/3
   - name: Gi0/4
   - name: Gi0/5
+  - name: Vlan103
+    description: フロアGW
+    ipv4: 10.50.13.1/24
+    segment: hq-fl3
 - id: hq-dist04
   site: hq
   role: l3switch
@@ -139,6 +151,10 @@ devices:
   - name: Gi0/1
   - name: Gi0/2
   - name: Gi0/3
+  - name: Vlan104
+    description: フロアGW
+    ipv4: 10.50.14.1/24
+    segment: hq-fl4
 - id: hq-acc01
   site: hq
   role: l2switch
@@ -276,7 +292,7 @@ devices:
   - name: Gi0/10
   - name: Gi0/11
   - name: Vlan100
-    description: ユーザセグメントGW
+    description: セグメントGW
     ipv4: 10.51.10.1/24
     segment: osk-lan
 - id: osk-acc01
@@ -340,7 +356,7 @@ devices:
   interfaces:
   - name: Gi0/1
   - name: Vlan100
-    description: ユーザセグメントGW
+    description: セグメントGW
     ipv4: 10.52.10.1/24
     segment: ngy-lan
   - name: Gi0/2
@@ -637,6 +653,81 @@ links:
   endpoints:
   - ngy-sw01:Gi0/8
   - ngy-srv02:Gi0/1
+- type: logical
+  endpoints:
+  - hq-rt01
+  - hq-fw01
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-rt02
+  - hq-fw02
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-fw01
+  - hq-core01
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-fw02
+  - hq-core02
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core01
+  - hq-core02
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core01
+  - hq-dist01
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core02
+  - hq-dist01
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core01
+  - hq-dist02
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core02
+  - hq-dist02
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core01
+  - hq-dist03
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core02
+  - hq-dist03
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core01
+  - hq-dist04
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - hq-core02
+  - hq-dist04
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - osk-rt01
+  - osk-core01
+  description: OSPF Area0
+- type: logical
+  endpoints:
+  - osk-rt02
+  - osk-core01
+  description: OSPF Area0
 - type: wan-circuit
   endpoints:
   - hq-rt01:Gi0/2
@@ -673,11 +764,11 @@ links:
   - ngy-rt01
   description: BGP
 segments:
-- id: hq-lan
+- id: hq-srv
   site: hq
-  vlan: 100
-  ipv4: 10.50.10.0/24
-  name: 本社ユーザ
+  vlan: 20
+  ipv4: 10.50.20.0/24
+  name: 本社サーバ
 - id: osk-lan
   site: osk
   vlan: 100
@@ -688,6 +779,26 @@ segments:
   vlan: 100
   ipv4: 10.52.10.0/24
   name: 名古屋ユーザ
+- id: hq-fl1
+  site: hq
+  vlan: 101
+  ipv4: 10.50.11.0/24
+  name: 本社1Fユーザ
+- id: hq-fl2
+  site: hq
+  vlan: 102
+  ipv4: 10.50.12.0/24
+  name: 本社2Fユーザ
+- id: hq-fl3
+  site: hq
+  vlan: 103
+  ipv4: 10.50.13.0/24
+  name: 本社3Fユーザ
+- id: hq-fl4
+  site: hq
+  vlan: 104
+  ipv4: 10.50.14.0/24
+  name: 本社4Fユーザ
 views:
 - id: physical-all
   title: 全社物理構成図 (50台)
