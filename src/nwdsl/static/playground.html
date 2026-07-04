@@ -75,6 +75,11 @@
   #svg-box { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
   .pad { padding: 16px 18px; overflow: auto; flex: 1; min-height: 0; }
   .issues-band { padding: 10px 14px 0; }
+  .actbar { display: flex; gap: 6px; justify-content: flex-end; align-items: center;
+            padding: 6px 12px; border-bottom: 1px solid var(--line); background: #fafbfd; }
+  .act { border: 1px solid var(--line); background: #fff; border-radius: 6px;
+         padding: 3px 12px; font-size: 12px; color: #33445c; cursor: pointer; }
+  .act:hover { border-color: var(--brand); color: var(--brand-dark); }
 
   /* ---- タブ・ステータス ---- */
   .tabs { display: flex; background: #eaeef5; border-radius: 8px; padding: 3px; gap: 2px; }
@@ -259,14 +264,17 @@ function show() {
     out.innerHTML = `<div class="pad">${warn || "<p>エラー</p>"}</div>`;
     return;
   }
+  const bar = (btns) => `<div class="actbar">${btns.map(([act, label]) =>
+    `<button class="act" data-act="${act}">${label}</button>`).join("")}</div>`;
   if (currentTab === "diagram") {
+    const dbar = bar([["copy-svg", "SVGをコピー"], ["dl-svg", ".svg DL"], ["dl-png", ".png DL"]]);
     if ($("engine-select").value === "mermaid") {
-      out.innerHTML = (warn ? `<div class="issues-band">${warn}</div>` : "") +
+      out.innerHTML = dbar + (warn ? `<div class="issues-band">${warn}</div>` : "") +
         `<div id="viewport"><div id="svg-box"></div></div>`;
       wireViewport();
       renderMermaidInto($("svg-box"), last.mermaid || "");
     } else if (last.svg) {
-      out.innerHTML = (warn ? `<div class="issues-band">${warn}</div>` : "") +
+      out.innerHTML = dbar + (warn ? `<div class="issues-band">${warn}</div>` : "") +
         `<div id="viewport"><div id="svg-box">${last.svg}</div></div>`;
       wireViewport();
       fitView();
@@ -274,13 +282,76 @@ function show() {
       out.innerHTML = `<div class="pad">${warn}<p>描画結果がありません</p></div>`;
     }
   } else if (currentTab === "tables") {
-    out.innerHTML = `<div class="pad">${warn}<div class="md-body">${mdToHtml(last.tables || "")}</div></div>`;
+    out.innerHTML = bar([["copy-tables", "Markdownをコピー"], ["dl-tables", ".md DL"]]) +
+      `<div class="pad">${warn}<div class="md-body">${mdToHtml(last.tables || "")}</div></div>`;
   } else if (currentTab === "d2") {
-    out.innerHTML = `<div class="pad"><pre>${esc(last.d2 || "")}</pre></div>`;
+    out.innerHTML = bar([["copy-d2", "コピー"], ["dl-d2", ".d2 DL"]]) +
+      `<div class="pad"><pre>${esc(last.d2 || "")}</pre></div>`;
   } else if (currentTab === "mermaid") {
-    out.innerHTML = `<div class="pad"><pre>${esc(last.mermaid || "")}</pre></div>`;
+    out.innerHTML = bar([["copy-mmd", "コピー"], ["dl-mmd", ".mmd DL"]]) +
+      `<div class="pad"><pre>${esc(last.mermaid || "")}</pre></div>`;
   }
 }
+
+// ---- コピー / ダウンロード ----
+function currentSvgText() {
+  const svg = document.querySelector("#svg-box > svg");
+  return svg ? new XMLSerializer().serializeToString(svg) : "";
+}
+
+function downloadBlob(filename, blob) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+function downloadText(filename, text, mime) {
+  downloadBlob(filename, new Blob([text], { type: mime + ";charset=utf-8" }));
+}
+
+async function downloadPng(filename) {
+  const text = currentSvgText();
+  if (!text) return;
+  const url = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
+  const img = new Image();
+  await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+  const scale = 2;  // 設計書貼り付け用に2倍解像度
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth * scale;
+  canvas.height = img.naturalHeight * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.scale(scale, scale);
+  ctx.drawImage(img, 0, 0);
+  URL.revokeObjectURL(url);
+  canvas.toBlob((b) => downloadBlob(filename, b), "image/png");
+}
+
+$("output").addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn || !last) return;
+  const vid = last.view || "view";
+  const orig = btn.textContent;
+  const flash = (t) => { btn.textContent = t; setTimeout(() => { btn.textContent = orig; }, 1400); };
+  try {
+    switch (btn.dataset.act) {
+      case "copy-svg": await navigator.clipboard.writeText(currentSvgText()); flash("コピーしました ✓"); break;
+      case "dl-svg": downloadText(`${vid}.svg`, currentSvgText(), "image/svg+xml"); break;
+      case "dl-png": await downloadPng(`${vid}.png`); break;
+      case "copy-tables": await navigator.clipboard.writeText(last.tables || ""); flash("コピーしました ✓"); break;
+      case "dl-tables": downloadText("tables.md", last.tables || "", "text/markdown"); break;
+      case "copy-d2": await navigator.clipboard.writeText(last.d2 || ""); flash("コピーしました ✓"); break;
+      case "dl-d2": downloadText(`${vid}.d2`, last.d2 || "", "text/plain"); break;
+      case "copy-mmd": await navigator.clipboard.writeText(last.mermaid || ""); flash("コピーしました ✓"); break;
+      case "dl-mmd": downloadText(`${vid}.mmd`, last.mermaid || "", "text/plain"); break;
+    }
+  } catch (err) {
+    flash("失敗しました");
+  }
+});
 
 // ---- Mermaid クライアント描画 (CDNから遅延ロード) ----
 let mermaidLib = null;

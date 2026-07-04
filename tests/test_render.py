@@ -148,6 +148,21 @@ def test_path_view_overlay(doc):
     assert any(e.emphasis == "failed" and e.circuit == "cct-ipvpn-hq" for e in g.edges)
 
 
+def test_logical_view_shows_l3_info(doc):
+    """logicalレイヤを含むビューではIF IPv4とセグメントノードが自動表示される。"""
+    g = resolve_view(doc, _view(doc, "logical-all"))
+    nodes = {n.id: n for n in g.nodes}
+    assert "Gi0/0/1: 10.1.0.2/24" in nodes["hq-rt01"].label   # IF一覧
+    assert nodes["seg__hq-server"].kind == "segment"          # セグメントノード
+    assert "VLAN 10 / 10.1.10.0/24" in nodes["seg__hq-server"].label
+    # GW機器 (segment参照IFを持つhq-sw01) からセグメントへのエッジ
+    seg_edges = [e for e in g.edges if e.type == "segment"]
+    assert ("hq-sw01", "seg__hq-server") in [(e.src, e.dst) for e in seg_edges]
+    # 物理ビューではL3は出ない (既定)
+    g2 = resolve_view(doc, _view(doc, "physical-all"))
+    assert all(n.kind != "segment" for n in g2.nodes)
+
+
 def test_parallel_lan_cables_bundled():
     """LAG等の平行リンクは1本に束ねて ×N 表示になる。"""
     from nwdsl.model import Document

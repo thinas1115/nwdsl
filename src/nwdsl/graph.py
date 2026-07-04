@@ -178,6 +178,38 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                 add_node(RenderNode(id=dev.id, label=_device_label(doc, dev.id),
                                     kind="device", role=dev.role, site=dev.site))
 
+        # ---- L3情報の表示 (論理ビューでは自動有効、show_l3 で明示制御) ----
+        show_l3 = (view.show_l3 if view.show_l3 is not None
+                   else "logical" in view.layers)
+        if show_l3:
+            for node in nodes.values():
+                if node.kind != "device":
+                    continue
+                dev = device_by_id[node.id]
+                ips = [f"{i.name}: {i.ipv4}" for i in dev.interfaces if i.ipv4]
+                if len(ips) > 5:
+                    ips = ips[:5] + [f"…他{len(ips) - 5}件"]
+                if ips:
+                    node.label += "\n" + "\n".join(ips)
+            for seg in doc.segments:
+                if seg.site not in in_scope:
+                    continue
+                lines = [seg.name or seg.id]
+                detail = " / ".join(x for x in (
+                    f"VLAN {seg.vlan}" if seg.vlan else None, seg.ipv4) if x)
+                if detail:
+                    lines.append(detail)
+                seg_node_id = f"seg__{seg.id}"
+                add_node(RenderNode(id=seg_node_id, label="\n".join(lines),
+                                    kind="segment", site=seg.site))
+                for dev in doc.devices:
+                    if dev.id not in nodes:
+                        continue
+                    for intf in dev.interfaces:
+                        if intf.segment == seg.id:
+                            graph.edges.append(RenderEdge(
+                                dev.id, seg_node_id, "segment", src_label=intf.name))
+
     graph.nodes = list(nodes.values())
     graph.groups = [(sid, site_by_id[sid].name) for sid in used_sites if sid in site_by_id]
     _bundle_parallel_cables(graph)

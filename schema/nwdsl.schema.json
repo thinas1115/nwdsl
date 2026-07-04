@@ -703,6 +703,19 @@
           "title": "Collapse Sites",
           "type": "boolean"
         },
+        "show_l3": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "L3情報 (IFのIPv4一覧とセグメントノード) を図に表示する。省略時は layers に logical を含むビューで自動的に有効",
+          "title": "Show L3"
+        },
         "description": {
           "anyOf": [
             {

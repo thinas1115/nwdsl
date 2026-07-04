@@ -17,6 +17,7 @@ _EDGE_STYLE = {
     "wan-circuit": ("#1a73e8", 3.5, None),
     "tunnel": ("#7b1fa2", 2.0, "7 4"),
     "logical": ("#188038", 2.0, "3 3"),
+    "segment": ("#0f766e", 1.5, None),
 }
 
 
@@ -56,6 +57,8 @@ def _node_svg(p: Placed) -> list[str]:
         if n.emphasis == "failed":
             fill, stroke, sw = "#fce8e6", "#c5221f", 3.0
             label = f"✕障害\n{label}"
+        elif n.kind == "segment":
+            fill, stroke, sw = "#e2f5f0", "#0f766e", 1.4
         elif n.kind == "site":
             fill, stroke, sw = "#fff8e1", "#b58105", 1.4
         elif n.kind == "external-device":

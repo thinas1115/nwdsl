@@ -76,8 +76,9 @@ devices:
         description: インターネット回線 (IPsec用)
         ipv4: 198.51.100.10/30
       - name: Gi0/1/0
-        description: フロアSWへ
+        description: フロアSWへ (LAN GW)
         ipv4: 10.2.10.1/24
+        segment: osk-lan
       - name: Tunnel0
         description: 本社向けIPsecトンネル
         ipv4: 172.31.0.2/30
@@ -99,8 +100,9 @@ devices:
         description: IP-VPNアクセス回線
         ipv4: 172.16.255.9/30
       - name: Gi0/1/0
-        description: フロアSWへ
+        description: フロアSWへ (LAN GW)
         ipv4: 10.3.10.1/24
+        segment: ngy-lan
   - id: ngy-sw01
     site: ngy
     role: l2switch

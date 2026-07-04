@@ -15,6 +15,7 @@ _EDGE_STYLES = {
     "wan-circuit": "stroke:#1a73e8,stroke-width:4px",
     "tunnel": "stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4",
     "logical": "stroke:#188038,stroke-width:2px,stroke-dasharray:3 3",
+    "segment": "stroke:#0f766e,stroke-width:1.5px",
 }
 
 _EDGE_EMPHASIS_STYLES = {
@@ -34,6 +35,7 @@ classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
 classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
 classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
 classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
 classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368"""
 
 _KNOWN_ROLES = {"router", "l3switch", "l2switch", "firewall"}
@@ -54,6 +56,8 @@ def _node_class(node: RenderNode) -> str:
         return "node_failed"
     if node.kind == "cloud":
         return "node_cloud"
+    if node.kind == "segment":
+        return "node_segment"
     if node.kind == "site":
         return "node_site"
     if node.kind == "external-device":
@@ -68,6 +72,8 @@ def _node_decl(node: RenderNode) -> str:
     label = _label(raw)
     if node.kind == "cloud":
         return f'{key}(("{label}"))'
+    if node.kind == "segment":
+        return f'{key}(["{label}"])'
     return f'{key}["{label}"]'
 
 

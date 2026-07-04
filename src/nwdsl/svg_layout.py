@@ -579,9 +579,13 @@ def _compose_generic(graph: RenderGraph, out: SvgLayout, units, cross,
                 label_rows.append([(llo, lhi)])
                 label_row_of[i] = len(label_rows) - 1
 
-    sky_top = cloud_y + CLOUD_H + 18
-    label_top = sky_top + max(1, len(lanes)) * SKY_LANE_H + 10
-    units_y = label_top + len(label_rows) * LABEL_ROW_H + 24 if clouds else top + 10
+    sky_top = cloud_y + (CLOUD_H + 18 if clouds else 0)
+    label_top = sky_top + len(lanes) * SKY_LANE_H + 10
+    # 空域 (雲・拠点間配線・回線ラベル帯) を使う場合はそのぶん拠点行を下げる
+    if clouds or lanes or label_rows:
+        units_y = label_top + len(label_rows) * LABEL_ROW_H + 24
+    else:
+        units_y = top + 10
 
     # ---- 確定座標で出力を組み立て ----
     for c, cx0, cw in placed_clouds:

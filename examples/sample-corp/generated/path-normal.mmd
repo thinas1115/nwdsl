@@ -1,12 +1,15 @@
 flowchart TB
   subgraph sg_hq["本社"]
-    hq_rt01["hq-rt01<br>Cisco ISR4331"]
-    hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
-    hq_rt02["hq-rt02<br>Cisco ISR4331"]
+    hq_rt01["hq-rt01<br>Cisco ISR4331<br>Gi0/0/0: 172.16.255.1/30<br>Gi0/0/1: 10.1.0.2/24"]
+    hq_sw01["hq-sw01<br>Cisco Catalyst 9300<br>Vlan10: 10.1.10.1/24<br>Vlan20: 10.1.20.1/24"]
+    hq_rt02["hq-rt02<br>Cisco ISR4331<br>Gi0/0/0: 203.0.113.10/29<br>Gi0/0/1: 10.1.0.3/24<br>Tunnel0: 172.31.0.1/30"]
+    seg__hq_server(["本社サーバ<br>VLAN 10 / 10.1.10.0/24"])
+    seg__hq_client(["本社クライアント<br>VLAN 20 / 10.1.20.0/24"])
   end
   subgraph sg_osk["大阪支店"]
-    osk_rt01["osk-rt01<br>Cisco ISR1100"]
+    osk_rt01["osk-rt01<br>Cisco ISR1100<br>Gi0/0/0: 172.16.255.5/30<br>Gi0/0/1: 198.51.100.10/30<br>Gi0/1/0: 10.2.10.1/24<br>Tunnel0: 172.31.0.2/30"]
     osk_sw01["osk-sw01<br>Cisco Catalyst 1000"]
+    seg__osk_lan(["大阪LAN<br>VLAN 1 / 10.2.10.0/24"])
   end
   ipvpn(("NTT Com IP-VPN網"))
   internet(("インターネット"))
@@ -21,6 +24,9 @@ flowchart TB
   hq_rt02 ---|"IPsec バックアップVPN"| osk_rt01
   hq_rt01 ---|"BGP (IP-VPN網内)"| osk_rt01
   hq_rt01 ---|"BGP (IP-VPN網内)"| ngy_rt01
+  hq_sw01 --- seg__hq_server
+  hq_sw01 --- seg__hq_client
+  osk_rt01 --- seg__osk_lan
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
   classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
@@ -31,11 +37,12 @@ flowchart TB
   classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
   classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
   classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class hq_rt01,osk_rt01 role_router
   class hq_sw01 role_l3switch
-  class hq_rt02,internet,ngy_rt01 node_dim
+  class hq_rt02,internet,ngy_rt01,seg__hq_server,seg__hq_client,seg__osk_lan node_dim
   class osk_sw01 role_l2switch
   class ipvpn node_cloud
   linkStyle 0,2,3,4 stroke:#c5221f,stroke-width:4px
-  linkStyle 1,5,6,7,8,9 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,5,6,7,8,9,10,11,12 stroke:#e8eaed,stroke-width:1px
