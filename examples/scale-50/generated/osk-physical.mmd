@@ -1,0 +1,49 @@
+flowchart TB
+  subgraph sg_osk["大阪支社"]
+    osk_rt01["osk-rt01<br>Cisco ISR4331"]
+    osk_core01["osk-core01<br>Catalyst 9300"]
+    osk_rt02["osk-rt02<br>Cisco ISR4331"]
+    osk_acc01["osk-acc01<br>Catalyst 1000"]
+    osk_acc02["osk-acc02<br>Catalyst 1000"]
+    osk_acc03["osk-acc03<br>Catalyst 1000"]
+    osk_acc04["osk-acc04<br>Catalyst 1000"]
+    osk_acc05["osk-acc05<br>Catalyst 1000"]
+    osk_acc06["osk-acc06<br>Catalyst 1000"]
+    osk_srv01["osk-srv01<br>PowerEdge R450"]
+    osk_srv02["osk-srv02<br>PowerEdge R450"]
+    osk_srv03["osk-srv03<br>PowerEdge R450"]
+  end
+  ipvpn(("IP-VPN網"))
+  internet(("インターネット"))
+  osk_rt01 --- osk_core01
+  osk_rt02 --- osk_core01
+  osk_core01 --- osk_acc01
+  osk_core01 --- osk_acc02
+  osk_core01 --- osk_acc03
+  osk_core01 --- osk_acc04
+  osk_core01 --- osk_acc05
+  osk_core01 --- osk_acc06
+  osk_core01 --- osk_srv01
+  osk_core01 --- osk_srv02
+  osk_core01 --- osk_srv03
+  ipvpn ---|"NTT Com IP-VPN 200M<br>(Gi0/2)"| osk_rt01
+  internet ---|"NTT西 フレッツ光 + OCN 1G<br>(Gi0/2)"| osk_rt02
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class osk_rt01,osk_rt02 role_router
+  class osk_core01 role_l3switch
+  class osk_acc01,osk_acc02,osk_acc03,osk_acc04,osk_acc05,osk_acc06 role_l2switch
+  class osk_srv01,osk_srv02,osk_srv03 role_other
+  class ipvpn,internet node_cloud
+  linkStyle 0,1,2,3,4,5,6,7,8,9,10 stroke:#4a4a4a,stroke-width:2px
+  linkStyle 11,12 stroke:#1a73e8,stroke-width:4px

@@ -2,8 +2,6 @@ flowchart TB
   subgraph sg_dc["DCコロケーション"]
     dc_fw01["dc-fw01<br>FortiGate 600F<br>tunnel.aws: 169.254.200.1/30"]
     dc_rt01["dc-rt01<br>Cisco C8500"]
-    dc_core01["dc-core01<br>Nexus 93180"]
-    dc_srvsw01["dc-srvsw01<br>Catalyst 9200"]
     dc_srv01["dc-srv01<br>PowerEdge R760 (基幹AP)<br>eno1: 10.20.10.11/24"]
     dc_srv02["dc-srv02<br>PowerEdge R760 (DB)<br>eno1: 10.20.10.12/24"]
     seg__dc_servers(["DCサーバ<br>VLAN 20 / 10.20.10.0/24"])
@@ -40,8 +38,7 @@ flowchart TB
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class dc_fw01 role_firewall
   class aws_vgw01,hq_rt01,dc_rt01,hq_rt02 role_router
-  class hq_sw01,dc_core01 role_l3switch
-  class dc_srvsw01 role_l2switch
+  class hq_sw01 role_l3switch
   class dc_srv01,dc_srv02 role_other
   class seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_segment
   linkStyle 0 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4

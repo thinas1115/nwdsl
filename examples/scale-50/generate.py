@@ -105,6 +105,21 @@ for n in range(1, 6):
 for n in range(1, 3):
     cable("ngy-sw01", f"ngy-srv0{n}")
 
+# ---- L3: セグメントとGW (論理構成図用) ----
+segments = [
+    {"id": "hq-lan", "site": "hq", "vlan": 100, "ipv4": "10.50.10.0/24", "name": "本社ユーザ"},
+    {"id": "osk-lan", "site": "osk", "vlan": 100, "ipv4": "10.51.10.0/24", "name": "大阪ユーザ"},
+    {"id": "ngy-lan", "site": "ngy", "vlan": 100, "ipv4": "10.52.10.0/24", "name": "名古屋ユーザ"},
+]
+for dev_id, seg_id, gw_ip in (
+        ("hq-core01", "hq-lan", "10.50.10.2/24"),
+        ("hq-core02", "hq-lan", "10.50.10.3/24"),
+        ("osk-core01", "osk-lan", "10.51.10.1/24"),
+        ("ngy-rt01", "ngy-lan", "10.52.10.1/24")):
+    rec = next(d for d in devices if d["id"] == dev_id)
+    rec["interfaces"].append({"name": "Vlan100", "description": "ユーザセグメントGW",
+                              "ipv4": gw_ip, "segment": seg_id})
+
 # ---- WAN ----
 wan("hq-rt01", "ipvpn", "cct-ipvpn-hq")
 wan("osk-rt01", "ipvpn", "cct-ipvpn-osk")
@@ -135,9 +150,12 @@ doc = {
         {"id": "cct-inet-osk", "provider": "NTT西", "service": "フレッツ光 + OCN", "bandwidth": "1G"},
     ],
     "links": links,
+    "segments": segments,
     "views": [
         {"id": "physical-all", "title": "全社物理構成図 (50台)",
          "layers": ["lan-cable", "wan-circuit"]},
+        {"id": "logical-all", "title": "全社論理構成図",
+         "layers": ["logical"]},
         {"id": "hq-physical", "title": "本社 物理構成図 (29台)",
          "layers": ["lan-cable", "wan-circuit"], "include_sites": ["hq"]},
         {"id": "osk-physical", "title": "大阪支社 物理構成図",

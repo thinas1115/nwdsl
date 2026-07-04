@@ -1,0 +1,89 @@
+flowchart TB
+  subgraph sg_hq["本社"]
+    hq_rt01["hq-rt01<br>Cisco ISR4451"]
+    hq_fw01["hq-fw01<br>PA-3410"]
+    hq_rt02["hq-rt02<br>Cisco ISR4451"]
+    hq_fw02["hq-fw02<br>PA-3410"]
+    hq_core01["hq-core01<br>Catalyst 9500"]
+    hq_core02["hq-core02<br>Catalyst 9500"]
+    hq_dist01["hq-dist01<br>Catalyst 9300"]
+    hq_dist02["hq-dist02<br>Catalyst 9300"]
+    hq_dist03["hq-dist03<br>Catalyst 9300"]
+    hq_dist04["hq-dist04<br>Catalyst 9300"]
+    hq_acc01["hq-acc01<br>Catalyst 1000"]
+    hq_acc02["hq-acc02<br>Catalyst 1000"]
+    hq_acc03["hq-acc03<br>Catalyst 1000"]
+    hq_acc04["hq-acc04<br>Catalyst 1000"]
+    hq_acc05["hq-acc05<br>Catalyst 1000"]
+    hq_acc06["hq-acc06<br>Catalyst 1000"]
+    hq_acc07["hq-acc07<br>Catalyst 1000"]
+    hq_acc08["hq-acc08<br>Catalyst 1000"]
+    hq_acc09["hq-acc09<br>Catalyst 1000"]
+    hq_acc10["hq-acc10<br>Catalyst 1000"]
+    hq_srvsw01["hq-srvsw01<br>Catalyst 9200"]
+    hq_srvsw02["hq-srvsw02<br>Catalyst 9200"]
+    hq_srv01["hq-srv01<br>PowerEdge R660"]
+    hq_srv02["hq-srv02<br>PowerEdge R660"]
+    hq_srv03["hq-srv03<br>PowerEdge R660"]
+    hq_srv04["hq-srv04<br>PowerEdge R660"]
+    hq_dmzsw01["hq-dmzsw01<br>Catalyst 1000"]
+    hq_dmzsrv01["hq-dmzsrv01<br>公開Web"]
+    hq_dmzsrv02["hq-dmzsrv02<br>公開DNS"]
+  end
+  ipvpn(("IP-VPN網"))
+  internet(("インターネット"))
+  hq_rt01 --- hq_fw01
+  hq_rt02 --- hq_fw02
+  hq_fw01 --- hq_core01
+  hq_fw02 --- hq_core02
+  hq_core01 --- hq_core02
+  hq_core01 --- hq_dist01
+  hq_core02 --- hq_dist01
+  hq_core01 --- hq_dist02
+  hq_core02 --- hq_dist02
+  hq_core01 --- hq_dist03
+  hq_core02 --- hq_dist03
+  hq_core01 --- hq_dist04
+  hq_core02 --- hq_dist04
+  hq_dist01 --- hq_acc01
+  hq_dist01 --- hq_acc02
+  hq_dist01 --- hq_acc03
+  hq_dist02 --- hq_acc04
+  hq_dist02 --- hq_acc05
+  hq_dist02 --- hq_acc06
+  hq_dist03 --- hq_acc07
+  hq_dist03 --- hq_acc08
+  hq_dist03 --- hq_acc09
+  hq_dist04 --- hq_acc10
+  hq_core01 --- hq_srvsw01
+  hq_core02 --- hq_srvsw02
+  hq_srvsw01 --- hq_srvsw02
+  hq_srvsw01 --- hq_srv01
+  hq_srvsw01 --- hq_srv02
+  hq_srvsw02 --- hq_srv03
+  hq_srvsw02 --- hq_srv04
+  hq_fw01 --- hq_dmzsw01
+  hq_dmzsw01 --- hq_dmzsrv01
+  hq_dmzsw01 --- hq_dmzsrv02
+  ipvpn ---|"NTT Com IP-VPN 1G<br>(Gi0/2)"| hq_rt01
+  internet ---|"NTT東 フレッツ光 + OCN 1G<br>(Gi0/2)"| hq_rt02
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class hq_rt01,hq_rt02 role_router
+  class hq_fw01,hq_fw02 role_firewall
+  class hq_core01,hq_core02,hq_dist01,hq_dist02,hq_dist03,hq_dist04 role_l3switch
+  class hq_acc01,hq_acc02,hq_acc03,hq_acc04,hq_acc05,hq_acc06,hq_acc07,hq_acc08,hq_acc09,hq_acc10,hq_srvsw01,hq_srvsw02,hq_dmzsw01 role_l2switch
+  class hq_srv01,hq_srv02,hq_srv03,hq_srv04,hq_dmzsrv01,hq_dmzsrv02 role_other
+  class ipvpn,internet node_cloud
+  linkStyle 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 stroke:#4a4a4a,stroke-width:2px
+  linkStyle 33,34 stroke:#1a73e8,stroke-width:4px

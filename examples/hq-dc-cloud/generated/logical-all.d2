@@ -27,8 +27,6 @@ s_dc: "DCコロケーション" {
   label.near: outside-top-left
   n_dc_fw01: "dc-fw01\nFortiGate 600F\ntunnel.aws: 169.254.200.1/30" {class: role-firewall}
   n_dc_rt01: "dc-rt01\nCisco C8500" {class: role-router}
-  n_dc_core01: "dc-core01\nNexus 93180" {class: role-l3switch}
-  n_dc_srvsw01: "dc-srvsw01\nCatalyst 9200" {class: role-l2switch}
   n_dc_srv01: "dc-srv01\nPowerEdge R760 (基幹AP)\neno1: 10.20.10.11/24" {class: role-other}
   n_dc_srv02: "dc-srv02\nPowerEdge R760 (DB)\neno1: 10.20.10.12/24" {class: role-other}
   n_seg__dc_servers: "DCサーバ\nVLAN 20 / 10.20.10.0/24" {class: node-segment; width: 180}

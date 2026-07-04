@@ -1,0 +1,43 @@
+flowchart TB
+  subgraph sg_hq["本社"]
+    hq_fw01["hq-fw01<br>Palo Alto PA-3410<br>eth1/3: 192.168.100.1/24"]
+    hq_core01["hq-core01<br>Catalyst 9500<br>Vlan10: 10.1.10.2/24<br>Vlan20: 10.1.20.2/24"]
+    hq_fw02["hq-fw02<br>Palo Alto PA-3410"]
+    hq_core02["hq-core02<br>Catalyst 9500<br>Vlan10: 10.1.10.3/24<br>Vlan20: 10.1.20.3/24"]
+    hq_rt01["hq-rt01<br>Cisco ISR4451"]
+    seg__hq_server(["本社サーバ<br>VLAN 10 / 10.1.10.0/24"])
+    seg__hq_client(["本社クライアント<br>VLAN 20 / 10.1.20.0/24"])
+    seg__hq_dmz(["DMZ<br>VLAN 100 / 192.168.100.0/24"])
+  end
+  subgraph sg_osk["大阪支店"]
+    osk_rt01["osk-rt01<br>Cisco ISR1100<br>Gi0/1/0: 10.9.1.1/24"]
+    seg__osk_lan(["大阪LAN<br>VLAN 1 / 10.9.1.0/24"])
+  end
+  hq_fw01 ---|"OSPF Area0"| hq_core01
+  hq_fw02 ---|"OSPF Area0"| hq_core02
+  hq_core01 ---|"OSPF Area0"| hq_core02
+  hq_rt01 ---|"BGP (IP-VPN網内)"| osk_rt01
+  hq_core01 --- seg__hq_server
+  hq_core02 --- seg__hq_server
+  hq_core01 --- seg__hq_client
+  hq_core02 --- seg__hq_client
+  hq_fw01 --- seg__hq_dmz
+  osk_rt01 --- seg__osk_lan
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class hq_fw01,hq_fw02 role_firewall
+  class hq_core01,hq_core02 role_l3switch
+  class hq_rt01,osk_rt01 role_router
+  class seg__hq_server,seg__hq_client,seg__hq_dmz,seg__osk_lan node_segment
+  linkStyle 0,1,2,3 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
+  linkStyle 4,5,6,7,8,9 stroke:#0f766e,stroke-width:1.5px

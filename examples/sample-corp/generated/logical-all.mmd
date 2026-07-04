@@ -1,19 +1,17 @@
 flowchart TB
   subgraph sg_hq["本社"]
-    hq_rt02["hq-rt02<br>Cisco ISR4331<br>Gi0/0/0: 203.0.113.10/29<br>Gi0/0/1: 10.1.0.3/24<br>Tunnel0: 172.31.0.1/30"]
-    hq_rt01["hq-rt01<br>Cisco ISR4331<br>Gi0/0/0: 172.16.255.1/30<br>Gi0/0/1: 10.1.0.2/24"]
+    hq_rt02["hq-rt02<br>Cisco ISR4331<br>Tunnel0: 172.31.0.1/30"]
+    hq_rt01["hq-rt01<br>Cisco ISR4331"]
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300<br>Vlan10: 10.1.10.1/24<br>Vlan20: 10.1.20.1/24"]
     seg__hq_server(["本社サーバ<br>VLAN 10 / 10.1.10.0/24"])
     seg__hq_client(["本社クライアント<br>VLAN 20 / 10.1.20.0/24"])
   end
   subgraph sg_osk["大阪支店"]
-    osk_rt01["osk-rt01<br>Cisco ISR1100<br>Gi0/0/0: 172.16.255.5/30<br>Gi0/0/1: 198.51.100.10/30<br>Gi0/1/0: 10.2.10.1/24<br>Tunnel0: 172.31.0.2/30"]
-    osk_sw01["osk-sw01<br>Cisco Catalyst 1000"]
+    osk_rt01["osk-rt01<br>Cisco ISR1100<br>Gi0/1/0: 10.2.10.1/24<br>Tunnel0: 172.31.0.2/30"]
     seg__osk_lan(["大阪LAN<br>VLAN 1 / 10.2.10.0/24"])
   end
   subgraph sg_ngy["名古屋営業所"]
-    ngy_rt01["ngy-rt01<br>Cisco ISR1100<br>Gi0/0/0: 172.16.255.9/30<br>Gi0/1/0: 10.3.10.1/24"]
-    ngy_sw01["ngy-sw01<br>Cisco Catalyst 1000"]
+    ngy_rt01["ngy-rt01<br>Cisco ISR1100<br>Gi0/1/0: 10.3.10.1/24"]
     seg__ngy_lan(["名古屋LAN<br>VLAN 1 / 10.3.10.0/24"])
   end
   hq_rt02 ---|"IPsec バックアップVPN"| osk_rt01
@@ -37,7 +35,6 @@ flowchart TB
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class hq_rt02,osk_rt01,hq_rt01,ngy_rt01 role_router
   class hq_sw01 role_l3switch
-  class osk_sw01,ngy_sw01 role_l2switch
   class seg__hq_server,seg__hq_client,seg__osk_lan,seg__ngy_lan node_segment
   linkStyle 0 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
   linkStyle 1,2 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3

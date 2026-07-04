@@ -40,8 +40,8 @@ devices:
     redundancy_group: hq-fw
     interfaces:
       - {name: eth1/1, description: rt01へ}
-      - {name: eth1/2, description: コアSW01へ}
-      - {name: eth1/3, description: DMZへ}
+      - {name: eth1/2, description: コアSW01へ, ipv4: 10.1.255.1/29}
+      - {name: eth1/3, description: DMZセグメントGW, ipv4: 192.168.100.1/24, segment: hq-dmz}
   - id: hq-fw02
     site: hq
     role: firewall
@@ -58,22 +58,26 @@ devices:
     platform: Catalyst 9500
     redundancy_group: hq-core
     interfaces:
-      - {name: Te1/0/1, description: FW01へ}
-      - {name: Te1/0/2, description: コア間リンク}
+      - {name: Te1/0/1, description: FW01へ, ipv4: 10.1.255.2/29}
+      - {name: Te1/0/2, description: コア間リンク, ipv4: 10.1.254.1/30}
       - {name: Te1/0/3, description: ディストリ01へ}
       - {name: Te1/0/4, description: ディストリ02へ}
       - {name: Te1/0/5, description: サーバSWへ}
+      - {name: Vlan10, description: サーバセグメントGW (HSRP VIP .1), ipv4: 10.1.10.2/24, segment: hq-server}
+      - {name: Vlan20, description: クライアントセグメントGW (HSRP VIP .1), ipv4: 10.1.20.2/24, segment: hq-client}
   - id: hq-core02
     site: hq
     role: l3switch
     platform: Catalyst 9500
     redundancy_group: hq-core
     interfaces:
-      - {name: Te1/0/1, description: FW02へ}
-      - {name: Te1/0/2, description: コア間リンク}
+      - {name: Te1/0/1, description: FW02へ, ipv4: 10.1.255.3/29}
+      - {name: Te1/0/2, description: コア間リンク, ipv4: 10.1.254.2/30}
       - {name: Te1/0/3, description: ディストリ01へ}
       - {name: Te1/0/4, description: ディストリ02へ}
       - {name: Te1/0/5, description: サーバSWへ}
+      - {name: Vlan10, description: サーバセグメントGW (HSRP standby), ipv4: 10.1.10.3/24, segment: hq-server}
+      - {name: Vlan20, description: クライアントセグメントGW (HSRP standby), ipv4: 10.1.20.3/24, segment: hq-client}
 
   # ---- ディストリビューションスイッチ ----
   - id: hq-dist01
@@ -158,8 +162,8 @@ devices:
     role: router
     platform: Cisco ISR1100
     interfaces:
-      - {name: Gi0/0/0, description: IP-VPNアクセス回線}
-      - {name: Gi0/1/0, description: LAN}
+      - {name: Gi0/0/0, description: IP-VPNアクセス回線, ipv4: 172.16.255.5/30}
+      - {name: Gi0/1/0, description: LAN GW, ipv4: 10.9.1.1/24, segment: osk-lan}
   - id: osk-sw01
     site: osk
     role: l2switch
@@ -215,6 +219,18 @@ links:
   # 大阪
   - {type: lan-cable, endpoints: ["osk-rt01:Gi0/1/0", "osk-sw01:Gi1/0/1"]}
 
+  # ---- 論理隣接 ----
+  - {type: logical, endpoints: ["hq-fw01", "hq-core01"], description: OSPF Area0}
+  - {type: logical, endpoints: ["hq-fw02", "hq-core02"], description: OSPF Area0}
+  - {type: logical, endpoints: ["hq-core01", "hq-core02"], description: OSPF Area0}
+  - {type: logical, endpoints: ["hq-rt01", "osk-rt01"], description: BGP (IP-VPN網内)}
+
+segments:
+  - {id: hq-server, site: hq, vlan: 10, ipv4: 10.1.10.0/24, name: 本社サーバ}
+  - {id: hq-client, site: hq, vlan: 20, ipv4: 10.1.20.0/24, name: 本社クライアント}
+  - {id: hq-dmz, site: hq, vlan: 100, ipv4: 192.168.100.0/24, name: DMZ}
+  - {id: osk-lan, site: osk, vlan: 1, ipv4: 10.9.1.0/24, name: 大阪LAN}
+
 views:
   - id: physical-all
     title: 全社物理構成図
@@ -223,3 +239,6 @@ views:
     title: 本社 物理構成図
     layers: [lan-cable, wan-circuit]
     include_sites: [hq]
+  - id: logical-all
+    title: 全社論理構成図
+    layers: [logical]

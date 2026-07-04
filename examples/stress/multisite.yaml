@@ -566,3 +566,8 @@ views:
   layers:
   - lan-cable
   - wan-circuit
+- id: logical-overview
+  title: 12拠点 BGP論理概要図
+  layers:
+  - logical
+  collapse_sites: true

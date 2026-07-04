@@ -94,7 +94,9 @@ doc["views"] = [
     {"id": "wan-overview", "title": "12拠点 WAN概要図", "collapse_sites": True,
      "layers": ["wan-circuit", "tunnel"]},
     {"id": "physical-all", "title": "12拠点 全社物理図",
-     "layers": ["lan-cable", "wan-circuit"]}]
+     "layers": ["lan-cable", "wan-circuit"]},
+    {"id": "logical-overview", "title": "12拠点 BGP論理概要図",
+     "layers": ["logical"], "collapse_sites": True}]
 (OUT / "multisite.yaml").write_text(yaml.safe_dump(doc, allow_unicode=True,
                                                    sort_keys=False), encoding="utf-8")
 

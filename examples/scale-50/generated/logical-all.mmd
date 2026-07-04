@@ -1,0 +1,39 @@
+flowchart TB
+  subgraph sg_hq["本社"]
+    hq_rt01["hq-rt01<br>Cisco ISR4451"]
+    hq_core01["hq-core01<br>Catalyst 9500<br>Vlan100: 10.50.10.2/24"]
+    hq_core02["hq-core02<br>Catalyst 9500<br>Vlan100: 10.50.10.3/24"]
+    seg__hq_lan(["本社ユーザ<br>VLAN 100 / 10.50.10.0/24"])
+  end
+  subgraph sg_osk["大阪支社"]
+    osk_rt01["osk-rt01<br>Cisco ISR4331"]
+    osk_core01["osk-core01<br>Catalyst 9300<br>Vlan100: 10.51.10.1/24"]
+    seg__osk_lan(["大阪ユーザ<br>VLAN 100 / 10.51.10.0/24"])
+  end
+  subgraph sg_ngy["名古屋営業所"]
+    ngy_rt01["ngy-rt01<br>Cisco ISR1100<br>Vlan100: 10.52.10.1/24"]
+    seg__ngy_lan(["名古屋ユーザ<br>VLAN 100 / 10.52.10.0/24"])
+  end
+  hq_rt01 ---|"BGP"| osk_rt01
+  hq_rt01 ---|"BGP"| ngy_rt01
+  hq_core01 --- seg__hq_lan
+  hq_core02 --- seg__hq_lan
+  osk_core01 --- seg__osk_lan
+  ngy_rt01 --- seg__ngy_lan
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class hq_rt01,osk_rt01,ngy_rt01 role_router
+  class hq_core01,hq_core02,osk_core01 role_l3switch
+  class seg__hq_lan,seg__osk_lan,seg__ngy_lan node_segment
+  linkStyle 0,1 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
+  linkStyle 2,3,4,5 stroke:#0f766e,stroke-width:1.5px

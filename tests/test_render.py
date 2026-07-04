@@ -189,6 +189,18 @@ def test_logical_view_shows_l3_info(doc):
     assert all(n.kind != "segment" for n in g2.nodes)
 
 
+def test_tunnel_only_view_gets_auto_l3():
+    """静的経路構成 (logicalなし・tunnelのみ) の論理図でもL3が自動表示される。"""
+    from nwdsl.loader import load_document as _load_doc
+    d = _load_doc(Path(__file__).parent.parent / "examples" / "two-site-ipsec"
+                  / "network.yaml")
+    view = next(v for v in d.views if v.id == "logical-all")
+    g = resolve_view(d, view)
+    nodes = {n.id: n for n in g.nodes}
+    assert "tunnel1: 172.16.0.1/30" in nodes["tk-rt01"].label
+    assert nodes["seg__tk-lan"].kind == "segment"
+
+
 def test_show_l3_modes(doc):
     """show_l3: used / all で表示範囲を切り替えられる。"""
     base = _view(doc, "logical-all")

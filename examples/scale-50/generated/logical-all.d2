@@ -1,5 +1,5 @@
 title: |md
-  # 全体論理構成図
+  # 全社論理構成図
 | {near: top-center}
 direction: down
 
@@ -22,20 +22,33 @@ classes: {
   edge-segment: {style.stroke: "#0f766e"; style.stroke-width: 1}
 }
 
-s_tokyo: "東京本社" {
+s_hq: "本社" {
   class: group-site
   label.near: outside-top-left
-  n_tk_rt01: "tk-rt01\nYamaha RTX1300\nlan1: 192.168.10.1/24\ntunnel1: 172.16.0.1/30" {class: role-router}
-  n_seg__tk_lan: "東京LAN\nVLAN 1 / 192.168.10.0/24" {class: node-segment}
+  n_hq_rt01: "hq-rt01\nCisco ISR4451" {class: role-router}
+  n_hq_core01: "hq-core01\nCatalyst 9500\nVlan100: 10.50.10.2/24" {class: role-l3switch}
+  n_hq_core02: "hq-core02\nCatalyst 9500\nVlan100: 10.50.10.3/24" {class: role-l3switch}
+  n_seg__hq_lan: "本社ユーザ\nVLAN 100 / 10.50.10.0/24" {class: node-segment; width: 180}
 }
 
-s_fukuoka: "福岡営業所" {
+s_osk: "大阪支社" {
   class: group-site
   label.near: outside-top-left
-  n_fk_rt01: "fk-rt01\nYamaha RTX830\nlan1: 192.168.20.1/24\ntunnel1: 172.16.0.2/30" {class: role-router}
-  n_seg__fk_lan: "福岡LAN\nVLAN 1 / 192.168.20.0/24" {class: node-segment}
+  n_osk_rt01: "osk-rt01\nCisco ISR4331" {class: role-router}
+  n_osk_core01: "osk-core01\nCatalyst 9300\nVlan100: 10.51.10.1/24" {class: role-l3switch}
+  n_seg__osk_lan: "大阪ユーザ\nVLAN 100 / 10.51.10.0/24" {class: node-segment}
 }
 
-s_tokyo.n_tk_rt01 -- s_fukuoka.n_fk_rt01: "IPsec本線 (経路は静的)" {class: edge-tunnel}
-s_tokyo.n_tk_rt01 -- s_tokyo.n_seg__tk_lan {class: edge-segment; source-arrowhead.label: "lan1"}
-s_fukuoka.n_fk_rt01 -- s_fukuoka.n_seg__fk_lan {class: edge-segment; source-arrowhead.label: "lan1"}
+s_ngy: "名古屋営業所" {
+  class: group-site
+  label.near: outside-top-left
+  n_ngy_rt01: "ngy-rt01\nCisco ISR1100\nVlan100: 10.52.10.1/24" {class: role-router}
+  n_seg__ngy_lan: "名古屋ユーザ\nVLAN 100 / 10.52.10.0/24" {class: node-segment}
+}
+
+s_hq.n_hq_rt01 -- s_osk.n_osk_rt01: "BGP" {class: edge-logical}
+s_hq.n_hq_rt01 -- s_ngy.n_ngy_rt01: "BGP" {class: edge-logical}
+s_hq.n_hq_core01 -- s_hq.n_seg__hq_lan {class: edge-segment; source-arrowhead.label: "Vlan100"}
+s_hq.n_hq_core02 -- s_hq.n_seg__hq_lan {class: edge-segment; source-arrowhead.label: "Vlan100"}
+s_osk.n_osk_core01 -- s_osk.n_seg__osk_lan {class: edge-segment; source-arrowhead.label: "Vlan100"}
+s_ngy.n_ngy_rt01 -- s_ngy.n_seg__ngy_lan {class: edge-segment; source-arrowhead.label: "Vlan100"}

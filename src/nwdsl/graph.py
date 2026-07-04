@@ -174,16 +174,24 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
             graph.edges.append(edge)
             view_ifs.update((n, i) for n, i in ifnames.items() if i is not None)
 
-        # 接続を持たない範囲内の機器も孤立ノードとして表示する
+        # 純粋なL3ビュー (logicalを含む、または物理レイヤ抜きのtunnelのみ) か
+        pure_l3 = ("logical" in view.layers
+                   or ("tunnel" in view.layers
+                       and not {"lan-cable", "wan-circuit"} & set(view.layers)))
+
+        # 接続を持たない範囲内の機器も孤立ノードとして表示する。
+        # ただし純L3ビューでは、L3情報を持たない機器 (L2アクセスSW等) は省く
         for dev in doc.devices:
             if dev.site in in_scope and dev.id not in nodes:
+                if pure_l3 and not any(i.ipv4 or i.segment for i in dev.interfaces):
+                    continue
                 add_node(RenderNode(id=dev.id, label=_device_label(doc, dev.id),
                                     kind="device", role=dev.role, site=dev.site))
 
         # ---- L3情報の表示 (論理ビューでは自動有効、show_l3 で表示範囲を制御) ----
         raw_l3 = view.show_l3
         if raw_l3 is None:
-            l3_mode = "view" if "logical" in view.layers else None
+            l3_mode = "view" if pure_l3 else None
         elif raw_l3 is True:
             l3_mode = "view"
         elif raw_l3 is False:

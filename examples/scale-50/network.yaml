@@ -44,6 +44,10 @@ devices:
   - name: Gi0/5
   - name: Gi0/6
   - name: Gi0/7
+  - name: Vlan100
+    description: ユーザセグメントGW
+    ipv4: 10.50.10.2/24
+    segment: hq-lan
   redundancy_group: hq-core
 - id: hq-srvsw01
   site: hq
@@ -83,6 +87,10 @@ devices:
   - name: Gi0/5
   - name: Gi0/6
   - name: Gi0/7
+  - name: Vlan100
+    description: ユーザセグメントGW
+    ipv4: 10.50.10.3/24
+    segment: hq-lan
   redundancy_group: hq-core
 - id: hq-srvsw02
   site: hq
@@ -267,6 +275,10 @@ devices:
   - name: Gi0/9
   - name: Gi0/10
   - name: Gi0/11
+  - name: Vlan100
+    description: ユーザセグメントGW
+    ipv4: 10.51.10.1/24
+    segment: osk-lan
 - id: osk-acc01
   site: osk
   role: l2switch
@@ -327,6 +339,10 @@ devices:
   platform: Cisco ISR1100
   interfaces:
   - name: Gi0/1
+  - name: Vlan100
+    description: ユーザセグメントGW
+    ipv4: 10.52.10.1/24
+    segment: ngy-lan
   - name: Gi0/2
     description: WANアクセス回線
 - id: ngy-sw01
@@ -656,12 +672,32 @@ links:
   - hq-rt01
   - ngy-rt01
   description: BGP
+segments:
+- id: hq-lan
+  site: hq
+  vlan: 100
+  ipv4: 10.50.10.0/24
+  name: 本社ユーザ
+- id: osk-lan
+  site: osk
+  vlan: 100
+  ipv4: 10.51.10.0/24
+  name: 大阪ユーザ
+- id: ngy-lan
+  site: ngy
+  vlan: 100
+  ipv4: 10.52.10.0/24
+  name: 名古屋ユーザ
 views:
 - id: physical-all
   title: 全社物理構成図 (50台)
   layers:
   - lan-cable
   - wan-circuit
+- id: logical-all
+  title: 全社論理構成図
+  layers:
+  - logical
 - id: hq-physical
   title: 本社 物理構成図 (29台)
   layers:
