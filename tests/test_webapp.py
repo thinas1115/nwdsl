@@ -17,6 +17,13 @@ def test_render_minimal_sample_without_d2():
     assert r["svg"].startswith("<svg")
 
 
+def test_render_engine_mermaid_is_client_side():
+    r = handle_render({"yaml": _MINIMAL_SAMPLE, "engine": "mermaid"}, d2_bin=None)
+    assert r["engine"] == "mermaid"
+    assert r["svg"] is None                      # 描画はクライアント側
+    assert r["mermaid"].startswith("flowchart")  # ソースは常に返す
+
+
 def test_render_yaml_syntax_error():
     r = handle_render({"yaml": "nwdsl: [unclosed"}, d2_bin=None)
     assert r["ok"] is False

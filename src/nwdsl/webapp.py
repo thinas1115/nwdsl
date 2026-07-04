@@ -189,6 +189,9 @@ def handle_render(payload: dict, d2_bin: Path | None) -> dict:
     result["d2"] = render_d2(graph)
     result["mermaid"] = render_mermaid(graph)
     engine = payload.get("engine") or "auto"
+    if engine == "mermaid":
+        result["engine"] = "mermaid"  # 描画はクライアント側 (mermaid.js)
+        return result
     use_d2 = d2_bin is not None and engine in ("auto", "d2")
     if use_d2:
         try:

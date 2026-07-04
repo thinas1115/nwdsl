@@ -192,7 +192,7 @@
       <select id="engine-select" title="描画エンジン">
         <option value="auto">エンジン: 自動</option>
         <option value="d2">D2 (ELK)</option>
-        <option value="svg">内蔵SVG (どのパターンでも破綻しない)</option>
+        <option value="mermaid">Mermaid</option>
       </select>
       <button class="tab" id="fit-btn" title="全体表示">フィット</button>
       <span class="hint">ドラッグ移動 / ホイール拡大縮小 / ダブルクリックでフィット</span>
@@ -253,7 +253,12 @@ function show() {
     return;
   }
   if (currentTab === "diagram") {
-    if (last.svg) {
+    if ($("engine-select").value === "mermaid") {
+      out.innerHTML = (warn ? `<div class="issues-band">${warn}</div>` : "") +
+        `<div id="viewport"><div id="svg-box"></div></div>`;
+      wireViewport();
+      renderMermaidInto($("svg-box"), last.mermaid || "");
+    } else if (last.svg) {
       out.innerHTML = (warn ? `<div class="issues-band">${warn}</div>` : "") +
         `<div id="viewport"><div id="svg-box">${last.svg}</div></div>`;
       wireViewport();
@@ -267,6 +272,30 @@ function show() {
     out.innerHTML = `<div class="pad"><pre>${esc(last.d2 || "")}</pre></div>`;
   } else if (currentTab === "mermaid") {
     out.innerHTML = `<div class="pad"><pre>${esc(last.mermaid || "")}</pre></div>`;
+  }
+}
+
+// ---- Mermaid クライアント描画 (CDNから遅延ロード) ----
+let mermaidLib = null;
+let mermaidSeq = 0;
+
+async function renderMermaidInto(box, source) {
+  try {
+    if (!mermaidLib) {
+      const mod = await import(
+        "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+      mermaidLib = mod.default;
+      mermaidLib.initialize({ startOnLoad: false, securityLevel: "loose" });
+    }
+    const { svg } = await mermaidLib.render(`mmd${++mermaidSeq}`, source);
+    box.innerHTML = svg;
+    fitView();
+  } catch (e) {
+    box.innerHTML = `<div class="pad"><div class="issue error">Mermaid描画エラー: ` +
+      `${esc(String(e && e.message || e))}</div>` +
+      `<p style="font-size:12.5px;color:#64748b">オフラインの場合はCDNから ` +
+      `mermaid.js を取得できないため描画できません。「Mermaid」タブのソースを ` +
+      `GitHub/Obsidianに貼って確認してください。</p></div>`;
   }
 }
 
@@ -285,13 +314,15 @@ function svgSize() {
   let w = svg.width && svg.width.baseVal ? svg.width.baseVal.value : 0;
   let h = svg.height && svg.height.baseVal ? svg.height.baseVal.value : 0;
   const vb = svg.viewBox && svg.viewBox.baseVal;
-  if ((!w || !h || !svg.hasAttribute("width")) && vb && vb.width) {
+  const wAttr = svg.getAttribute("width") || "";
+  if ((!w || !h || !wAttr || wAttr.includes("%")) && vb && vb.width) {
     w = vb.width;
     h = vb.height;
   }
   if (w > 0 && h > 0) {
     svg.setAttribute("width", w);
     svg.setAttribute("height", h);
+    svg.style.maxWidth = "none";  // mermaidが付けるmax-widthを無効化
   }
   return { w, h };
 }
@@ -482,8 +513,9 @@ $("sample-select").addEventListener("change", (e) => loadSample(e.target.value))
   $("sample-select").innerHTML =
     names.map((n) => `<option value="${n}">${n}</option>`).join("");
   loadSample(names[0] || "minimal");
-  // ?doc=tutorial.md でDocsビューアを直接開ける (共有リンク用)
+  // ?doc=tutorial.md でDocsビューア、?engine=mermaid でエンジンを直接指定できる
   const q = new URLSearchParams(location.search);
+  if (q.has("engine")) $("engine-select").value = q.get("engine");
   if (q.has("doc")) openDocs(q.get("doc") || undefined);
 })();
 </script>
