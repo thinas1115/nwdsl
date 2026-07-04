@@ -15,6 +15,10 @@ nwdsl --help    # または .\.venv\Scripts\nwdsl --help
 図をSVG化する場合は [D2](https://github.com/terrastruct/d2/releases) のバイナリを入れておく
 (Windows は tar.gz を展開して PATH を通すだけ。管理者権限不要)。
 
+> **いちばん簡単な試し方**: `nwdsl serve` を実行するとブラウザで playground が開く。
+> YAML を編集すると自動で検証+描画され、このチュートリアルも画面内で読める。
+> 以降の手順は CLI ベースで説明するが、playground 上で同じ YAML を貼っても動く。
+
 ## 1. 最小構成: 1拠点・2機器・1本のケーブル
 
 `network.yaml` を作る:

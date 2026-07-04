@@ -100,6 +100,12 @@ def cmd_tables(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    from .webapp import serve
+    serve(port=args.port, open_browser=not args.no_browser)
+    return 0
+
+
 def cmd_schema(args: argparse.Namespace) -> int:
     schema = json.dumps(Document.model_json_schema(), ensure_ascii=False, indent=2)
     if args.out:
@@ -137,6 +143,11 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("schema", help="JSON Schema を出力する")
     p.add_argument("-o", "--out", help="出力ファイル (省略時は標準出力)")
     p.set_defaults(func=cmd_schema)
+
+    p = sub.add_parser("serve", help="ブラウザで試せる playground を起動する")
+    p.add_argument("--port", type=int, default=8321)
+    p.add_argument("--no-browser", action="store_true", help="ブラウザを自動で開かない")
+    p.set_defaults(func=cmd_serve)
 
     args = parser.parse_args(argv)
     return args.func(args)

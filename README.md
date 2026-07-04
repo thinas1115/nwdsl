@@ -42,11 +42,14 @@
 python -m venv .venv
 .\.venv\Scripts\pip install -e .
 
+nwdsl serve                                              # ブラウザで試す (playground)
 nwdsl validate examples\sample-corp\network.yaml         # 整合性検査
 nwdsl render   examples\sample-corp\network.yaml -o out  # 図ソース生成 (.d2 / .mmd)
 nwdsl tables   examples\sample-corp\network.yaml -o out\tables.md
 nwdsl schema   -o nwdsl.schema.json                      # エディタ補完用 JSON Schema
 ```
+
+`nwdsl serve` は http://127.0.0.1:8321/ にローカルの playground を起動する。左ペインで YAML を編集すると自動で検証+描画され、サンプル(最小構成〜50台規模)の読み込み、ビュー切替、表/D2/Mermaid の確認、チュートリアル・リファレンス・ADR の閲覧が画面内でできる。初見の人はまずこれ。
 
 SVG 化には [D2](https://github.com/terrastruct/d2/releases)(単一バイナリ)を使う:
 

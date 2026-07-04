@@ -188,7 +188,11 @@ nwdsl render   examples\sample-corp\network.yaml -o diagrams --view wan-overview
 nwdsl tables   examples\sample-corp\network.yaml -o diagrams\tables.md      # 6表すべて
 nwdsl tables   examples\sample-corp\network.yaml --section circuits         # 回線一覧のみ標準出力
 nwdsl schema   -o nwdsl.schema.json
+nwdsl serve                          # playground (http://127.0.0.1:8321/) を起動
+nwdsl serve --port 9000 --no-browser # ポート指定 / ブラウザ自動起動なし
 ```
+
+`serve` は編集→自動描画の playground。SVG プレビューには D2 バイナリが必要 (PATH または リポジトリ `.tools/` から自動検出)。D2 が無い環境では図ソースの表示のみになる。docs/ と examples/ はカレントディレクトリ基準で検出するため、リポジトリ直下での起動を推奨。
 
 `--view` / `--section` は複数回指定できる。`--format` は `d2` / `mermaid` / `all`(既定)。
 
