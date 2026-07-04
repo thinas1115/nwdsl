@@ -148,6 +148,30 @@ def test_path_view_overlay(doc):
     assert any(e.emphasis == "failed" and e.circuit == "cct-ipvpn-hq" for e in g.edges)
 
 
+def test_l3_hides_unused_interface_address():
+    """linkにもsegmentにも使われていないIFのアドレスはL3表示に出さない。"""
+    from nwdsl.model import Document
+    raw = {
+        "nwdsl": "0.1", "network": {"name": "t"},
+        "sites": [{"id": "s1", "name": "S1"}],
+        "devices": [
+            {"id": "r1", "site": "s1", "role": "router", "interfaces": [
+                {"name": "ge0", "ipv4": "10.0.0.1/30"},          # link使用 → 表示
+                {"name": "ge9", "ipv4": "192.168.99.1/24"},      # 未使用 → 非表示
+            ]},
+            {"id": "r2", "site": "s1", "role": "router",
+             "interfaces": [{"name": "ge0", "ipv4": "10.0.0.2/30"}]},
+        ],
+        "links": [{"type": "logical", "endpoints": ["r1:ge0", "r2:ge0"]}],
+        "views": [{"id": "v", "title": "t", "layers": ["logical"]}],
+    }
+    d = Document.model_validate(raw)
+    g = resolve_view(d, d.views[0])
+    label = next(n for n in g.nodes if n.id == "r1").label
+    assert "ge0: 10.0.0.1/30" in label
+    assert "192.168.99.1" not in label
+
+
 def test_logical_view_shows_l3_info(doc):
     """logicalレイヤを含むビューではIF IPv4とセグメントノードが自動表示される。"""
     g = resolve_view(doc, _view(doc, "logical-all"))

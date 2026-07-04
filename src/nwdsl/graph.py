@@ -182,11 +182,19 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
         show_l3 = (view.show_l3 if view.show_l3 is not None
                    else "logical" in view.layers)
         if show_l3:
+            # アドレス表記は「使用中のIF」(linkの端点 or セグメント参照あり) に限定する
+            used_ifs: set[tuple[str, str]] = set()
+            for link in doc.links:
+                for ep in link.endpoints:
+                    ep_node, ep_if = parse_endpoint(ep)
+                    if ep_if is not None:
+                        used_ifs.add((ep_node, ep_if))
             for node in nodes.values():
                 if node.kind != "device":
                     continue
                 dev = device_by_id[node.id]
-                ips = [f"{i.name}: {i.ipv4}" for i in dev.interfaces if i.ipv4]
+                ips = [f"{i.name}: {i.ipv4}" for i in dev.interfaces
+                       if i.ipv4 and ((dev.id, i.name) in used_ifs or i.segment)]
                 if len(ips) > 5:
                     ips = ips[:5] + [f"…他{len(ips) - 5}件"]
                 if ips:
