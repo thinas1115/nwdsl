@@ -4,87 +4,165 @@
 <meta charset="utf-8">
 <title>nwdsl playground</title>
 <style>
+  :root {
+    --bg: #f1f4f9; --panel: #ffffff; --line: #e3e8ef;
+    --ink: #1e293b; --muted: #64748b; --faint: #94a3b8;
+    --brand: #2563eb; --brand-dark: #1d4ed8; --brand-soft: #eff4ff;
+    --navy1: #0d1b34; --navy2: #16294d;
+    --ok: #0f8a3d; --ng: #d43a2f;
+    --mono: "Cascadia Code", Consolas, "BIZ UDGothic", monospace;
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(15,27,52,.06), 0 8px 24px rgba(15,27,52,.07);
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
-         display: flex; flex-direction: column; height: 100vh; background: #f7f9fc; }
-  header { display: flex; align-items: center; gap: 16px; padding: 8px 16px;
-           background: #1a2340; color: #fff; flex-wrap: wrap; }
-  header h1 { font-size: 16px; margin: 0; }
-  header .links { display: flex; gap: 4px; flex-wrap: wrap; }
-  header button, header select {
-    background: #33475b; color: #fff; border: 1px solid #5b7fa6; border-radius: 4px;
-    padding: 4px 10px; font-size: 12px; cursor: pointer; }
-  header button:hover { background: #4a6076; }
-  main { flex: 1; display: flex; min-height: 0; }
-  #editor-pane { width: 40%; min-width: 320px; display: flex; flex-direction: column;
-                 border-right: 1px solid #d5dce5; }
-  #editor-toolbar { display: flex; gap: 8px; align-items: center; padding: 6px 10px;
-                    background: #eef2f7; border-bottom: 1px solid #d5dce5; font-size: 12px; }
-  #yaml { flex: 1; border: none; resize: none; padding: 10px; font-size: 13px; line-height: 1.5;
-          font-family: Consolas, "BIZ UDGothic", monospace; outline: none; }
-  #preview-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  #preview-toolbar { display: flex; gap: 6px; align-items: center; padding: 6px 10px;
-                     background: #eef2f7; border-bottom: 1px solid #d5dce5; flex-wrap: wrap; }
-  .tab { border: 1px solid #c3ccd6; background: #fff; border-radius: 4px; padding: 3px 12px;
-         font-size: 12px; cursor: pointer; }
-  .tab.active { background: #1a56b0; color: #fff; border-color: #1a56b0; }
-  #view-select { font-size: 12px; padding: 3px; }
-  #status { margin-left: auto; font-size: 12px; }
-  #status.ok { color: #137333; } #status.ng { color: #c5221f; }
-  #output { flex: 1; overflow: auto; background: #fff; padding: 12px; }
+  body { margin: 0; color: var(--ink); background: var(--bg);
+         font-family: "Segoe UI", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+         display: flex; flex-direction: column; height: 100vh; }
+  button { font-family: inherit; }
+
+  /* ---- ヘッダー ---- */
+  header { display: flex; align-items: center; gap: 14px; padding: 10px 20px; flex-wrap: wrap;
+           background: linear-gradient(90deg, var(--navy1), var(--navy2)); color: #fff; }
+  header h1 { font-size: 16px; margin: 0; letter-spacing: .3px; font-weight: 600; }
+  header h1 .accent { color: #7fb0ff; }
+  header .tagline { font-size: 11.5px; color: #8fa3c4; }
+  header label { font-size: 12px; color: #c6d2e4; display: flex; align-items: center; gap: 6px; }
+  header select { background: rgba(255,255,255,.08); color: #fff; font-size: 12.5px;
+                  border: 1px solid rgba(255,255,255,.22); border-radius: 7px; padding: 5px 8px; }
+  header select option { color: #1e293b; }
+  .btn { border-radius: 7px; padding: 6px 14px; font-size: 12.5px; cursor: pointer;
+         border: 1px solid transparent; transition: background .12s, border-color .12s; }
+  .btn-primary { background: var(--brand); color: #fff; font-weight: 600; }
+  .btn-primary:hover { background: var(--brand-dark); }
+  .btn-ghost { background: transparent; color: #dbe6f6; border-color: rgba(255,255,255,.25); }
+  .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.45); }
+  header .links { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+
+  /* ---- 2ペインレイアウト ---- */
+  main { flex: 1; display: flex; min-height: 0; gap: 14px; padding: 14px 16px 16px; }
+  #editor-pane, #preview-pane { display: flex; flex-direction: column; min-height: 0;
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden; }
+  #editor-pane { width: 40%; min-width: 340px; }
+  #preview-pane { flex: 1; min-width: 0; }
+  .pane-bar { display: flex; gap: 10px; align-items: center; padding: 8px 14px;
+              border-bottom: 1px solid var(--line); background: #fafbfd; flex-wrap: wrap; }
+  .pane-bar .hint { font-size: 11.5px; color: var(--faint); }
+  #yaml { flex: 1; border: none; resize: none; padding: 14px 16px; font-size: 13px;
+          line-height: 1.6; font-family: var(--mono); outline: none; color: #0f2038;
+          tab-size: 2; }
+
+  /* ---- タブ・ステータス ---- */
+  .tabs { display: flex; background: #eaeef5; border-radius: 8px; padding: 3px; gap: 2px; }
+  .tab { border: none; background: transparent; border-radius: 6px; padding: 4px 14px;
+         font-size: 12.5px; color: var(--muted); cursor: pointer; }
+  .tab:hover { color: var(--ink); }
+  .tab.active { background: #fff; color: var(--brand-dark); font-weight: 600;
+                box-shadow: 0 1px 2px rgba(15,27,52,.12); }
+  #view-select { font-size: 12.5px; padding: 5px 8px; border: 1px solid var(--line);
+                 border-radius: 7px; color: var(--ink); background: #fff; max-width: 230px; }
+  .zoom-wrap { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); }
+  #zoom { width: 90px; accent-color: var(--brand); }
+  #status { margin-left: auto; font-size: 12px; font-weight: 600; border-radius: 99px;
+            padding: 3px 12px; }
+  #status.ok { color: var(--ok); background: #e8f6ed; }
+  #status.ng { color: var(--ng); background: #fdebe9; }
+
+  /* ---- プレビュー本体 ---- */
+  #output { flex: 1; overflow: auto; background: #fff; padding: 16px 18px; }
   #output svg { max-width: none; }
-  #output pre { font-family: Consolas, monospace; font-size: 12px; white-space: pre-wrap; }
-  #output table { border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
-  #output th, #output td { border: 1px solid #c3ccd6; padding: 4px 10px; text-align: left; }
-  #output th { background: #eef2f7; }
-  .issue { padding: 6px 10px; border-radius: 4px; margin-bottom: 6px; font-size: 13px; }
-  .issue.error { background: #fce8e6; color: #a50e0e; }
-  .issue.warning { background: #fff8e1; color: #7a5d00; }
-  #docs-overlay { position: fixed; inset: 0; background: rgba(20,30,50,.55); display: none; }
-  #docs-panel { position: absolute; top: 4%; left: 8%; right: 8%; bottom: 4%; background: #fff;
-                border-radius: 8px; display: flex; overflow: hidden; }
-  #docs-nav { width: 240px; border-right: 1px solid #d5dce5; overflow-y: auto; padding: 12px;
-              background: #f7f9fc; }
-  #docs-nav h3 { font-size: 12px; color: #5f6368; margin: 10px 0 4px; }
-  #docs-nav a { display: block; font-size: 13px; padding: 3px 6px; color: #1a56b0;
-                text-decoration: none; border-radius: 4px; cursor: pointer; }
-  #docs-nav a:hover { background: #e8f0fe; }
-  #docs-body { flex: 1; overflow-y: auto; padding: 20px 32px; }
-  #docs-body pre.raw { white-space: pre-wrap; font-size: 13px; }
-  #docs-body table { border-collapse: collapse; }
-  #docs-body th, #docs-body td { border: 1px solid #c3ccd6; padding: 4px 8px; font-size: 13px; }
-  #docs-close { position: absolute; top: 10px; right: 16px; font-size: 20px; cursor: pointer;
-                background: none; border: none; color: #5f6368; }
-  #zoom { width: 90px; }
+  #output > pre { background: #0d1b34; color: #d7e3f4; border-radius: 8px; padding: 14px 16px;
+                  font-family: var(--mono); font-size: 12.5px; line-height: 1.55;
+                  white-space: pre-wrap; }
+  .issue { padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 13px;
+           border: 1px solid transparent; }
+  .issue.error { background: #fdebe9; color: #9c2318; border-color: #f5c6c0; }
+  .issue.warning { background: #fff7e0; color: #7a5d00; border-color: #f1e2ac; }
+
+  /* ---- Markdown 本文 (表タブ / Docs 共通) ---- */
+  .md-body { max-width: 900px; line-height: 1.8; font-size: 14.5px; }
+  .md-body h1 { font-size: 25px; padding-bottom: 10px; border-bottom: 1px solid var(--line);
+                margin: 4px 0 18px; }
+  .md-body h2 { font-size: 19px; margin: 34px 0 12px; padding-left: 10px;
+                border-left: 4px solid var(--brand); }
+  .md-body h3 { font-size: 15.5px; margin: 24px 0 8px; }
+  .md-body p, .md-body li { color: #334155; }
+  .md-body a { color: var(--brand); }
+  .md-body code { background: #edf1f7; border-radius: 5px; padding: 1.5px 6px;
+                  font-family: var(--mono); font-size: .88em; color: #0f3060; }
+  .md-body pre { background: #0d1b34; border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
+  .md-body pre code { background: none; padding: 0; color: #d7e3f4; font-size: 12.5px;
+                      line-height: 1.6; }
+  .md-body table { border-collapse: collapse; margin: 14px 0; font-size: 13.5px; width: 100%; }
+  .md-body th { background: #f4f7fb; text-align: left; }
+  .md-body th, .md-body td { border: 1px solid var(--line); padding: 7px 12px; }
+  .md-body tr:nth-child(even) td { background: #fafcfe; }
+  .md-body blockquote { margin: 14px 0; padding: 10px 16px; background: var(--brand-soft);
+                        border-left: 4px solid var(--brand); border-radius: 0 8px 8px 0;
+                        color: #1e3a6e; }
+  .md-body blockquote p { margin: 4px 0; color: inherit; }
+  .md-body hr { border: none; border-top: 1px solid var(--line); margin: 28px 0; }
+  .md-body pre.raw { white-space: pre-wrap; color: #d7e3f4; }
+
+  /* ---- Docs ビューア ---- */
+  #docs-overlay { position: fixed; inset: 0; background: rgba(9,17,34,.6); display: none;
+                  backdrop-filter: blur(2px); }
+  #docs-panel { position: absolute; top: 3.5%; left: 7%; right: 7%; bottom: 3.5%;
+                background: #fff; border-radius: 14px; display: flex; overflow: hidden;
+                box-shadow: 0 24px 80px rgba(9,17,34,.45); }
+  #docs-nav { width: 270px; border-right: 1px solid var(--line); overflow-y: auto;
+              padding: 18px 14px; background: #f7f9fd; flex-shrink: 0; }
+  #docs-nav h3 { font-size: 11px; color: var(--faint); margin: 18px 6px 6px;
+                 text-transform: uppercase; letter-spacing: .8px; }
+  #docs-nav h3:first-child { margin-top: 2px; }
+  #docs-nav a { display: block; font-size: 13.5px; padding: 7px 10px; color: #33445c;
+                text-decoration: none; border-radius: 7px; cursor: pointer; margin-bottom: 1px; }
+  #docs-nav a:hover { background: #e9eef8; }
+  #docs-nav a.active { background: var(--brand-soft); color: var(--brand-dark); font-weight: 600; }
+  #docs-body { flex: 1; overflow-y: auto; padding: 30px 44px 60px; }
+  #docs-close { position: absolute; top: 12px; right: 14px; font-size: 15px; cursor: pointer;
+                background: #f1f4f9; border: 1px solid var(--line); border-radius: 99px;
+                width: 32px; height: 32px; color: var(--muted); }
+  #docs-close:hover { background: #e3e8ef; color: var(--ink); }
 </style>
 </head>
 <body>
 <header>
-  <h1>nwdsl playground</h1>
-  <label style="font-size:12px">サンプル:
+  <div>
+    <h1><span class="accent">nw</span>dsl playground</h1>
+    <div class="tagline">ネットワーク構成DSL — YAMLを書くと構成図・表が生成されます</div>
+  </div>
+  <label>サンプル
     <select id="sample-select"></select>
   </label>
-  <button id="render-btn">検証 + 描画 (Ctrl+Enter)</button>
+  <button id="render-btn" class="btn btn-primary">検証 + 描画</button>
   <span class="links">
-    <button data-doc="tutorial.md">チュートリアル</button>
-    <button data-doc="reference.md">リファレンス</button>
-    <button data-doc="openspec-integration.md">OpenSpec統合</button>
-    <button data-doc="">Docs一覧</button>
+    <button class="btn btn-ghost" data-doc="tutorial.md">チュートリアル</button>
+    <button class="btn btn-ghost" data-doc="reference.md">リファレンス</button>
+    <button class="btn btn-ghost" data-doc="openspec-integration.md">OpenSpec統合</button>
+    <button class="btn btn-ghost" data-doc="">Docs一覧</button>
   </span>
 </header>
 <main>
   <div id="editor-pane">
-    <div id="editor-toolbar">network.yaml を編集すると自動で再描画されます</div>
+    <div class="pane-bar">
+      <strong style="font-size:12.5px">network.yaml</strong>
+      <span class="hint">編集すると自動で検証+再描画 (Ctrl+Enter で即時)</span>
+    </div>
     <textarea id="yaml" spellcheck="false"></textarea>
   </div>
   <div id="preview-pane">
-    <div id="preview-toolbar">
-      <span class="tab active" data-tab="diagram">図</span>
-      <span class="tab" data-tab="tables">表</span>
-      <span class="tab" data-tab="d2">D2ソース</span>
-      <span class="tab" data-tab="mermaid">Mermaid</span>
-      <label style="font-size:12px">ビュー: <select id="view-select"></select></label>
-      <label style="font-size:12px">拡大 <input type="range" id="zoom" min="30" max="200" value="100"></label>
+    <div class="pane-bar">
+      <div class="tabs">
+        <button class="tab active" data-tab="diagram">図</button>
+        <button class="tab" data-tab="tables">表</button>
+        <button class="tab" data-tab="d2">D2ソース</button>
+        <button class="tab" data-tab="mermaid">Mermaid</button>
+      </div>
+      <select id="view-select" title="ビュー切替"></select>
+      <span class="zoom-wrap">拡大
+        <input type="range" id="zoom" min="30" max="200" value="100">
+      </span>
       <span id="status"></span>
     </div>
     <div id="output"></div>
@@ -93,8 +171,8 @@
 <div id="docs-overlay">
   <div id="docs-panel">
     <nav id="docs-nav"></nav>
-    <div id="docs-body"></div>
-    <button id="docs-close">✕</button>
+    <div id="docs-body" class="md-body"></div>
+    <button id="docs-close" title="閉じる">✕</button>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
@@ -152,7 +230,7 @@ function show() {
         : "<p>D2 バイナリが見つからないため SVG プレビューは無効です。「D2ソース」タブの内容を d2 CLI で描画してください。</p>");
     }
   } else if (currentTab === "tables") {
-    out.innerHTML = warn + mdToHtml(last.tables || "");
+    out.innerHTML = warn + `<div class="md-body">${mdToHtml(last.tables || "")}</div>`;
   } else if (currentTab === "d2") {
     out.innerHTML = `<pre>${esc(last.d2 || "")}</pre>`;
   } else if (currentTab === "mermaid") {
@@ -235,6 +313,8 @@ async function openDocs(name) {
 
 async function showDoc(name) {
   if (!name) { $("docs-body").innerHTML = "<p>docs/ が見つかりません</p>"; return; }
+  document.querySelectorAll("#docs-nav a").forEach((a) =>
+    a.classList.toggle("active", a.dataset.name === name));
   const r = await api(`/api/doc?name=${encodeURIComponent(name)}`);
   $("docs-body").innerHTML = r.markdown ? mdToHtml(r.markdown) : `<p>${esc(r.error || "")}</p>`;
   $("docs-body").scrollTop = 0;
@@ -268,6 +348,9 @@ $("sample-select").addEventListener("change", (e) => loadSample(e.target.value))
   $("sample-select").innerHTML =
     names.map((n) => `<option value="${n}">${n}</option>`).join("");
   loadSample(names[0] || "minimal");
+  // ?doc=tutorial.md でDocsビューアを直接開ける (共有リンク用)
+  const q = new URLSearchParams(location.search);
+  if (q.has("doc")) openDocs(q.get("doc") || undefined);
 })();
 </script>
 </body>

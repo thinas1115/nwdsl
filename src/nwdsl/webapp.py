@@ -108,6 +108,20 @@ def _samples() -> dict[str, Path | None]:
     return result
 
 
+_DOC_ORDER = ["tutorial.md", "reference.md", "openspec-integration.md"]
+
+
+def _doc_title(path: Path) -> str:
+    """先頭の H1 をタイトルとして使う (無ければファイル名)。"""
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines()[:10]:
+            if line.startswith("# "):
+                return line[2:].strip()
+    except OSError:
+        pass
+    return path.stem
+
+
 def _doc_list() -> list[dict[str, str]]:
     docs = _repo_dir("docs")
     if not docs:
@@ -116,7 +130,10 @@ def _doc_list() -> list[dict[str, str]]:
     for pattern in ("*.md", "adr/*.md"):
         for path in sorted(docs.glob(pattern)):
             rel = path.relative_to(docs).as_posix()
-            entries.append({"name": rel, "title": path.stem})
+            entries.append({"name": rel, "title": _doc_title(path)})
+    guide_rank = {name: i for i, name in enumerate(_DOC_ORDER)}
+    entries.sort(key=lambda e: (e["name"].startswith("adr/"),
+                                guide_rank.get(e["name"], 99), e["name"]))
     return entries
 
 
