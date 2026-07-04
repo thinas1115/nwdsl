@@ -149,6 +149,11 @@
                 background: #f1f4f9; border: 1px solid var(--line); border-radius: 99px;
                 width: 32px; height: 32px; color: var(--muted); }
   #docs-close:hover { background: #e3e8ef; color: var(--ink); }
+  #docs-copy { position: absolute; top: 12px; right: 56px; cursor: pointer; font-size: 12px;
+               background: var(--brand); color: #fff; border: none; border-radius: 99px;
+               padding: 7px 16px; font-weight: 600; }
+  #docs-copy:hover { background: var(--brand-dark); }
+  #docs-copy.done { background: var(--ok); }
 </style>
 </head>
 <body>
@@ -193,6 +198,7 @@
         <option value="auto">エンジン: 自動</option>
         <option value="d2">D2 (ELK)</option>
         <option value="mermaid">Mermaid</option>
+        <option value="svg">内蔵SVG (破綻しない保証)</option>
       </select>
       <button class="tab" id="fit-btn" title="全体表示">フィット</button>
       <span class="hint">ドラッグ移動 / ホイール拡大縮小 / ダブルクリックでフィット</span>
@@ -205,6 +211,7 @@
   <div id="docs-panel">
     <nav id="docs-nav"></nav>
     <div id="docs-body" class="md-body"></div>
+    <button id="docs-copy" title="表示中ドキュメントのMarkdown原文をコピー (AIへの読み込み用)">.md をコピー</button>
     <button id="docs-close" title="閉じる">✕</button>
   </div>
 </div>
@@ -456,14 +463,29 @@ async function openDocs(name) {
   showDoc(name || (list[0] && list[0].name));
 }
 
+let currentDocMd = "";
+
 async function showDoc(name) {
   if (!name) { $("docs-body").innerHTML = "<p>docs/ が見つかりません</p>"; return; }
   document.querySelectorAll("#docs-nav a").forEach((a) =>
     a.classList.toggle("active", a.dataset.name === name));
   const r = await api(`/api/doc?name=${encodeURIComponent(name)}`);
+  currentDocMd = r.markdown || "";
   $("docs-body").innerHTML = r.markdown ? mdToHtml(r.markdown) : `<p>${esc(r.error || "")}</p>`;
   $("docs-body").scrollTop = 0;
 }
+
+$("docs-copy").addEventListener("click", async () => {
+  const btn = $("docs-copy");
+  try {
+    await navigator.clipboard.writeText(currentDocMd);
+    btn.textContent = "コピーしました ✓";
+    btn.classList.add("done");
+  } catch (e) {
+    btn.textContent = "コピー失敗";
+  }
+  setTimeout(() => { btn.textContent = ".md をコピー"; btn.classList.remove("done"); }, 1600);
+});
 
 // ---- イベント配線 ----
 $("render-btn").addEventListener("click", render);

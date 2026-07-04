@@ -108,7 +108,8 @@ def _samples() -> dict[str, Path | None]:
     return result
 
 
-_DOC_ORDER = ["tutorial.md", "reference.md", "openspec-integration.md"]
+_DOC_ORDER = ["tutorial.md", "reference.md", "patterns.md", "faq.md",
+              "openspec-integration.md"]
 
 
 def _doc_title(path: Path) -> str:

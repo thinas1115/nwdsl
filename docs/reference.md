@@ -205,4 +205,51 @@ PNG が必要なら Windows では Edge のヘッドレスで変換できる:
   --screenshot=out.png --window-size=1600,1000 --default-background-color=FFFFFFFF file:///C:/path/to/in.svg
 ```
 
-Mermaid 出力 (.mmd) は GitHub / Obsidian に貼るとそのまま描画される。機器数が多い詳細図はレイアウトが乱れやすいため、詳細図は D2、概要図・埋め込みは Mermaid という使い分けを推奨する。
+Mermaid 出力 (.mmd) は GitHub / Obsidian に貼るとそのまま描画される。
+
+## 描画エンジンの使い分け
+
+| | D2 (ELK) | Mermaid | 内蔵SVG |
+|---|---|---|---|
+| 実装 | 外部バイナリ (`.tools/` or PATH) | GitHub/Obsidian/mermaid.js | Python内蔵 (依存なし) |
+| 木構造系の見た目 | ◎ 最も洗練 | △ 中規模で乱れる | ○ 直交配線・整列済み |
+| リング / leaf-spine / 多拠点概要 | ✕ 破綻 (ADR-0007) | ✕ 同様に破綻 | ◎ 円環/2段/格子で描画 |
+| 重なりの保証 | なし (回避策を実装済み) | なし | **あり** (不変条件を機械検証, ADR-0008) |
+| 用途 | 設計書の正式図 (木構造系) | Markdown埋め込み・レビュー共有 | 特殊トポロジ / D2なし環境 / 確実性優先 |
+
+## アーキテクチャ (コンポーネントと役割)
+
+```
+network.yaml ─▶ loader.py ─▶ model.py(pydantic) ─▶ validate.py ─▶ graph.py ─▶ シリアライザ群
+   (唯一のソース)  YAML読込     スキーマ=型=検証      参照/意味検査   ビュー解決    (下記)
+```
+
+| コンポーネント | 役割 |
+|---|---|
+| `model.py` | スキーマの単一ソース。pydanticモデル=型=検証=JSON Schema生成元 |
+| `loader.py` | YAML読込と構文レベル検証 (スキーマ違反を日本語で報告) |
+| `validate.py` | 意味的整合性 (参照解決・linkタイプ制約・経路の隣接性など約20規則) |
+| `graph.py` | View定義を **RenderGraph** (フォーマット非依存の中間グラフ) に解決。BFS向き付け・LAG束ね・経路オーバーレイもここ |
+| `render_d2.py` / `render_mermaid.py` / `render_svg.py` | RenderGraph を各記法にシリアライズ。意味論 (色・線種) は3者で共通 |
+| `svg_layout.py` | 内蔵SVGのレイアウトエンジン (不変条件保証, ADR-0008) |
+| `tables.py` | 設計書向け6表をMarkdown生成 (接続先・収容先はlinksから逆引き) |
+| `cli.py` / `webapp.py` | CLI 5コマンド / playground (ローカルWebサーバー) |
+
+## エンティティ関係 (参照の向き)
+
+```
+Site ◀── Device ── Interface ──▶ Segment
+            ▲          ▲
+            │ endpoints │ (device:interface)
+           Link ──▶ Circuit        Link ──▶ Cloud (端点として)
+            ▲
+           Path.hops (node列。隣接性はlinkで検証)
+           Path.failure ──▶ Device / Cloud / Circuit
+View ──▶ Site (include/exclude) / Path (type: path)
+```
+
+- ID参照はすべてバリデータが検査する。逆方向の導出 (IF→接続先、Circuit→収容先) は表生成が行う
+
+## playground
+
+`nwdsl serve` で起動するローカルUI。YAML編集 (ハイライト付き) → 自動検証+描画、エンジン切替 (D2/Mermaid/内蔵SVG)、表/D2/Mermaidソースのタブ、Docsビューア (右上の「.md をコピー」でAIに読み込ませる用のMarkdown原文を取得可)。プレビューはドラッグ移動+ホイール拡大縮小。
