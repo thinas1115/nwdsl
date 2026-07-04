@@ -21,11 +21,21 @@ TARGETS = [
     EXAMPLES / "sample-corp" / "network.yaml",
     EXAMPLES / "complex-lan" / "network.yaml",
     EXAMPLES / "scale-50" / "network.yaml",
+    EXAMPLES / "two-site-ipsec" / "network.yaml",
+    EXAMPLES / "hq-dc-cloud" / "network.yaml",
+    EXAMPLES / "branch-20" / "network.yaml",
     EXAMPLES / "stress" / "leafspine.yaml",
     EXAMPLES / "stress" / "ring.yaml",
     EXAMPLES / "stress" / "multisite.yaml",
     EXAMPLES / "stress" / "lag.yaml",
 ]
+
+
+@pytest.mark.parametrize("path", TARGETS, ids=lambda p: p.parent.name + "-" + p.stem)
+def test_all_examples_validate_clean(path):
+    from nwdsl.validate import validate_document, has_errors
+    issues = validate_document(load_document(path))
+    assert not has_errors(issues), [str(i) for i in issues]
 
 
 def _views():

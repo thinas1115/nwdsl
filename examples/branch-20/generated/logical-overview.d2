@@ -1,0 +1,81 @@
+title: |md
+  # BGP論理概要図 (ハブ&スポーク)
+| {near: top-center}
+direction: down
+
+classes: {
+  role-router: {style.fill: "#e8f0fe"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
+  role-l3switch: {style.fill: "#d2e3fc"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
+  role-l2switch: {style.fill: "#e6f4ea"; style.stroke: "#137333"; style.font-color: "#1a2e1f"}
+  role-firewall: {style.fill: "#fce8e6"; style.stroke: "#c5221f"; style.font-color: "#3c1a19"}
+  role-other: {style.fill: "#f1f3f4"; style.stroke: "#5f6368"; style.font-color: "#202124"}
+  node-cloud: {shape: cloud; style.fill: "#f1f3f4"; style.stroke: "#5f6368"}
+  node-site: {style.fill: "#fff8e1"; style.stroke: "#b58105"; style.font-color: "#4a3a08"}
+  node-segment: {style.fill: "#e2f5f0"; style.stroke: "#0f766e"; style.font-color: "#0b3d38"; style.border-radius: 12}
+  node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
+  group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
+  edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
+  edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
+  edge-tunnel: {style.stroke: "#7b1fa2"; style.stroke-width: 2; style.stroke-dash: 5}
+  edge-logical: {style.stroke: "#188038"; style.stroke-width: 2; style.stroke-dash: 3}
+  edge-segment: {style.stroke: "#0f766e"; style.stroke-width: 1}
+}
+
+n_site__hube: "東日本ハブ" {class: node-site}
+n_site__br03: "支店03" {class: node-site}
+n_site__hubw: "西日本ハブ" {class: node-site}
+n_site__br04: "支店04" {class: node-site}
+n_site__br05: "支店05" {class: node-site}
+n_site__br06: "支店06" {class: node-site}
+n_site__br07: "支店07" {class: node-site}
+n_site__br08: "支店08" {class: node-site}
+n_site__br09: "支店09" {class: node-site}
+n_site__br10: "支店10" {class: node-site}
+n_site__br11: "支店11" {class: node-site}
+n_site__br12: "支店12" {class: node-site}
+n_site__br13: "支店13" {class: node-site}
+n_site__br14: "支店14" {class: node-site}
+n_site__br15: "支店15" {class: node-site}
+n_site__br16: "支店16" {class: node-site}
+n_site__br17: "支店17" {class: node-site}
+n_site__br18: "支店18" {class: node-site}
+n_site__br19: "支店19" {class: node-site}
+n_site__br20: "支店20" {class: node-site}
+
+n_site__hube -- n_site__br03: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br03: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br04: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br04: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br05: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br05: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br06: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br06: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br07: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br07: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br08: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br08: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br09: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br09: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br10: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br10: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br11: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br11: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br12: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br12: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br13: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br13: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br14: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br14: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br15: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br15: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br16: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br16: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br17: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br17: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br18: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br18: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br19: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br19: "BGP" {class: edge-logical}
+n_site__hube -- n_site__br20: "BGP" {class: edge-logical}
+n_site__hubw -- n_site__br20: "BGP" {class: edge-logical}

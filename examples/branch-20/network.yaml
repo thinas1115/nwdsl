@@ -1,0 +1,982 @@
+# このファイルは generate.py により生成 (手編集しない)
+nwdsl: '0.1'
+network:
+  name: branch-20
+  description: 20拠点ハブ&スポーク (東西DRハブ + モバイルバックアップ)
+sites:
+- id: hube
+  name: 東日本ハブ
+  location: 東京
+- id: hubw
+  name: 西日本ハブ
+  location: 大阪
+- id: br03
+  name: 支店03
+- id: br04
+  name: 支店04
+- id: br05
+  name: 支店05
+- id: br06
+  name: 支店06
+- id: br07
+  name: 支店07
+- id: br08
+  name: 支店08
+- id: br09
+  name: 支店09
+- id: br10
+  name: 支店10
+- id: br11
+  name: 支店11
+- id: br12
+  name: 支店12
+- id: br13
+  name: 支店13
+- id: br14
+  name: 支店14
+- id: br15
+  name: 支店15
+- id: br16
+  name: 支店16
+- id: br17
+  name: 支店17
+- id: br18
+  name: 支店18
+- id: br19
+  name: 支店19
+- id: br20
+  name: 支店20
+devices:
+- id: hube-rt01
+  site: hube
+  role: router
+  platform: Cisco C8300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  redundancy_group: hube-wan
+- id: hube-rt02
+  site: hube
+  role: router
+  platform: Cisco C8300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+  redundancy_group: hube-wan
+- id: hube-core01
+  site: hube
+  role: l3switch
+  platform: Catalyst 9500
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+- id: hube-srv01
+  site: hube
+  role: server
+  platform: 基幹サーバ
+  interfaces:
+  - name: Gi0/1
+- id: hubw-rt01
+  site: hubw
+  role: router
+  platform: Cisco C8300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  redundancy_group: hubw-wan
+- id: hubw-rt02
+  site: hubw
+  role: router
+  platform: Cisco C8300
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+  redundancy_group: hubw-wan
+- id: hubw-core01
+  site: hubw
+  role: l3switch
+  platform: Catalyst 9500
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+  - name: Gi0/3
+- id: hubw-srv01
+  site: hubw
+  role: server
+  platform: 基幹サーバ
+  interfaces:
+  - name: Gi0/1
+- id: br03-rt01
+  site: br03
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+- id: br03-sw01
+  site: br03
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br04-rt01
+  site: br04
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br04-sw01
+  site: br04
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br05-rt01
+  site: br05
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br05-sw01
+  site: br05
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br06-rt01
+  site: br06
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+- id: br06-sw01
+  site: br06
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br07-rt01
+  site: br07
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br07-sw01
+  site: br07
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br08-rt01
+  site: br08
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br08-sw01
+  site: br08
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br09-rt01
+  site: br09
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+- id: br09-sw01
+  site: br09
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br10-rt01
+  site: br10
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br10-sw01
+  site: br10
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br11-rt01
+  site: br11
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br11-sw01
+  site: br11
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br12-rt01
+  site: br12
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+- id: br12-sw01
+  site: br12
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br13-rt01
+  site: br13
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br13-sw01
+  site: br13
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br14-rt01
+  site: br14
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br14-sw01
+  site: br14
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br15-rt01
+  site: br15
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+- id: br15-sw01
+  site: br15
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br16-rt01
+  site: br16
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br16-sw01
+  site: br16
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br17-rt01
+  site: br17
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br17-sw01
+  site: br17
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br18-rt01
+  site: br18
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+  - name: Gi0/3
+    description: モバイル閉域網アクセス回線
+- id: br18-sw01
+  site: br18
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br19-rt01
+  site: br19
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br19-sw01
+  site: br19
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+- id: br20-rt01
+  site: br20
+  role: router
+  platform: Cisco C1121
+  interfaces:
+  - name: Gi0/1
+  - name: Gi0/2
+    description: IP-VPNアクセス回線
+- id: br20-sw01
+  site: br20
+  role: l2switch
+  platform: Catalyst 1000
+  interfaces:
+  - name: Gi0/1
+clouds:
+- id: ipvpn
+  name: IP-VPN網
+  kind: wan
+- id: mobile
+  name: モバイル閉域網
+  kind: wan
+circuits:
+- id: cct-v-hube1
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-v-hube2
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-m-hube
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 100M
+- id: cct-v-hubw1
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-v-hubw2
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-m-hubw
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 100M
+- id: cct-v-br03
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-m-br03
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 50M
+- id: cct-v-br04
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br05
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br06
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-m-br06
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 50M
+- id: cct-v-br07
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br08
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br09
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-m-br09
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 50M
+- id: cct-v-br10
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br11
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br12
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-m-br12
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 50M
+- id: cct-v-br13
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br14
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br15
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-m-br15
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 50M
+- id: cct-v-br16
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br17
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br18
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-m-br18
+  provider: SB
+  service: モバイル閉域網
+  bandwidth: 50M
+- id: cct-v-br19
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+- id: cct-v-br20
+  provider: NTT Com
+  service: IP-VPN
+  bandwidth: 100M
+links:
+- type: lan-cable
+  endpoints:
+  - hube-rt01:Gi0/1
+  - hube-core01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hube-rt02:Gi0/1
+  - hube-core01:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hube-core01:Gi0/3
+  - hube-srv01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - hube-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-hube1
+- type: wan-circuit
+  endpoints:
+  - hube-rt02:Gi0/2
+  - ipvpn
+  circuit: cct-v-hube2
+- type: wan-circuit
+  endpoints:
+  - hube-rt02:Gi0/3
+  - mobile
+  circuit: cct-m-hube
+- type: lan-cable
+  endpoints:
+  - hubw-rt01:Gi0/1
+  - hubw-core01:Gi0/1
+- type: lan-cable
+  endpoints:
+  - hubw-rt02:Gi0/1
+  - hubw-core01:Gi0/2
+- type: lan-cable
+  endpoints:
+  - hubw-core01:Gi0/3
+  - hubw-srv01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - hubw-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-hubw1
+- type: wan-circuit
+  endpoints:
+  - hubw-rt02:Gi0/2
+  - ipvpn
+  circuit: cct-v-hubw2
+- type: wan-circuit
+  endpoints:
+  - hubw-rt02:Gi0/3
+  - mobile
+  circuit: cct-m-hubw
+- type: lan-cable
+  endpoints:
+  - br03-rt01:Gi0/1
+  - br03-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br03-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br03
+- type: wan-circuit
+  endpoints:
+  - br03-rt01:Gi0/3
+  - mobile
+  circuit: cct-m-br03
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br03-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br03-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br04-rt01:Gi0/1
+  - br04-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br04-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br04
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br04-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br04-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br05-rt01:Gi0/1
+  - br05-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br05-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br05
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br05-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br05-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br06-rt01:Gi0/1
+  - br06-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br06-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br06
+- type: wan-circuit
+  endpoints:
+  - br06-rt01:Gi0/3
+  - mobile
+  circuit: cct-m-br06
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br06-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br06-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br07-rt01:Gi0/1
+  - br07-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br07-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br07
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br07-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br07-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br08-rt01:Gi0/1
+  - br08-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br08-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br08
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br08-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br08-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br09-rt01:Gi0/1
+  - br09-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br09-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br09
+- type: wan-circuit
+  endpoints:
+  - br09-rt01:Gi0/3
+  - mobile
+  circuit: cct-m-br09
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br09-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br09-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br10-rt01:Gi0/1
+  - br10-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br10-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br10
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br10-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br10-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br11-rt01:Gi0/1
+  - br11-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br11-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br11
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br11-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br11-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br12-rt01:Gi0/1
+  - br12-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br12-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br12
+- type: wan-circuit
+  endpoints:
+  - br12-rt01:Gi0/3
+  - mobile
+  circuit: cct-m-br12
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br12-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br12-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br13-rt01:Gi0/1
+  - br13-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br13-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br13
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br13-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br13-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br14-rt01:Gi0/1
+  - br14-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br14-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br14
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br14-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br14-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br15-rt01:Gi0/1
+  - br15-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br15-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br15
+- type: wan-circuit
+  endpoints:
+  - br15-rt01:Gi0/3
+  - mobile
+  circuit: cct-m-br15
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br15-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br15-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br16-rt01:Gi0/1
+  - br16-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br16-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br16
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br16-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br16-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br17-rt01:Gi0/1
+  - br17-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br17-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br17
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br17-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br17-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br18-rt01:Gi0/1
+  - br18-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br18-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br18
+- type: wan-circuit
+  endpoints:
+  - br18-rt01:Gi0/3
+  - mobile
+  circuit: cct-m-br18
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br18-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br18-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br19-rt01:Gi0/1
+  - br19-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br19-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br19
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br19-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br19-rt01
+  description: BGP
+- type: lan-cable
+  endpoints:
+  - br20-rt01:Gi0/1
+  - br20-sw01:Gi0/1
+- type: wan-circuit
+  endpoints:
+  - br20-rt01:Gi0/2
+  - ipvpn
+  circuit: cct-v-br20
+- type: logical
+  endpoints:
+  - hube-rt01
+  - br20-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - hubw-rt01
+  - br20-rt01
+  description: BGP
+paths:
+- id: br05-normal
+  title: 支店05→東日本ハブ (正常時)
+  hops:
+  - node: br05-sw01
+  - node: br05-rt01
+  - node: ipvpn
+    protocol: BGP
+  - node: hube-rt01
+  - node: hube-core01
+  - node: hube-srv01
+- id: br06-mobile
+  title: 支店06→東日本ハブ (IP-VPN障害時)
+  failure:
+  - cct-v-br06
+  hops:
+  - node: br06-sw01
+  - node: br06-rt01
+  - node: mobile
+    protocol: BGP
+    note: モバイル閉域網へ切替
+  - node: hube-rt02
+  - node: hube-core01
+  - node: hube-srv01
+views:
+- id: wan-overview
+  title: 20拠点 WAN概要図
+  layers:
+  - wan-circuit
+  collapse_sites: true
+- id: logical-overview
+  title: BGP論理概要図 (ハブ&スポーク)
+  layers:
+  - logical
+  collapse_sites: true
+- id: hube-physical
+  title: 東日本ハブ 物理構成図
+  layers:
+  - lan-cable
+  - wan-circuit
+  include_sites:
+  - hube
+- id: path-br06-mobile
+  title: 支店06 IP-VPN障害時経路
+  type: path
+  path: br06-mobile

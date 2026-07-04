@@ -8,7 +8,7 @@
 from __future__ import annotations
 
 import ipaddress
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -183,10 +183,12 @@ class View(StrictModel):
     exclude_sites: Optional[list[str]] = Field(default=None, description="除外する拠点")
     collapse_sites: bool = Field(
         default=False, description="true のとき拠点を1ノードに畳む (全社概要図向け)")
-    show_l3: Optional[bool] = Field(
+    show_l3: Optional[Union[bool, Literal["view", "used", "all"]]] = Field(
         default=None,
-        description="L3情報 (IFのIPv4一覧とセグメントノード) を図に表示する。"
-                    "省略時は layers に logical を含むビューで自動的に有効")
+        description="L3情報 (IFのIPv4一覧とセグメントノード) の表示。"
+                    "view=このビューに現れる接続のIFのみ (true と同義) / "
+                    "used=いずれかのlinkで使用中のIF / all=IPv4を持つ全IF / false=非表示。"
+                    "省略時は layers に logical を含むビューで view モードが自動有効")
     description: Optional[str] = Field(default=None, description="補足")
 
 

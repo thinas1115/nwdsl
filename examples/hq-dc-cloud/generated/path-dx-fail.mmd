@@ -1,0 +1,63 @@
+flowchart TB
+  subgraph sg_hq["本社"]
+    hq_rt01["hq-rt01<br>Cisco C8300<br>Gi0/0/0: 10.255.0.1/29<br>Gi0/0/1: 10.10.0.2/24"]
+    hq_sw01["hq-sw01<br>Catalyst 9300<br>Vlan100: 10.10.100.1/24"]
+    hq_rt02["hq-rt02<br>Cisco C8300<br>Gi0/0/0: 10.255.0.2/29<br>Gi0/0/1: 10.10.0.3/24"]
+    seg__hq_users(["本社ユーザ<br>VLAN 100 / 10.10.100.0/24"])
+  end
+  subgraph sg_dc["DCコロケーション"]
+    dc_rt01["dc-rt01<br>Cisco C8500<br>Te0/0/0: 10.255.0.3/29<br>Te0/0/3: 169.254.100.1/30"]
+    dc_core01["dc-core01<br>Nexus 93180"]
+    dc_fw01["dc-fw01<br>FortiGate 600F<br>wan1: 198.51.100.20/29<br>tunnel.aws: 169.254.200.1/30"]
+    dc_srvsw01["dc-srvsw01<br>Catalyst 9200"]
+    dc_srv01["dc-srv01<br>PowerEdge R760 (基幹AP)<br>eno1: 10.20.10.11/24"]
+    dc_srv02["dc-srv02<br>PowerEdge R760 (DB)<br>eno1: 10.20.10.12/24"]
+    seg__dc_servers(["DCサーバ<br>VLAN 20 / 10.20.10.0/24"])
+  end
+  subgraph sg_aws["AWS ap-northeast-1"]
+    aws_vgw01["aws-vgw01<br>AWS VGW/TGW<br>dx1: 169.254.100.2/30<br>vpn1: 169.254.200.2/30<br>vpc1: 10.100.0.1/16"]
+    seg__aws_vpc_app(["VPC アプリ用<br>10.100.0.0/16"])
+  end
+  wide_ether(("広域Ethernet網"))
+  internet(("インターネット"))
+  hq_sw01 -->|"① HSRP"| hq_rt01
+  hq_rt02 --- hq_sw01
+  dc_rt01 -->|"④"| dc_core01
+  dc_core01 -->|"⑤ 経路広報の切替でVPNへ"| dc_fw01
+  dc_core01 --- dc_srvsw01
+  dc_srvsw01 --- dc_srv01
+  dc_srvsw01 --- dc_srv02
+  hq_rt01 -->|"② OSPF"| wide_ether
+  wide_ether ---|"キャリアA 広域Ethernet 1G<br>(Gi0/0/0)"| hq_rt02
+  wide_ether -->|"③"| dc_rt01
+  dc_rt01 ---|"エクイニクス経由 AWS Direct Connect 専用線 1G<br>(Te0/0/3 - dx1)"| aws_vgw01
+  internet ---|"キャリアB DC IXインターネット 1G<br>(wan1)"| dc_fw01
+  dc_fw01 -->|"⑥ BGP Site-to-Site VPN経由"| aws_vgw01
+  hq_rt01 ---|"OSPF (広域Ether網内)"| dc_rt01
+  hq_rt02 ---|"OSPF (広域Ether網内)"| dc_rt01
+  dc_rt01 ---|"BGP (DX上)"| aws_vgw01
+  hq_sw01 --- seg__hq_users
+  dc_srv01 --- seg__dc_servers
+  dc_srv02 --- seg__dc_servers
+  aws_vgw01 --- seg__aws_vpc_app
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class hq_rt01,dc_rt01,aws_vgw01 role_router
+  class hq_sw01,dc_core01 role_l3switch
+  class hq_rt02,dc_srvsw01,dc_srv01,dc_srv02,internet,seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_dim
+  class dc_fw01 role_firewall
+  class wide_ether node_cloud
+  linkStyle 0,2,3,7,9,12 stroke:#c5221f,stroke-width:4px
+  linkStyle 1,4,5,6,8,11,13,14,16,17,18,19 stroke:#e8eaed,stroke-width:1px
+  linkStyle 10 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 15 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4

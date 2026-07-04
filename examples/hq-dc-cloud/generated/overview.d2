@@ -1,0 +1,46 @@
+title: |md
+  # 全体概要図
+| {near: top-center}
+direction: down
+
+classes: {
+  role-router: {style.fill: "#e8f0fe"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
+  role-l3switch: {style.fill: "#d2e3fc"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
+  role-l2switch: {style.fill: "#e6f4ea"; style.stroke: "#137333"; style.font-color: "#1a2e1f"}
+  role-firewall: {style.fill: "#fce8e6"; style.stroke: "#c5221f"; style.font-color: "#3c1a19"}
+  role-other: {style.fill: "#f1f3f4"; style.stroke: "#5f6368"; style.font-color: "#202124"}
+  node-cloud: {shape: cloud; style.fill: "#f1f3f4"; style.stroke: "#5f6368"}
+  node-site: {style.fill: "#fff8e1"; style.stroke: "#b58105"; style.font-color: "#4a3a08"}
+  node-segment: {style.fill: "#e2f5f0"; style.stroke: "#0f766e"; style.font-color: "#0b3d38"; style.border-radius: 12}
+  node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
+  group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
+  edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
+  edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
+  edge-tunnel: {style.stroke: "#7b1fa2"; style.stroke-width: 2; style.stroke-dash: 5}
+  edge-logical: {style.stroke: "#188038"; style.stroke-width: 2; style.stroke-dash: 3}
+  edge-segment: {style.stroke: "#0f766e"; style.stroke-width: 1}
+}
+
+n_site__hq: "本社" {class: node-site}
+n_cloud__wide_ether: "　広域Ethernet網　" {class: node-cloud}
+n_site__dc: "DCコロケーション" {class: node-site}
+n_site__aws: "AWS ap-northeast-1" {class: node-site}
+n_cloud__internet: "　インターネット　" {class: node-cloud}
+
+lbl_0: "キャリアA 広域Ethernet 1G" {class: edge-label}
+n_cloud__wide_ether -- lbl_0 {class: edge-wan-circuit}
+lbl_0 -- n_site__hq {class: edge-wan-circuit}
+lbl_1: "キャリアA 広域Ethernet 1G" {class: edge-label}
+n_cloud__wide_ether -- lbl_1 {class: edge-wan-circuit}
+lbl_1 -- n_site__hq {class: edge-wan-circuit}
+lbl_2: "キャリアA 広域Ethernet 10G" {class: edge-label}
+n_cloud__wide_ether -- lbl_2 {class: edge-wan-circuit}
+lbl_2 -- n_site__dc {class: edge-wan-circuit}
+lbl_3: "エクイニクス経由 AWS Direct Connect 専用線 1G" {class: edge-label}
+n_site__dc -- lbl_3 {class: edge-wan-circuit}
+lbl_3 -- n_site__aws {class: edge-wan-circuit}
+lbl_4: "キャリアB DC IXインターネット 1G" {class: edge-label}
+n_cloud__internet -- lbl_4 {class: edge-wan-circuit}
+lbl_4 -- n_site__dc {class: edge-wan-circuit}
+n_site__dc -- n_site__aws: "Site-to-Site VPN (DX障害時のバックアップ)" {class: edge-tunnel}

@@ -151,7 +151,7 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 | `include_sites` | list | - | この拠点だけ描く。範囲外の対向機器は「機器ID (拠点名)」の破線ノードで境界表示 |
 | `exclude_sites` | list | - | 除外する拠点 |
 | `collapse_sites` | bool | - | true で拠点を1ノードに畳む。拠点内で閉じる接続は消え、拠点間接続だけが残る (全社概要図向け) |
-| `show_l3` | bool | - | 機器ノードにIPv4付きIFの一覧を表示し、segments を薄緑ノードとしてGW機器に接続して描く。**省略時は layers に logical を含むビューで自動有効**。物理図でIPも見たい場合は `show_l3: true` を明示 |
+| `show_l3` | bool / enum | - | L3表示 (IF IPv4一覧+セグメントノード)。`view`=このビューに現れる接続のIFのみ (`true` と同義・既定挙動) / `used`=いずれかのlinkで使用中のIF / `all`=IPv4を持つ全IF / `false`=非表示。**省略時は layers に logical を含むビューで view モードが自動有効**。セグメントGWのIFは常に表示対象 |
 | `description` | string | - | 補足 |
 
 典型的なビュー: 物理図=`[lan-cable, wan-circuit]` / 論理図=`[logical, tunnel]` / 全社概要図=`[wan-circuit, tunnel]` + `collapse_sites` / 拠点詳細図=`include_sites`。

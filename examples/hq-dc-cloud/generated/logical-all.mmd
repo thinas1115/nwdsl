@@ -1,0 +1,49 @@
+flowchart TB
+  subgraph sg_dc["DCコロケーション"]
+    dc_fw01["dc-fw01<br>FortiGate 600F<br>tunnel.aws: 169.254.200.1/30"]
+    dc_rt01["dc-rt01<br>Cisco C8500"]
+    dc_core01["dc-core01<br>Nexus 93180"]
+    dc_srvsw01["dc-srvsw01<br>Catalyst 9200"]
+    dc_srv01["dc-srv01<br>PowerEdge R760 (基幹AP)<br>eno1: 10.20.10.11/24"]
+    dc_srv02["dc-srv02<br>PowerEdge R760 (DB)<br>eno1: 10.20.10.12/24"]
+    seg__dc_servers(["DCサーバ<br>VLAN 20 / 10.20.10.0/24"])
+  end
+  subgraph sg_aws["AWS ap-northeast-1"]
+    aws_vgw01["aws-vgw01<br>AWS VGW/TGW<br>vpn1: 169.254.200.2/30<br>vpc1: 10.100.0.1/16"]
+    seg__aws_vpc_app(["VPC アプリ用<br>10.100.0.0/16"])
+  end
+  subgraph sg_hq["本社"]
+    hq_rt01["hq-rt01<br>Cisco C8300"]
+    hq_rt02["hq-rt02<br>Cisco C8300"]
+    hq_sw01["hq-sw01<br>Catalyst 9300<br>Vlan100: 10.10.100.1/24"]
+    seg__hq_users(["本社ユーザ<br>VLAN 100 / 10.10.100.0/24"])
+  end
+  dc_fw01 ---|"Site-to-Site VPN (DX障害時のバックアップ)"| aws_vgw01
+  hq_rt01 ---|"OSPF (広域Ether網内)"| dc_rt01
+  hq_rt02 ---|"OSPF (広域Ether網内)"| dc_rt01
+  dc_rt01 ---|"BGP (DX上)"| aws_vgw01
+  hq_sw01 --- seg__hq_users
+  dc_srv01 --- seg__dc_servers
+  dc_srv02 --- seg__dc_servers
+  aws_vgw01 --- seg__aws_vpc_app
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class dc_fw01 role_firewall
+  class aws_vgw01,hq_rt01,dc_rt01,hq_rt02 role_router
+  class hq_sw01,dc_core01 role_l3switch
+  class dc_srvsw01 role_l2switch
+  class dc_srv01,dc_srv02 role_other
+  class seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_segment
+  linkStyle 0 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
+  linkStyle 1,2,3 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
+  linkStyle 4,5,6,7 stroke:#0f766e,stroke-width:1.5px

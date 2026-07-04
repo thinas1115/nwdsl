@@ -1,0 +1,71 @@
+flowchart TB
+  site__hube["東日本ハブ"]
+  site__br03["支店03"]
+  site__hubw["西日本ハブ"]
+  site__br04["支店04"]
+  site__br05["支店05"]
+  site__br06["支店06"]
+  site__br07["支店07"]
+  site__br08["支店08"]
+  site__br09["支店09"]
+  site__br10["支店10"]
+  site__br11["支店11"]
+  site__br12["支店12"]
+  site__br13["支店13"]
+  site__br14["支店14"]
+  site__br15["支店15"]
+  site__br16["支店16"]
+  site__br17["支店17"]
+  site__br18["支店18"]
+  site__br19["支店19"]
+  site__br20["支店20"]
+  site__hube ---|"BGP"| site__br03
+  site__hubw ---|"BGP"| site__br03
+  site__hube ---|"BGP"| site__br04
+  site__hubw ---|"BGP"| site__br04
+  site__hube ---|"BGP"| site__br05
+  site__hubw ---|"BGP"| site__br05
+  site__hube ---|"BGP"| site__br06
+  site__hubw ---|"BGP"| site__br06
+  site__hube ---|"BGP"| site__br07
+  site__hubw ---|"BGP"| site__br07
+  site__hube ---|"BGP"| site__br08
+  site__hubw ---|"BGP"| site__br08
+  site__hube ---|"BGP"| site__br09
+  site__hubw ---|"BGP"| site__br09
+  site__hube ---|"BGP"| site__br10
+  site__hubw ---|"BGP"| site__br10
+  site__hube ---|"BGP"| site__br11
+  site__hubw ---|"BGP"| site__br11
+  site__hube ---|"BGP"| site__br12
+  site__hubw ---|"BGP"| site__br12
+  site__hube ---|"BGP"| site__br13
+  site__hubw ---|"BGP"| site__br13
+  site__hube ---|"BGP"| site__br14
+  site__hubw ---|"BGP"| site__br14
+  site__hube ---|"BGP"| site__br15
+  site__hubw ---|"BGP"| site__br15
+  site__hube ---|"BGP"| site__br16
+  site__hubw ---|"BGP"| site__br16
+  site__hube ---|"BGP"| site__br17
+  site__hubw ---|"BGP"| site__br17
+  site__hube ---|"BGP"| site__br18
+  site__hubw ---|"BGP"| site__br18
+  site__hube ---|"BGP"| site__br19
+  site__hubw ---|"BGP"| site__br19
+  site__hube ---|"BGP"| site__br20
+  site__hubw ---|"BGP"| site__br20
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class site__hube,site__br03,site__hubw,site__br04,site__br05,site__br06,site__br07,site__br08,site__br09,site__br10,site__br11,site__br12,site__br13,site__br14,site__br15,site__br16,site__br17,site__br18,site__br19,site__br20 node_site
+  linkStyle 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3

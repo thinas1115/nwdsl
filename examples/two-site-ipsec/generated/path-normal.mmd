@@ -1,0 +1,36 @@
+flowchart TB
+  subgraph sg_tokyo["東京本社"]
+    tk_rt01["tk-rt01<br>Yamaha RTX1300<br>lan1: 192.168.10.1/24<br>tunnel1: 172.16.0.1/30"]
+    tk_sw01["tk-sw01<br>Yamaha SWX2310"]
+    seg__tk_lan(["東京LAN<br>VLAN 1 / 192.168.10.0/24"])
+  end
+  subgraph sg_fukuoka["福岡営業所"]
+    fk_rt01["fk-rt01<br>Yamaha RTX830<br>lan1: 192.168.20.1/24<br>tunnel1: 172.16.0.2/30"]
+    fk_sw01["fk-sw01<br>Yamaha SWX2210"]
+    seg__fk_lan(["福岡LAN<br>VLAN 1 / 192.168.20.0/24"])
+  end
+  internet(("インターネット"))
+  tk_sw01 -->|"① 静的ルート 192.168.20.0/24 → tunnel1"| tk_rt01
+  fk_rt01 -->|"③"| fk_sw01
+  internet ---|"NTT東日本 フレッツ光クロス + OCN 10G<br>(lan2)"| tk_rt01
+  internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G<br>(lan2)"| fk_rt01
+  tk_rt01 -->|"② IPsec"| fk_rt01
+  tk_rt01 --- seg__tk_lan
+  fk_rt01 --- seg__fk_lan
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class tk_rt01,fk_rt01 role_router
+  class tk_sw01,fk_sw01 role_l2switch
+  class internet,seg__tk_lan,seg__fk_lan node_dim
+  linkStyle 0,1,4 stroke:#c5221f,stroke-width:4px
+  linkStyle 2,3,5,6 stroke:#e8eaed,stroke-width:1px

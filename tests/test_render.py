@@ -173,18 +173,33 @@ def test_l3_hides_unused_interface_address():
 
 
 def test_logical_view_shows_l3_info(doc):
-    """logicalレイヤを含むビューではIF IPv4とセグメントノードが自動表示される。"""
+    """logicalレイヤを含むビューでは view モードのL3表示が自動有効になる。"""
     g = resolve_view(doc, _view(doc, "logical-all"))
     nodes = {n.id: n for n in g.nodes}
-    assert "Gi0/0/1: 10.1.0.2/24" in nodes["hq-rt01"].label   # IF一覧
+    # 既定 (view): このビューに現れる接続のIFのみ → トンネルIFは表示
+    assert "Tunnel0: 172.31.0.1/30" in nodes["hq-rt02"].label
+    # ビューに現れないWAN/LAN物理IFのアドレスは出さない
+    assert "Gi0/0/1" not in nodes["hq-rt01"].label
     assert nodes["seg__hq-server"].kind == "segment"          # セグメントノード
     assert "VLAN 10 / 10.1.10.0/24" in nodes["seg__hq-server"].label
-    # GW機器 (segment参照IFを持つhq-sw01) からセグメントへのエッジ
     seg_edges = [e for e in g.edges if e.type == "segment"]
     assert ("hq-sw01", "seg__hq-server") in [(e.src, e.dst) for e in seg_edges]
     # 物理ビューではL3は出ない (既定)
     g2 = resolve_view(doc, _view(doc, "physical-all"))
     assert all(n.kind != "segment" for n in g2.nodes)
+
+
+def test_show_l3_modes(doc):
+    """show_l3: used / all で表示範囲を切り替えられる。"""
+    base = _view(doc, "logical-all")
+    g_used = resolve_view(doc, base.model_copy(update={"show_l3": "used"}))
+    label = next(n for n in g_used.nodes if n.id == "hq-rt01").label
+    assert "Gi0/0/1: 10.1.0.2/24" in label      # 使用中IFまで拡大
+    g_all = resolve_view(doc, base.model_copy(update={"show_l3": "all"}))
+    label_all = next(n for n in g_all.nodes if n.id == "hq-rt01").label
+    assert "Gi0/0/0: 172.16.255.1/30" in label_all
+    g_off = resolve_view(doc, base.model_copy(update={"show_l3": False}))
+    assert all(n.kind != "segment" for n in g_off.nodes)
 
 
 def test_parallel_lan_cables_bundled():

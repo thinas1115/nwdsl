@@ -1,0 +1,99 @@
+title: |md
+  # 支店06 IP-VPN障害時経路
+| {near: top-center}
+direction: down
+
+classes: {
+  role-router: {style.fill: "#e8f0fe"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
+  role-l3switch: {style.fill: "#d2e3fc"; style.stroke: "#1a56b0"; style.font-color: "#1a2340"}
+  role-l2switch: {style.fill: "#e6f4ea"; style.stroke: "#137333"; style.font-color: "#1a2e1f"}
+  role-firewall: {style.fill: "#fce8e6"; style.stroke: "#c5221f"; style.font-color: "#3c1a19"}
+  role-other: {style.fill: "#f1f3f4"; style.stroke: "#5f6368"; style.font-color: "#202124"}
+  node-cloud: {shape: cloud; style.fill: "#f1f3f4"; style.stroke: "#5f6368"}
+  node-site: {style.fill: "#fff8e1"; style.stroke: "#b58105"; style.font-color: "#4a3a08"}
+  node-segment: {style.fill: "#e2f5f0"; style.stroke: "#0f766e"; style.font-color: "#0b3d38"; style.border-radius: 12}
+  node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
+  group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
+  edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
+  edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
+  edge-tunnel: {style.stroke: "#7b1fa2"; style.stroke-width: 2; style.stroke-dash: 5}
+  edge-logical: {style.stroke: "#188038"; style.stroke-width: 2; style.stroke-dash: 3}
+  edge-segment: {style.stroke: "#0f766e"; style.stroke-width: 1}
+}
+
+s_hube: "東日本ハブ" {
+  class: group-site
+  label.near: outside-top-left
+  n_hube_rt01: "hube-rt01\nCisco C8300" {class: role-router; style.opacity: 0.3}
+  n_hube_core01: "hube-core01\nCatalyst 9500" {class: role-l3switch; width: 180}
+  n_hube_rt02: "hube-rt02\nCisco C8300" {class: role-router}
+  n_hube_srv01: "hube-srv01\n基幹サーバ" {class: role-other}
+}
+
+s_br06: "支店06" {
+  class: group-site
+  label.near: outside-top-left
+  n_br06_rt01: "br06-rt01\nCisco C1121" {class: role-router}
+  n_br06_sw01: "br06-sw01\nCatalyst 1000" {class: role-l2switch}
+}
+
+n_ipvpn: "　IP-VPN網　" {class: node-cloud; style.opacity: 0.3}
+n_mobile: "　モバイル閉域網　" {class: node-cloud}
+n_br03_rt01: "br03-rt01\n(支店03)" {class: node-external; style.opacity: 0.3}
+n_br04_rt01: "br04-rt01\n(支店04)" {class: node-external; style.opacity: 0.3}
+n_br05_rt01: "br05-rt01\n(支店05)" {class: node-external; style.opacity: 0.3}
+n_hubw_rt01: "hubw-rt01\n(西日本ハブ)" {class: node-external; style.opacity: 0.3}
+n_br07_rt01: "br07-rt01\n(支店07)" {class: node-external; style.opacity: 0.3}
+n_br08_rt01: "br08-rt01\n(支店08)" {class: node-external; style.opacity: 0.3}
+n_br09_rt01: "br09-rt01\n(支店09)" {class: node-external; style.opacity: 0.3}
+n_br10_rt01: "br10-rt01\n(支店10)" {class: node-external; style.opacity: 0.3}
+n_br11_rt01: "br11-rt01\n(支店11)" {class: node-external; style.opacity: 0.3}
+n_br12_rt01: "br12-rt01\n(支店12)" {class: node-external; style.opacity: 0.3}
+n_br13_rt01: "br13-rt01\n(支店13)" {class: node-external; style.opacity: 0.3}
+n_br14_rt01: "br14-rt01\n(支店14)" {class: node-external; style.opacity: 0.3}
+n_br15_rt01: "br15-rt01\n(支店15)" {class: node-external; style.opacity: 0.3}
+n_br16_rt01: "br16-rt01\n(支店16)" {class: node-external; style.opacity: 0.3}
+n_br17_rt01: "br17-rt01\n(支店17)" {class: node-external; style.opacity: 0.3}
+n_br18_rt01: "br18-rt01\n(支店18)" {class: node-external; style.opacity: 0.3}
+n_br19_rt01: "br19-rt01\n(支店19)" {class: node-external; style.opacity: 0.3}
+n_br20_rt01: "br20-rt01\n(支店20)" {class: node-external; style.opacity: 0.3}
+
+s_hube.n_hube_rt01 -- s_hube.n_hube_core01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"; style.opacity: 0.15}
+s_hube.n_hube_rt02 -> s_hube.n_hube_core01: "④" {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/2"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hube.n_hube_core01 -> s_hube.n_hube_srv01: "⑤" {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_3: "NTT Com IP-VPN 1G\n(Gi0/2)" {class: edge-label; style.opacity: 0.15}
+n_ipvpn -- lbl_3 {class: edge-wan-circuit; style.opacity: 0.15}
+lbl_3 -- s_hube.n_hube_rt01 {class: edge-wan-circuit; style.opacity: 0.15}
+lbl_4: "NTT Com IP-VPN 1G\n(Gi0/2)" {class: edge-label; style.opacity: 0.15}
+n_ipvpn -- lbl_4 {class: edge-wan-circuit; style.opacity: 0.15}
+lbl_4 -- s_hube.n_hube_rt02 {class: edge-wan-circuit; style.opacity: 0.15}
+lbl_5: "③" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
+n_mobile -- lbl_5 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_5 -> s_hube.n_hube_rt02 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hube.n_hube_rt01 -- n_br03_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br04_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br05_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_br06.n_br06_sw01 -> s_br06.n_br06_rt01: "①" {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_10: "NTT Com IP-VPN 100M\n(Gi0/2)" {class: edge-label; style.opacity: 0.5}
+n_ipvpn -- lbl_10 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
+lbl_10 -- s_br06.n_br06_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
+lbl_11: "② BGP モバイル閉域網へ切替" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
+s_br06.n_br06_rt01 -- lbl_11 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_11 -> n_mobile {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hube.n_hube_rt01 -- s_br06.n_br06_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_br06.n_br06_rt01 -- n_hubw_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br07_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br08_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br09_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br10_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br11_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br12_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br13_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br14_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br15_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br16_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br17_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br18_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br19_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+s_hube.n_hube_rt01 -- n_br20_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}

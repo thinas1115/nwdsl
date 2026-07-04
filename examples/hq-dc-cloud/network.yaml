@@ -1,0 +1,186 @@
+# hq-dc-cloud: 本社 + データセンター + AWS (Direct Connect + インターネットVPNバックアップ)
+#   オンプレとクラウドの混在構成。DX障害時の迂回経路つき
+nwdsl: "0.1"
+
+network:
+  name: hq-dc-cloud
+  description: 本社/DC/AWSのハイブリッド構成
+
+sites:
+  - id: hq
+    name: 本社
+    location: 東京都港区
+  - id: dc
+    name: DCコロケーション
+    location: 千葉県印西市
+  - id: aws
+    name: AWS ap-northeast-1
+    location: クラウド (東京リージョン)
+
+devices:
+  # ---- 本社 ----
+  - id: hq-rt01
+    site: hq
+    role: router
+    platform: Cisco C8300
+    redundancy_group: hq-wan
+    interfaces:
+      - {name: Gi0/0/0, description: 広域Etherアクセス, ipv4: 10.255.0.1/29}
+      - {name: Gi0/0/1, description: コアSWへ, ipv4: 10.10.0.2/24}
+  - id: hq-rt02
+    site: hq
+    role: router
+    platform: Cisco C8300
+    redundancy_group: hq-wan
+    interfaces:
+      - {name: Gi0/0/0, description: 広域Etherアクセス, ipv4: 10.255.0.2/29}
+      - {name: Gi0/0/1, description: コアSWへ, ipv4: 10.10.0.3/24}
+  - id: hq-sw01
+    site: hq
+    role: l3switch
+    platform: Catalyst 9300
+    interfaces:
+      - {name: Gi1/0/1, description: rt01へ}
+      - {name: Gi1/0/2, description: rt02へ}
+      - {name: Vlan100, description: 社内セグメントGW, ipv4: 10.10.100.1/24, segment: hq-users}
+
+  # ---- DC ----
+  - id: dc-rt01
+    site: dc
+    role: router
+    platform: Cisco C8500
+    interfaces:
+      - {name: Te0/0/0, description: 広域Etherアクセス, ipv4: 10.255.0.3/29}
+      - {name: Te0/0/1, description: コアへ}
+      - {name: Te0/0/3, description: Direct Connect専用線, ipv4: 169.254.100.1/30}
+  - id: dc-fw01
+    site: dc
+    role: firewall
+    platform: FortiGate 600F
+    interfaces:
+      - {name: wan1, description: インターネット (VPNバックアップ用), ipv4: 198.51.100.20/29}
+      - {name: internal1, description: コアへ}
+      - {name: tunnel.aws, description: AWS向けIPsec (バックアップ), ipv4: 169.254.200.1/30}
+  - id: dc-core01
+    site: dc
+    role: l3switch
+    platform: Nexus 93180
+    interfaces:
+      - {name: Eth1/1, description: rt01へ}
+      - {name: Eth1/2, description: fw01へ}
+      - {name: Eth1/3, description: サーバSWへ}
+  - id: dc-srvsw01
+    site: dc
+    role: l2switch
+    platform: Catalyst 9200
+    interfaces:
+      - {name: Gi1/0/1, description: コアへ}
+      - {name: Gi1/0/11, description: srv01へ}
+      - {name: Gi1/0/12, description: srv02へ}
+  - id: dc-srv01
+    site: dc
+    role: server
+    platform: PowerEdge R760 (基幹AP)
+    interfaces: [{name: eno1, ipv4: 10.20.10.11/24, segment: dc-servers}]
+  - id: dc-srv02
+    site: dc
+    role: server
+    platform: PowerEdge R760 (DB)
+    interfaces: [{name: eno1, ipv4: 10.20.10.12/24, segment: dc-servers}]
+
+  # ---- AWS ----
+  - id: aws-vgw01
+    site: aws
+    role: router
+    platform: AWS VGW/TGW
+    interfaces:
+      - {name: dx1, description: Direct Connect終端, ipv4: 169.254.100.2/30}
+      - {name: vpn1, description: Site-to-Site VPN終端 (バックアップ), ipv4: 169.254.200.2/30}
+      - {name: vpc1, description: VPCアタッチメント, ipv4: 10.100.0.1/16, segment: aws-vpc-app}
+
+clouds:
+  - id: wide-ether
+    name: 広域Ethernet網
+    kind: wan
+  - id: internet
+    name: インターネット
+    kind: internet
+
+circuits:
+  - {id: cct-we-hq1, provider: キャリアA, service: 広域Ethernet, bandwidth: 1G}
+  - {id: cct-we-hq2, provider: キャリアA, service: 広域Ethernet, bandwidth: 1G}
+  - {id: cct-we-dc,  provider: キャリアA, service: 広域Ethernet, bandwidth: 10G}
+  - {id: cct-dx, provider: エクイニクス経由, service: AWS Direct Connect 専用線, bandwidth: 1G}
+  - {id: cct-inet-dc, provider: キャリアB, service: DC IXインターネット, bandwidth: 1G}
+
+links:
+  # 本社LAN
+  - {type: lan-cable, endpoints: ["hq-rt01:Gi0/0/1", "hq-sw01:Gi1/0/1"]}
+  - {type: lan-cable, endpoints: ["hq-rt02:Gi0/0/1", "hq-sw01:Gi1/0/2"]}
+  # DC内
+  - {type: lan-cable, endpoints: ["dc-rt01:Te0/0/1", "dc-core01:Eth1/1"]}
+  - {type: lan-cable, endpoints: ["dc-fw01:internal1", "dc-core01:Eth1/2"]}
+  - {type: lan-cable, endpoints: ["dc-core01:Eth1/3", "dc-srvsw01:Gi1/0/1"]}
+  - {type: lan-cable, endpoints: ["dc-srvsw01:Gi1/0/11", "dc-srv01:eno1"]}
+  - {type: lan-cable, endpoints: ["dc-srvsw01:Gi1/0/12", "dc-srv02:eno1"]}
+  # WAN
+  - {type: wan-circuit, endpoints: ["hq-rt01:Gi0/0/0", "wide-ether"], circuit: cct-we-hq1}
+  - {type: wan-circuit, endpoints: ["hq-rt02:Gi0/0/0", "wide-ether"], circuit: cct-we-hq2}
+  - {type: wan-circuit, endpoints: ["dc-rt01:Te0/0/0", "wide-ether"], circuit: cct-we-dc}
+  # AWSへ: DX専用線 (point-to-point) と インターネットVPNバックアップ
+  - {type: wan-circuit, endpoints: ["dc-rt01:Te0/0/3", "aws-vgw01:dx1"], circuit: cct-dx}
+  - {type: wan-circuit, endpoints: ["dc-fw01:wan1", "internet"], circuit: cct-inet-dc}
+  - type: tunnel
+    endpoints: ["dc-fw01:tunnel.aws", "aws-vgw01:vpn1"]
+    description: Site-to-Site VPN (DX障害時のバックアップ)
+  # 論理隣接
+  - {type: logical, endpoints: ["hq-rt01", "dc-rt01"], description: OSPF (広域Ether網内)}
+  - {type: logical, endpoints: ["hq-rt02", "dc-rt01"], description: OSPF (広域Ether網内)}
+  - {type: logical, endpoints: ["dc-rt01", "aws-vgw01"], description: BGP (DX上)}
+
+segments:
+  - {id: hq-users, site: hq, vlan: 100, ipv4: 10.10.100.0/24, name: 本社ユーザ}
+  - {id: dc-servers, site: dc, vlan: 20, ipv4: 10.20.10.0/24, name: DCサーバ}
+  - {id: aws-vpc-app, site: aws, ipv4: 10.100.0.0/16, name: VPC アプリ用}
+
+paths:
+  - id: hq-aws-normal
+    title: 本社→AWS (正常時)
+    hops:
+      - {node: hq-sw01}
+      - {node: hq-rt01, protocol: HSRP, note: active側GW}
+      - {node: wide-ether, protocol: OSPF}
+      - {node: dc-rt01}
+      - {node: aws-vgw01, protocol: BGP, note: Direct Connect経由}
+  - id: hq-aws-dx-fail
+    title: 本社→AWS (DX障害時)
+    failure: [cct-dx]
+    fallback_of: hq-aws-normal
+    hops:
+      - {node: hq-sw01}
+      - {node: hq-rt01, protocol: HSRP}
+      - {node: wide-ether, protocol: OSPF}
+      - {node: dc-rt01}
+      - {node: dc-core01}
+      - {node: dc-fw01, note: 経路広報の切替でVPNへ}
+      - {node: aws-vgw01, protocol: BGP, note: Site-to-Site VPN経由}
+
+views:
+  - id: overview
+    title: 全体概要図
+    layers: [wan-circuit, tunnel]
+    collapse_sites: true
+  - id: physical-all
+    title: 全体物理構成図
+    layers: [lan-cable, wan-circuit]
+  - id: logical-all
+    title: 全体論理構成図
+    layers: [logical, tunnel]
+  - id: path-normal
+    title: 通信経路 本社→AWS (正常時)
+    type: path
+    path: hq-aws-normal
+  - id: path-dx-fail
+    title: 通信経路 本社→AWS (DX障害時)
+    type: path
+    path: hq-aws-dx-fail

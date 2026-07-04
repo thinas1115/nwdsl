@@ -136,6 +136,7 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
             graph.edges.append(RenderEdge(mapped[0], mapped[1], link.type, label))
     else:
         # ---- 機器レベルの図 ----
+        view_ifs: set[tuple[str, str]] = set()  # このビューに現れた接続のIF
         for link in selected:
             ep_nodes: list[str] = []
             ifnames: dict[str, Optional[str]] = {}
@@ -171,6 +172,7 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                 edge.src_label = ifnames.get(ep_nodes[0])
                 edge.dst_label = ifnames.get(ep_nodes[1])
             graph.edges.append(edge)
+            view_ifs.update((n, i) for n, i in ifnames.items() if i is not None)
 
         # 接続を持たない範囲内の機器も孤立ノードとして表示する
         for dev in doc.devices:
@@ -178,23 +180,41 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                 add_node(RenderNode(id=dev.id, label=_device_label(doc, dev.id),
                                     kind="device", role=dev.role, site=dev.site))
 
-        # ---- L3情報の表示 (論理ビューでは自動有効、show_l3 で明示制御) ----
-        show_l3 = (view.show_l3 if view.show_l3 is not None
-                   else "logical" in view.layers)
-        if show_l3:
-            # アドレス表記は「使用中のIF」(linkの端点 or セグメント参照あり) に限定する
+        # ---- L3情報の表示 (論理ビューでは自動有効、show_l3 で表示範囲を制御) ----
+        raw_l3 = view.show_l3
+        if raw_l3 is None:
+            l3_mode = "view" if "logical" in view.layers else None
+        elif raw_l3 is True:
+            l3_mode = "view"
+        elif raw_l3 is False:
+            l3_mode = None
+        else:
+            l3_mode = raw_l3
+        if l3_mode:
             used_ifs: set[tuple[str, str]] = set()
             for link in doc.links:
                 for ep in link.endpoints:
                     ep_node, ep_if = parse_endpoint(ep)
                     if ep_if is not None:
                         used_ifs.add((ep_node, ep_if))
+
+            def _l3_visible(dev_id: str, intf) -> bool:
+                if not intf.ipv4:
+                    return False
+                if l3_mode == "all":
+                    return True
+                if intf.segment:  # 表示されるセグメントのGWは常に対象
+                    return True
+                if l3_mode == "view":
+                    return (dev_id, intf.name) in view_ifs
+                return (dev_id, intf.name) in used_ifs  # "used"
+
             for node in nodes.values():
                 if node.kind != "device":
                     continue
                 dev = device_by_id[node.id]
                 ips = [f"{i.name}: {i.ipv4}" for i in dev.interfaces
-                       if i.ipv4 and ((dev.id, i.name) in used_ifs or i.segment)]
+                       if _l3_visible(dev.id, i)]
                 if len(ips) > 5:
                     ips = ips[:5] + [f"…他{len(ips) - 5}件"]
                 if ips:

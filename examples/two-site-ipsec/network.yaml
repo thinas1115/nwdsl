@@ -1,0 +1,126 @@
+# two-site-ipsec: 専用網を持たない小規模2拠点 (フレッツ + IPsec のみ)
+#   最小の実務構成。静的ルーティング、ヤマハ機。入門用サンプル
+nwdsl: "0.1"
+
+network:
+  name: two-site-ipsec
+  description: 小規模2拠点のインターネットVPN構成
+
+sites:
+  - id: tokyo
+    name: 東京本社
+    location: 東京都台東区
+  - id: fukuoka
+    name: 福岡営業所
+    location: 福岡県福岡市
+
+devices:
+  - id: tk-rt01
+    site: tokyo
+    role: router
+    platform: Yamaha RTX1300
+    interfaces:
+      - name: lan2
+        description: インターネット (PPPoE)
+      - name: lan1
+        description: LAN側GW
+        ipv4: 192.168.10.1/24
+        segment: tk-lan
+      - name: tunnel1
+        description: 福岡向けIPsec
+        ipv4: 172.16.0.1/30
+  - id: tk-sw01
+    site: tokyo
+    role: l2switch
+    platform: Yamaha SWX2310
+    interfaces:
+      - name: port1
+        description: rt01へ
+  - id: fk-rt01
+    site: fukuoka
+    role: router
+    platform: Yamaha RTX830
+    interfaces:
+      - name: lan2
+        description: インターネット (PPPoE)
+      - name: lan1
+        description: LAN側GW
+        ipv4: 192.168.20.1/24
+        segment: fk-lan
+      - name: tunnel1
+        description: 東京向けIPsec
+        ipv4: 172.16.0.2/30
+  - id: fk-sw01
+    site: fukuoka
+    role: l2switch
+    platform: Yamaha SWX2210
+    interfaces:
+      - name: port1
+        description: rt01へ
+
+clouds:
+  - id: internet
+    name: インターネット
+    kind: internet
+
+circuits:
+  - id: cct-tk
+    provider: NTT東日本
+    service: フレッツ光クロス + OCN
+    circuit_id: CAF-XXXX01
+    bandwidth: 10G
+  - id: cct-fk
+    provider: NTT西日本
+    service: フレッツ光ネクスト + OCN
+    circuit_id: CAF-XXXX02
+    bandwidth: 1G
+
+links:
+  - type: lan-cable
+    endpoints: ["tk-rt01:lan1", "tk-sw01:port1"]
+  - type: lan-cable
+    endpoints: ["fk-rt01:lan1", "fk-sw01:port1"]
+  - type: wan-circuit
+    endpoints: ["tk-rt01:lan2", "internet"]
+    circuit: cct-tk
+  - type: wan-circuit
+    endpoints: ["fk-rt01:lan2", "internet"]
+    circuit: cct-fk
+  - type: tunnel
+    endpoints: ["tk-rt01:tunnel1", "fk-rt01:tunnel1"]
+    description: IPsec本線 (経路は静的)
+
+segments:
+  - id: tk-lan
+    site: tokyo
+    vlan: 1
+    ipv4: 192.168.10.0/24
+    name: 東京LAN
+  - id: fk-lan
+    site: fukuoka
+    vlan: 1
+    ipv4: 192.168.20.0/24
+    name: 福岡LAN
+
+paths:
+  - id: tk-fk
+    title: 東京→福岡 (通常時。冗長なし)
+    hops:
+      - node: tk-sw01
+      - node: tk-rt01
+        note: 静的ルート 192.168.20.0/24 → tunnel1
+      - node: fk-rt01
+        protocol: IPsec
+      - node: fk-sw01
+
+views:
+  - id: physical-all
+    title: 全体物理構成図
+    layers: [lan-cable, wan-circuit]
+  - id: logical-all
+    title: 全体論理構成図
+    layers: [tunnel]
+  - id: path-normal
+    title: 通信経路 東京→福岡
+    type: path
+    path: tk-fk

@@ -541,7 +541,6 @@ def _compose_generic(graph: RenderGraph, out: SvgLayout, units, cross,
     label_row_of: dict[int, int] = {}
     label_anchor: dict[int, float] = {}
     sky: list[tuple[int, RenderEdge]] = []
-    all_vx = sorted(x for (_, _), x in end_x.items())
     for i in routable:
         e = cross[i]
         if (i, "src") not in end_x or (i, "dst") not in end_x:
@@ -568,10 +567,10 @@ def _compose_generic(graph: RenderGraph, out: SvgLayout, units, cross,
             label_anchor[i] = anchor
             w = max(text_w(s, 12.5) for s in e.label.split("\n")) + 12
             llo, lhi = anchor - w / 2 - 6, anchor + w / 2 + 6
-            blockers = [vx for vx in all_vx if abs(vx - anchor) > 1]
+            # ラベル同士の重なりのみ禁止。他エッジの縦線を跨ぐのは白背景で許容
+            # (禁止すると多拠点でラベル行が際限なく増えることを実測して緩和)
             for ri, intervals in enumerate(label_rows):
-                if all(lhi < a or llo > b for a, b in intervals) and \
-                        all(not (llo < vx < lhi) for vx in blockers):
+                if all(lhi < a or llo > b for a, b in intervals):
                     intervals.append((llo, lhi))
                     label_row_of[i] = ri
                     break
