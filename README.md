@@ -36,7 +36,7 @@
 
 生成された表: [examples/sample-corp/generated/tables.md](examples/sample-corp/generated/tables.md)
 
-> **適用限界**: 現行のD2レンダリングが設計書品質を出せるのは木構造に近い企業キャンパス/WAN構成(3拠点・50台規模まで検証済み)。**leaf-spineファブリック・メトロリング・10拠点超のWAN概要図は現状破綻します**([examples/stress/](examples/stress/) で再現可能)。これらはパターン特化レイアウトで対応予定([ADR-0007](docs/adr/0007-renderer-strategy.md))。
+> **描画エンジンは2系統**: D2(ELK)は木構造系の構成で最も美しいが、leaf-spineファブリック・メトロリング・10拠点超のWAN概要では破綻する([ADR-0007](docs/adr/0007-renderer-strategy.md)、[examples/stress/](examples/stress/) で再現可能)。このため**「どのパターンでも破綻しない」ことを不変条件(ノード/ラベル重なりゼロ・線のノード貫通ゼロ)として保証する内蔵SVGエンジン**を実装している(`--format svg`、[ADR-0008](docs/adr/0008-invariant-renderer.md))。内蔵エンジンはリングを円環に、ファブリックを2段扇状に自動配置し、全サンプル×全ビューの不変条件をテストで機械検証している。
 
 ## クイックスタート
 

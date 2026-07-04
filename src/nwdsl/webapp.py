@@ -188,11 +188,18 @@ def handle_render(payload: dict, d2_bin: Path | None) -> dict:
     graph = resolve_view(doc, view)
     result["d2"] = render_d2(graph)
     result["mermaid"] = render_mermaid(graph)
-    if d2_bin is not None:
+    engine = payload.get("engine") or "auto"
+    use_d2 = d2_bin is not None and engine in ("auto", "d2")
+    if use_d2:
         try:
             result["svg"] = _render_svg(result["d2"], d2_bin)
+            result["engine"] = "d2"
         except (RuntimeError, subprocess.TimeoutExpired) as exc:
             result["errors"] = [str(exc)]
+    else:
+        from .render_svg import render_svg
+        result["svg"] = render_svg(graph)
+        result["engine"] = "svg"
     return result
 
 

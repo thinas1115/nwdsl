@@ -160,6 +160,11 @@
         <button class="tab" data-tab="mermaid">Mermaid</button>
       </div>
       <select id="view-select" title="ビュー切替"></select>
+      <select id="engine-select" title="描画エンジン">
+        <option value="auto">エンジン: 自動</option>
+        <option value="d2">D2 (ELK)</option>
+        <option value="svg">内蔵SVG (どのパターンでも破綻しない)</option>
+      </select>
       <span class="zoom-wrap">拡大
         <input type="range" id="zoom" min="30" max="200" value="100">
       </span>
@@ -261,7 +266,8 @@ function applyZoom() {
 }
 
 async function render() {
-  const body = { yaml: $("yaml").value, view: $("view-select").value || null };
+  const body = { yaml: $("yaml").value, view: $("view-select").value || null,
+                 engine: $("engine-select").value };
   setStatus("描画中…", true);
   try {
     last = await api("/api/render", {
@@ -327,6 +333,7 @@ $("yaml").addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); render(); }
 });
 $("view-select").addEventListener("change", render);
+$("engine-select").addEventListener("change", render);
 $("zoom").addEventListener("input", applyZoom);
 document.querySelectorAll(".tab").forEach((t) =>
   t.addEventListener("click", () => {

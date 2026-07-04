@@ -185,6 +185,7 @@ nwdsl validate examples\sample-corp\network.yaml            # 整合性検査
 nwdsl validate examples\sample-corp\network.yaml --strict   # 警告もエラー扱い
 nwdsl render   examples\sample-corp\network.yaml -o diagrams                # 全ビュー出力
 nwdsl render   examples\sample-corp\network.yaml -o diagrams --view wan-overview --format d2
+nwdsl render   examples\stress\ring.yaml -o diagrams --format svg   # 内蔵SVGエンジン (D2不要, ADR-0008)
 nwdsl tables   examples\sample-corp\network.yaml -o diagrams\tables.md      # 6表すべて
 nwdsl tables   examples\sample-corp\network.yaml --section circuits         # 回線一覧のみ標準出力
 nwdsl schema   -o nwdsl.schema.json

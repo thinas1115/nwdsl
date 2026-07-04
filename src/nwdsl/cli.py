@@ -79,6 +79,11 @@ def cmd_render(args: argparse.Namespace) -> int:
             path = out_dir / f"{view.id}.mmd"
             path.write_text(render_mermaid(graph), encoding="utf-8")
             print(f"wrote {path}")
+        if "svg" in formats:
+            from .render_svg import render_svg
+            path = out_dir / f"{view.id}.svg"
+            path.write_text(render_svg(graph), encoding="utf-8")
+            print(f"wrote {path}")
     return 0
 
 
@@ -130,7 +135,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("file")
     p.add_argument("-o", "--out", default="diagrams", help="出力ディレクトリ (default: diagrams)")
     p.add_argument("--view", action="append", help="対象ビューID (複数指定可、省略時は全ビュー)")
-    p.add_argument("--format", choices=["d2", "mermaid", "all"], default="all")
+    p.add_argument("--format", choices=["d2", "mermaid", "svg", "all"], default="all",
+                   help="svg は自前レンダラ (D2バイナリ不要、ADR-0008)。all は d2+mermaid")
     p.set_defaults(func=cmd_render)
 
     p = sub.add_parser("tables", help="設計書向けMarkdown表を生成する")
