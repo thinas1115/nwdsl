@@ -43,14 +43,38 @@
   #editor-pane, #preview-pane { display: flex; flex-direction: column; min-height: 0;
     background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
     box-shadow: var(--shadow); overflow: hidden; }
-  #editor-pane { width: 40%; min-width: 340px; }
+  #editor-pane { width: 40%; min-width: 300px; max-width: 75%; }
   #preview-pane { flex: 1; min-width: 0; }
+  #splitter { width: 8px; margin: 0 -4px; cursor: col-resize; position: relative; z-index: 5; }
+  #splitter::after { content: ""; position: absolute; left: 3px; top: 0; bottom: 0;
+                     width: 2px; background: transparent; }
+  #splitter:hover::after, #splitter.active::after { background: var(--brand); }
   .pane-bar { display: flex; gap: 10px; align-items: center; padding: 8px 14px;
               border-bottom: 1px solid var(--line); background: #fafbfd; flex-wrap: wrap; }
   .pane-bar .hint { font-size: 11.5px; color: var(--faint); }
-  #yaml { flex: 1; border: none; resize: none; padding: 14px 16px; font-size: 13px;
-          line-height: 1.6; font-family: var(--mono); outline: none; color: #0f2038;
-          tab-size: 2; }
+
+  /* ---- YAMLエディタ (ハイライトはオーバーレイ方式) ---- */
+  #editor-wrap { position: relative; flex: 1; min-height: 0; }
+  #hl, #yaml { position: absolute; inset: 0; margin: 0; padding: 14px 16px;
+               font-family: var(--mono); font-size: 13px; line-height: 1.6; tab-size: 2;
+               white-space: pre; overflow: auto; box-sizing: border-box; }
+  #hl { pointer-events: none; color: #1e293b; background: #fff; }
+  #yaml { color: transparent; caret-color: #0f2038; background: transparent;
+          border: none; resize: none; outline: none; }
+  #yaml::selection { background: rgba(37, 99, 235, .22); }
+  .tk-k { color: #1d4ed8; font-weight: 600; }
+  .tk-s { color: #b45309; }
+  .tk-n { color: #0f766e; }
+  .tk-c { color: #94a3b8; font-style: italic; }
+  .tk-d { color: #94a3b8; }
+
+  /* ---- プレビュー: パン + ホイールズーム ---- */
+  #viewport { flex: 1; min-height: 0; overflow: hidden; cursor: grab;
+              position: relative; background: #fff; }
+  #viewport.dragging { cursor: grabbing; }
+  #svg-box { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+  .pad { padding: 16px 18px; overflow: auto; flex: 1; min-height: 0; }
+  .issues-band { padding: 10px 14px 0; }
 
   /* ---- タブ・ステータス ---- */
   .tabs { display: flex; background: #eaeef5; border-radius: 8px; padding: 3px; gap: 2px; }
@@ -69,8 +93,9 @@
   #status.ng { color: var(--ng); background: #fdebe9; }
 
   /* ---- プレビュー本体 ---- */
-  #output { flex: 1; overflow: auto; background: #fff; padding: 16px 18px; }
-  #output svg { max-width: none; }
+  #output { flex: 1; overflow: hidden; background: #fff; display: flex;
+            flex-direction: column; min-height: 0; }
+  #output svg { max-width: none; display: block; }
   #output > pre { background: #0d1b34; color: #d7e3f4; border-radius: 8px; padding: 14px 16px;
                   font-family: var(--mono); font-size: 12.5px; line-height: 1.55;
                   white-space: pre-wrap; }
@@ -149,8 +174,12 @@
       <strong style="font-size:12.5px">network.yaml</strong>
       <span class="hint">編集すると自動で検証+再描画 (Ctrl+Enter で即時)</span>
     </div>
-    <textarea id="yaml" spellcheck="false"></textarea>
+    <div id="editor-wrap">
+      <pre id="hl" aria-hidden="true"></pre>
+      <textarea id="yaml" spellcheck="false" wrap="off"></textarea>
+    </div>
   </div>
+  <div id="splitter"></div>
   <div id="preview-pane">
     <div class="pane-bar">
       <div class="tabs">
@@ -165,9 +194,8 @@
         <option value="d2">D2 (ELK)</option>
         <option value="svg">内蔵SVG (どのパターンでも破綻しない)</option>
       </select>
-      <span class="zoom-wrap">拡大
-        <input type="range" id="zoom" min="30" max="200" value="100">
-      </span>
+      <button class="tab" id="fit-btn" title="全体表示">フィット</button>
+      <span class="hint">ドラッグ移動 / ホイール拡大縮小 / ダブルクリックでフィット</span>
       <span id="status"></span>
     </div>
     <div id="output"></div>
@@ -221,48 +249,127 @@ function show() {
   if (!last) { out.innerHTML = ""; return; }
   const warn = issuesHtml(last);
   if (!last.ok || (last.issues || []).some((i) => i.level === "error")) {
-    out.innerHTML = warn || "<p>エラー</p>";
+    out.innerHTML = `<div class="pad">${warn || "<p>エラー</p>"}</div>`;
     return;
   }
   if (currentTab === "diagram") {
     if (last.svg) {
-      out.innerHTML = warn + `<div id="svg-box">${last.svg}</div>`;
-      fitZoom();
-      applyZoom();
+      out.innerHTML = (warn ? `<div class="issues-band">${warn}</div>` : "") +
+        `<div id="viewport"><div id="svg-box">${last.svg}</div></div>`;
+      wireViewport();
+      fitView();
     } else {
-      out.innerHTML = warn + (last.d2_available
-        ? "<p>描画結果がありません</p>"
-        : "<p>D2 バイナリが見つからないため SVG プレビューは無効です。「D2ソース」タブの内容を d2 CLI で描画してください。</p>");
+      out.innerHTML = `<div class="pad">${warn}<p>描画結果がありません</p></div>`;
     }
   } else if (currentTab === "tables") {
-    out.innerHTML = warn + `<div class="md-body">${mdToHtml(last.tables || "")}</div>`;
+    out.innerHTML = `<div class="pad">${warn}<div class="md-body">${mdToHtml(last.tables || "")}</div></div>`;
   } else if (currentTab === "d2") {
-    out.innerHTML = `<pre>${esc(last.d2 || "")}</pre>`;
+    out.innerHTML = `<div class="pad"><pre>${esc(last.d2 || "")}</pre></div>`;
   } else if (currentTab === "mermaid") {
-    out.innerHTML = `<pre>${esc(last.mermaid || "")}</pre>`;
+    out.innerHTML = `<div class="pad"><pre>${esc(last.mermaid || "")}</pre></div>`;
   }
 }
 
-function fitZoom() {
-  // 描画のたびに図全体が収まる倍率へ自動フィット (縦横の両方を考慮)
-  const svg = document.querySelector("#svg-box svg");
-  if (!svg || !svg.width || !svg.width.baseVal) return;
-  const w = svg.width.baseVal.value, h = svg.height.baseVal.value;
-  const availW = $("output").clientWidth - 30;
-  const availH = $("output").clientHeight - 40;
+// ---- プレビューのパン + ホイールズーム ----
+const vp = { s: 1, tx: 0, ty: 0 };
+
+function applyView() {
+  const box = $("svg-box");
+  if (box) box.style.transform = `translate(${vp.tx}px, ${vp.ty}px) scale(${vp.s})`;
+}
+
+function svgSize() {
+  // D2のSVGは外側svgがviewBoxのみ(width/height無し)の二重構造なので正規化する
+  const svg = document.querySelector("#svg-box > svg");
+  if (!svg) return null;
+  let w = svg.width && svg.width.baseVal ? svg.width.baseVal.value : 0;
+  let h = svg.height && svg.height.baseVal ? svg.height.baseVal.value : 0;
+  const vb = svg.viewBox && svg.viewBox.baseVal;
+  if ((!w || !h || !svg.hasAttribute("width")) && vb && vb.width) {
+    w = vb.width;
+    h = vb.height;
+  }
   if (w > 0 && h > 0) {
-    const scale = Math.min(availW / w, availH / h, 1);
-    $("zoom").value = Math.max(30, Math.floor(scale * 100));
+    svg.setAttribute("width", w);
+    svg.setAttribute("height", h);
   }
+  return { w, h };
 }
 
-function applyZoom() {
-  const box = document.querySelector("#svg-box svg");
-  if (box) {
-    const scale = $("zoom").value / 100;
-    box.style.transformOrigin = "top left";
-    box.style.transform = `scale(${scale})`;
-  }
+function fitView() {
+  const view = $("viewport");
+  const size = svgSize();
+  if (!view || !size) return;
+  const w = size.w, h = size.h;
+  if (w <= 0 || h <= 0) return;
+  vp.s = Math.min((view.clientWidth - 24) / w, (view.clientHeight - 24) / h, 1);
+  vp.tx = (view.clientWidth - w * vp.s) / 2;
+  vp.ty = Math.max(12, (view.clientHeight - h * vp.s) / 2);
+  applyView();
+}
+
+function wireViewport() {
+  const view = $("viewport");
+  if (!view) return;
+  view.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const rect = view.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+    const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+    const ns = Math.min(8, Math.max(0.05, vp.s * factor));
+    vp.tx = px - (ns / vp.s) * (px - vp.tx);
+    vp.ty = py - (ns / vp.s) * (py - vp.ty);
+    vp.s = ns;
+    applyView();
+  }, { passive: false });
+  view.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    view.classList.add("dragging");
+    const sx = e.clientX - vp.tx, sy = e.clientY - vp.ty;
+    const move = (ev) => { vp.tx = ev.clientX - sx; vp.ty = ev.clientY - sy; applyView(); };
+    const up = () => {
+      view.classList.remove("dragging");
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    };
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+  });
+  view.addEventListener("dblclick", fitView);
+}
+
+// ---- YAMLシンタックスハイライト (オーバーレイ方式) ----
+function hlYaml(src) {
+  return src.split("\n").map((line) => {
+    let code = line, comment = "";
+    const ci = line.indexOf("#");
+    if (ci >= 0 && !((line.slice(0, ci).split('"').length % 2 === 0) ||
+                     (line.slice(0, ci).split("'").length % 2 === 0))) {
+      code = line.slice(0, ci);
+      comment = line.slice(ci);
+    }
+    let html = esc(code)
+      .replace(/^(\s*)(- )?([A-Za-z0-9_.\/-]+)(:)(?=\s|$)/,
+               (m, sp, dash, key, col) =>
+                 `${sp}${dash ? '<span class="tk-d">- </span>' : ""}` +
+                 `<span class="tk-k">${key}</span>${col}`)
+      .replace(/^(\s*)(- )(?!<)/, '$1<span class="tk-d">- </span>')
+      .replace(/&quot;[^&]*?&quot;/g, (m) => `<span class="tk-s">${m}</span>`)
+      .replace(/\b(true|false|null)\b/g, '<span class="tk-n">$1</span>')
+      .replace(/(:\s)(\d[\w.\/]*)$/, '$1<span class="tk-n">$2</span>');
+    if (comment) html += `<span class="tk-c">${esc(comment)}</span>`;
+    return html;
+  }).join("\n");
+}
+
+function refreshHl() {
+  $("hl").innerHTML = hlYaml($("yaml").value) + "\n";
+  syncHlScroll();
+}
+
+function syncHlScroll() {
+  $("hl").scrollTop = $("yaml").scrollTop;
+  $("hl").scrollLeft = $("yaml").scrollLeft;
 }
 
 async function render() {
@@ -297,6 +404,7 @@ function scheduleRender() {
 async function loadSample(name) {
   const r = await api(`/api/sample?name=${encodeURIComponent(name)}`);
   $("yaml").value = r.yaml;
+  refreshHl();
   $("view-select").innerHTML = "";
   render();
 }
@@ -328,16 +436,35 @@ async function showDoc(name) {
 
 // ---- イベント配線 ----
 $("render-btn").addEventListener("click", render);
-$("yaml").addEventListener("input", scheduleRender);
+$("yaml").addEventListener("input", () => { refreshHl(); scheduleRender(); });
 $("yaml").addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); render(); }
 });
 $("view-select").addEventListener("change", render);
 $("engine-select").addEventListener("change", render);
-$("zoom").addEventListener("input", applyZoom);
-document.querySelectorAll(".tab").forEach((t) =>
+$("fit-btn").addEventListener("click", fitView);
+$("yaml").addEventListener("scroll", syncHlScroll);
+(() => {  // スプリッタ: 左ペイン幅のドラッグ変更
+  const sp = $("splitter"), pane = $("editor-pane");
+  sp.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    sp.classList.add("active");
+    const move = (ev) => {
+      const left = document.querySelector("main").getBoundingClientRect().left;
+      pane.style.width = Math.max(300, ev.clientX - left - 16) + "px";
+    };
+    const up = () => {
+      sp.classList.remove("active");
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    };
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+  });
+})();
+document.querySelectorAll(".tabs .tab").forEach((t) =>
   t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+    document.querySelectorAll(".tabs .tab").forEach((x) => x.classList.remove("active"));
     t.classList.add("active");
     currentTab = t.dataset.tab;
     show();

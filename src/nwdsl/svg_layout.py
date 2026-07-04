@@ -176,7 +176,7 @@ class _Sub:
             sweep(True)
             sweep(False)
 
-        # ---- 座標: スロット割当 (I1) ----
+        # ---- 座標: スロット割当 (I1) + 親子の重心整列 ----
         widths: dict[str, float] = {}
         for r in rows:
             for nid in order[r]:
@@ -188,30 +188,47 @@ class _Sub:
                     n_out = sum(1 for e in self.edges if e.src == nid)
                     n_in = sum(1 for e in self.edges if e.dst == nid)
                     widths[nid] = max(w, PORT_MIN * max(n_out, n_in, 1))
-        row_w = {r: sum(widths[n] for n in order[r]) + X_GAP * (len(order[r]) - 1)
-                 for r in rows}
-        total_w = max(row_w.values())
-
-        lanes_in_channel: dict[int, int] = defaultdict(int)
-        for e in same_rank:
-            lanes_in_channel[rank[e.src]] += 1
-
-        y = 0.0
         xs: dict[str, float] = {}
-        ys: dict[str, float] = {}
-        for r in range(max_rank + 1):
-            x = (total_w - row_w.get(r, 0)) / 2
-            for nid in order.get(r, []):
+        for r in rows:
+            row_w = sum(widths[n] for n in order[r]) + X_GAP * (len(order[r]) - 1)
+            x = -row_w / 2
+            for nid in order[r]:
                 xs[nid] = x
-                ys[nid] = y
                 x += widths[nid] + X_GAP
-            y += NODE_H + CHANNEL_BASE + LANE_H * lanes_in_channel.get(r, 0)
-        self.w = total_w
-        self.h = y - CHANNEL_BASE
 
-        for nid, node in self.nodes.items():
-            _, h = node_size(node)
-            self.placed[nid] = Placed(node, xs[nid], ys[nid], widths[nid], max(h, NODE_H))
+        def _cx(nid: str) -> float:
+            return xs[nid] + widths[nid] / 2
+
+        def _reposition(r: int, ref: dict[str, list[str]]) -> None:
+            """隣接ランクの重心へ寄せる。順序と最小間隔は保つ (I1)。"""
+            desired = [(sum(_cx(p) for p in ref[nid]) / len(ref[nid])
+                        if ref[nid] else _cx(nid)) for nid in order[r]]
+            pos: list[float] = []
+            prev = -1e18
+            for nid, d in zip(order[r], desired):
+                x = max(prev + X_GAP, d - widths[nid] / 2)
+                pos.append(x)
+                prev = x + widths[nid]
+            nxt = 1e18
+            for k in range(len(order[r]) - 1, -1, -1):
+                nid, d = order[r][k], desired[k]
+                pos[k] = min(nxt - X_GAP - widths[nid],
+                             max(pos[k], d - widths[nid] / 2))
+                nxt = pos[k]
+            for nid, x in zip(order[r], pos):
+                xs[nid] = x
+
+        for _ in range(3):
+            for r in range(1, max_rank + 1):
+                if r in order:
+                    _reposition(r, adj_up)
+            for r in range(max_rank - 1, -1, -1):
+                if r in order:
+                    _reposition(r, adj_dn)
+        min_x = min(xs[n] for n in xs)
+        for nid in xs:
+            xs[nid] -= min_x
+        total_w = max(xs[n] + widths[n] for n in xs)
 
         # ---- ポート割当 (I2: ポート間隔 >= PORT_MIN をノード幅で保証済み) ----
         out_edges: dict[str, list[tuple[float, RenderEdge, list[str]]]] = defaultdict(list)
@@ -223,8 +240,7 @@ class _Sub:
             in_edges[chain[-1]].append((src_x, e, chain))
 
         def port_x(nid: str, index: int, count: int) -> float:
-            p = self.placed[nid]
-            return p.x + p.w * (index + 1) / (count + 1)
+            return xs[nid] + widths[nid] * (index + 1) / (count + 1)
 
         port_of: dict[tuple[int, str], float] = {}  # (chain id, "src"|"dst") -> x
         for nid, items in out_edges.items():
@@ -235,6 +251,64 @@ class _Sub:
             items.sort(key=lambda t: t[0])
             for i, (_, e, chain) in enumerate(items):
                 port_of[(id(chain), "dst")] = port_x(nid, i, len(items))
+
+        # ---- 直交配線: チャネルごとの水平レーンを区間スケジューリングで予約 (I2/I3) ----
+        channel_lanes: dict[int, list[list[tuple[float, float]]]] = defaultdict(list)
+
+        def alloc_lane(ch: int, x1: float, x2: float) -> int:
+            lo, hi = min(x1, x2) - 8, max(x1, x2) + 8
+            for li, intervals in enumerate(channel_lanes[ch]):
+                if all(hi < a or lo > b for a, b in intervals):
+                    intervals.append((lo, hi))
+                    return li
+            channel_lanes[ch].append([(lo, hi)])
+            return len(channel_lanes[ch]) - 1
+
+        def chain_seq(chain: list[str]) -> list[str]:
+            return chain if rank[chain[0]] < rank[chain[-1]] else list(reversed(chain))
+
+        def seg_x(chain: list[str], seq: list[str], k: int) -> tuple[float, float]:
+            """seq[k] → seq[k+1] セグメントの上端x・下端x。"""
+            flipped = rank[chain[0]] > rank[chain[-1]]
+            top_key, bot_key = ("dst", "src") if flipped else ("src", "dst")
+            xa = (port_of[(id(chain), top_key)] if k == 0
+                  else xs[seq[k]] + widths[seq[k]] / 2)
+            xb = (port_of[(id(chain), bot_key)] if k == len(seq) - 2
+                  else xs[seq[k + 1]] + widths[seq[k + 1]] / 2)
+            return xa, xb
+
+        seg_lane: dict[tuple[int, int], int] = {}  # (chain id, seg idx) -> lane
+        for e, chain in chains:
+            seq = chain_seq(chain)
+            for k in range(len(seq) - 1):
+                xa, xb = seg_x(chain, seq, k)
+                if abs(xa - xb) > 1:
+                    seg_lane[(id(chain), k)] = alloc_lane(rank[seq[k]], xa, xb)
+        sr_lane: dict[int, int] = {}  # same-rank edge index -> lane
+        for si, e in enumerate(same_rank):
+            sr_lane[si] = alloc_lane(rank[e.src], _cx(e.src), _cx(e.dst))
+
+        # ---- y座標: チャネル高さはレーン数に応じて確保 ----
+        row_h = {r: max([max(node_size(self.nodes[n])[1], NODE_H)
+                         for n in order[r] if not n.startswith("__d")] or [NODE_H])
+                 for r in rows}
+        row_y: dict[int, float] = {}
+        y = 0.0
+        for r in range(max_rank + 1):
+            row_y[r] = y
+            lanes = len(channel_lanes.get(r, []))
+            y += row_h.get(r, NODE_H) + max(CHANNEL_BASE, 30 + lanes * LANE_H + 16)
+        ys = {nid: row_y[rank[nid]] for nid in list(self.nodes) + [n for r in rows
+              for n in order[r] if n.startswith("__d")]}
+        self.w = total_w
+        self.h = row_y[max_rank] + row_h.get(max_rank, NODE_H)
+
+        def lane_y(ch: int, lane: int) -> float:
+            return row_y[ch] + row_h.get(ch, NODE_H) + 22 + lane * LANE_H
+
+        for nid, node in self.nodes.items():
+            _, h = node_size(node)
+            self.placed[nid] = Placed(node, xs[nid], ys[nid], widths[nid], max(h, NODE_H))
 
         # ---- 経路点列: 全セグメントがチャネル内 (I3) ----
         label_rects: list[tuple[float, float, float, float]] = []
@@ -265,15 +339,25 @@ class _Sub:
             routed.label_box = (mx - w / 2, my - h / 2, w, h)
 
         for e, chain in chains:
-            src, dst = chain[0], chain[-1]
-            sp, dp = self.placed[src], self.placed[dst]
-            downward = ys[src] < ys[dst]
-            x0 = port_of[(id(chain), "src")]
-            x1 = port_of[(id(chain), "dst")]
-            pts = [(x0, sp.y + sp.h if downward else sp.y)]
-            for mid in chain[1:-1]:
-                pts.append((xs[mid] + DUMMY_W / 2, ys[mid] + NODE_H / 2))
-            pts.append((x1, dp.y if downward else dp.y + dp.h))
+            seq = chain_seq(chain)
+            pts: list[tuple[float, float]] = []
+            for k in range(len(seq) - 1):
+                a, b = seq[k], seq[k + 1]
+                ch = rank[a]
+                xa, xb = seg_x(chain, seq, k)
+                ya = (self.placed[a].y + self.placed[a].h if a in self.placed
+                      else ys[a] + row_h.get(rank[a], NODE_H) / 2)
+                yb = (self.placed[b].y if b in self.placed
+                      else ys[b] + row_h.get(rank[b], NODE_H) / 2)
+                if k == 0:
+                    pts.append((xa, ya))
+                if abs(xa - xb) > 1:
+                    ly = lane_y(ch, seg_lane[(id(chain), k)])
+                    pts.append((xa, ly))
+                    pts.append((xb, ly))
+                pts.append((xb, yb))
+            if rank[chain[0]] > rank[chain[-1]]:
+                pts = list(reversed(pts))  # 点列は常に e.src 起点で持つ
             routed = RoutedEdge(e, pts)
             if e.src_label:
                 routed.src_port_label = (pts[0][0], pts[0][1], e.src_label)
@@ -282,16 +366,12 @@ class _Sub:
             place_label(routed)
             self.routed.append(routed)
 
-        # ---- 同ランク辺: 直下チャネルの専用レーンをU字経由 (I3) ----
-        lane_used: dict[int, int] = defaultdict(int)
-        for e in same_rank:
-            r = rank[e.src]
-            lane = lane_used[r]
-            lane_used[r] += 1
+        # ---- 同ランク辺: 直下チャネルの予約レーンをU字経由 (I3) ----
+        for si, e in enumerate(same_rank):
             sp, dp = self.placed[e.src], self.placed[e.dst]
-            lane_y = ys[e.src] + NODE_H + CHANNEL_BASE / 2 + lane * LANE_H
-            pts = [(sp.cx, sp.y + sp.h), (sp.cx, lane_y),
-                   (dp.cx, lane_y), (dp.cx, dp.y + dp.h)]
+            ly = lane_y(rank[e.src], sr_lane[si])
+            pts = [(sp.cx, sp.y + sp.h), (sp.cx, ly),
+                   (dp.cx, ly), (dp.cx, dp.y + dp.h)]
             routed = RoutedEdge(e, pts)
             place_label(routed)
             self.routed.append(routed)
