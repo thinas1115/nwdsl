@@ -180,8 +180,35 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
 
     graph.nodes = list(nodes.values())
     graph.groups = [(sid, site_by_id[sid].name) for sid in used_sites if sid in site_by_id]
+    _bundle_parallel_cables(graph)
     _orient_edges(doc, graph)
     return graph
+
+
+def _bundle_parallel_cables(graph: RenderGraph) -> None:
+    """同一機器ペア間の平行な構内配線 (LAG等) を1本に束ね「×N」表示にする。
+
+    メンバー個別のIF対応は表 (接続一覧) が持つため、図では本数情報に集約する。
+    """
+    seen: dict[frozenset[str], RenderEdge] = {}
+    bundled: list[RenderEdge] = []
+    counts: dict[frozenset[str], int] = {}
+    for edge in graph.edges:
+        if edge.type != "lan-cable":
+            bundled.append(edge)
+            continue
+        key = frozenset((edge.src, edge.dst))
+        if key in seen:
+            counts[key] = counts.get(key, 1) + 1
+        else:
+            seen[key] = edge
+            bundled.append(edge)
+    for key, n in counts.items():  # n は束ねた総本数
+        edge = seen[key]
+        edge.label = f"×{n}" + (f" {edge.label}" if edge.label else "")
+        edge.src_label = None  # 束ねた場合、端点IFは1組に定まらないため表に委ねる
+        edge.dst_label = None
+    graph.edges = bundled
 
 
 def _orient_edges(doc: Document, graph: RenderGraph) -> None:

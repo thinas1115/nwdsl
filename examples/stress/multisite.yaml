@@ -1,0 +1,568 @@
+nwdsl: '0.1'
+network:
+  name: stress-multisite
+sites:
+- id: s01
+  name: 拠点01
+- id: s02
+  name: 拠点02
+- id: s03
+  name: 拠点03
+- id: s04
+  name: 拠点04
+- id: s05
+  name: 拠点05
+- id: s06
+  name: 拠点06
+- id: s07
+  name: 拠点07
+- id: s08
+  name: 拠点08
+- id: s09
+  name: 拠点09
+- id: s10
+  name: 拠点10
+- id: s11
+  name: 拠点11
+- id: s12
+  name: 拠点12
+devices:
+- id: s01-rt01
+  site: s01
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s01-sw01
+  site: s01
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s01-rt02
+  site: s01
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s02-rt01
+  site: s02
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s02-sw01
+  site: s02
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s02-rt02
+  site: s02
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s03-rt01
+  site: s03
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s03-sw01
+  site: s03
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s03-rt02
+  site: s03
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s04-rt01
+  site: s04
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s04-sw01
+  site: s04
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s04-rt02
+  site: s04
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s05-rt01
+  site: s05
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s05-sw01
+  site: s05
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s05-rt02
+  site: s05
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s06-rt01
+  site: s06
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s06-sw01
+  site: s06
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s06-rt02
+  site: s06
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s07-rt01
+  site: s07
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s07-sw01
+  site: s07
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: s08-rt01
+  site: s08
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s08-sw01
+  site: s08
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: s09-rt01
+  site: s09
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s09-sw01
+  site: s09
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: s10-rt01
+  site: s10
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s10-sw01
+  site: s10
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: s11-rt01
+  site: s11
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s11-sw01
+  site: s11
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: s12-rt01
+  site: s12
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: s12-sw01
+  site: s12
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+clouds:
+- id: ipvpn
+  name: IP-VPN網
+  kind: wan
+- id: inet
+  name: インターネット
+  kind: internet
+circuits:
+- id: cct-v01
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-i01
+  provider: キャリア
+  service: フレッツ光
+  bandwidth: 1G
+- id: cct-v02
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-i02
+  provider: キャリア
+  service: フレッツ光
+  bandwidth: 1G
+- id: cct-v03
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-i03
+  provider: キャリア
+  service: フレッツ光
+  bandwidth: 1G
+- id: cct-v04
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-i04
+  provider: キャリア
+  service: フレッツ光
+  bandwidth: 1G
+- id: cct-v05
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-i05
+  provider: キャリア
+  service: フレッツ光
+  bandwidth: 1G
+- id: cct-v06
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-i06
+  provider: キャリア
+  service: フレッツ光
+  bandwidth: 1G
+- id: cct-v07
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-v08
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-v09
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-v10
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-v11
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+- id: cct-v12
+  provider: キャリア
+  service: IP-VPN
+  bandwidth: 1G
+links:
+- type: lan-cable
+  endpoints:
+  - s01-rt01:e1
+  - s01-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s01-rt01:e2
+  - ipvpn
+  circuit: cct-v01
+- type: lan-cable
+  endpoints:
+  - s01-rt02:e1
+  - s01-sw01:e2
+- type: wan-circuit
+  endpoints:
+  - s01-rt02:e2
+  - inet
+  circuit: cct-i01
+- type: lan-cable
+  endpoints:
+  - s02-rt01:e1
+  - s02-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s02-rt01:e2
+  - ipvpn
+  circuit: cct-v02
+- type: lan-cable
+  endpoints:
+  - s02-rt02:e1
+  - s02-sw01:e2
+- type: wan-circuit
+  endpoints:
+  - s02-rt02:e2
+  - inet
+  circuit: cct-i02
+- type: lan-cable
+  endpoints:
+  - s03-rt01:e1
+  - s03-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s03-rt01:e2
+  - ipvpn
+  circuit: cct-v03
+- type: lan-cable
+  endpoints:
+  - s03-rt02:e1
+  - s03-sw01:e2
+- type: wan-circuit
+  endpoints:
+  - s03-rt02:e2
+  - inet
+  circuit: cct-i03
+- type: lan-cable
+  endpoints:
+  - s04-rt01:e1
+  - s04-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s04-rt01:e2
+  - ipvpn
+  circuit: cct-v04
+- type: lan-cable
+  endpoints:
+  - s04-rt02:e1
+  - s04-sw01:e2
+- type: wan-circuit
+  endpoints:
+  - s04-rt02:e2
+  - inet
+  circuit: cct-i04
+- type: lan-cable
+  endpoints:
+  - s05-rt01:e1
+  - s05-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s05-rt01:e2
+  - ipvpn
+  circuit: cct-v05
+- type: lan-cable
+  endpoints:
+  - s05-rt02:e1
+  - s05-sw01:e2
+- type: wan-circuit
+  endpoints:
+  - s05-rt02:e2
+  - inet
+  circuit: cct-i05
+- type: lan-cable
+  endpoints:
+  - s06-rt01:e1
+  - s06-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s06-rt01:e2
+  - ipvpn
+  circuit: cct-v06
+- type: lan-cable
+  endpoints:
+  - s06-rt02:e1
+  - s06-sw01:e2
+- type: wan-circuit
+  endpoints:
+  - s06-rt02:e2
+  - inet
+  circuit: cct-i06
+- type: lan-cable
+  endpoints:
+  - s07-rt01:e1
+  - s07-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s07-rt01:e2
+  - ipvpn
+  circuit: cct-v07
+- type: lan-cable
+  endpoints:
+  - s08-rt01:e1
+  - s08-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s08-rt01:e2
+  - ipvpn
+  circuit: cct-v08
+- type: lan-cable
+  endpoints:
+  - s09-rt01:e1
+  - s09-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s09-rt01:e2
+  - ipvpn
+  circuit: cct-v09
+- type: lan-cable
+  endpoints:
+  - s10-rt01:e1
+  - s10-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s10-rt01:e2
+  - ipvpn
+  circuit: cct-v10
+- type: lan-cable
+  endpoints:
+  - s11-rt01:e1
+  - s11-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s11-rt01:e2
+  - ipvpn
+  circuit: cct-v11
+- type: lan-cable
+  endpoints:
+  - s12-rt01:e1
+  - s12-sw01:e1
+- type: wan-circuit
+  endpoints:
+  - s12-rt01:e2
+  - ipvpn
+  circuit: cct-v12
+- type: tunnel
+  endpoints:
+  - s01-rt02
+  - s02-rt02
+  description: IPsec s01-s02
+- type: tunnel
+  endpoints:
+  - s01-rt02
+  - s03-rt02
+  description: IPsec s01-s03
+- type: tunnel
+  endpoints:
+  - s01-rt02
+  - s04-rt02
+  description: IPsec s01-s04
+- type: tunnel
+  endpoints:
+  - s01-rt02
+  - s05-rt02
+  description: IPsec s01-s05
+- type: tunnel
+  endpoints:
+  - s01-rt02
+  - s06-rt02
+  description: IPsec s01-s06
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s02-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s03-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s04-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s05-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s06-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s07-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s08-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s09-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s10-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s11-rt01
+  description: BGP
+- type: logical
+  endpoints:
+  - s01-rt01
+  - s12-rt01
+  description: BGP
+views:
+- id: wan-overview
+  title: 12拠点 WAN概要図
+  collapse_sites: true
+  layers:
+  - wan-circuit
+  - tunnel
+- id: physical-all
+  title: 12拠点 全社物理図
+  layers:
+  - lan-cable
+  - wan-circuit

@@ -36,6 +36,8 @@
 
 生成された表: [examples/sample-corp/generated/tables.md](examples/sample-corp/generated/tables.md)
 
+> **適用限界**: 現行のD2レンダリングが設計書品質を出せるのは木構造に近い企業キャンパス/WAN構成(3拠点・50台規模まで検証済み)。**leaf-spineファブリック・メトロリング・10拠点超のWAN概要図は現状破綻します**([examples/stress/](examples/stress/) で再現可能)。これらはパターン特化レイアウトで対応予定([ADR-0007](docs/adr/0007-renderer-strategy.md))。
+
 ## クイックスタート
 
 ```powershell

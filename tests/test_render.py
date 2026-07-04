@@ -148,6 +148,29 @@ def test_path_view_overlay(doc):
     assert any(e.emphasis == "failed" and e.circuit == "cct-ipvpn-hq" for e in g.edges)
 
 
+def test_parallel_lan_cables_bundled():
+    """LAG等の平行リンクは1本に束ねて ×N 表示になる。"""
+    from nwdsl.model import Document
+    raw = {
+        "nwdsl": "0.1", "network": {"name": "t"},
+        "sites": [{"id": "dc", "name": "DC"}],
+        "devices": [
+            {"id": "a", "site": "dc", "role": "l3switch",
+             "interfaces": [{"name": f"e{i}"} for i in range(1, 5)]},
+            {"id": "b", "site": "dc", "role": "l3switch",
+             "interfaces": [{"name": f"e{i}"} for i in range(1, 5)]},
+        ],
+        "links": [{"type": "lan-cable", "endpoints": [f"a:e{i}", f"b:e{i}"]}
+                  for i in range(1, 5)],
+        "views": [{"id": "v", "title": "t", "layers": ["lan-cable"]}],
+    }
+    d = Document.model_validate(raw)
+    g = resolve_view(d, d.views[0])
+    assert len(g.edges) == 1
+    assert g.edges[0].label == "×4"
+    assert g.edges[0].src_label is None
+
+
 def test_path_view_d2_output(doc):
     out = render_d2(resolve_view(doc, _view(doc, "path-ipvpn-fail")))
     assert "style.animated: true" in out

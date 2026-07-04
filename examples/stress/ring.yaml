@@ -1,0 +1,251 @@
+nwdsl: '0.1'
+network:
+  name: stress-ring
+sites:
+- id: r1
+  name: リング拠点1
+- id: r2
+  name: リング拠点2
+- id: r3
+  name: リング拠点3
+- id: r4
+  name: リング拠点4
+- id: r5
+  name: リング拠点5
+- id: r6
+  name: リング拠点6
+- id: r7
+  name: リング拠点7
+- id: r8
+  name: リング拠点8
+devices:
+- id: r1-rt
+  site: r1
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r1-sw
+  site: r1
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: r2-rt
+  site: r2
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r2-sw
+  site: r2
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: r3-rt
+  site: r3
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r3-sw
+  site: r3
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: r4-rt
+  site: r4
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r4-sw
+  site: r4
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: r5-rt
+  site: r5
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r5-sw
+  site: r5
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: r6-rt
+  site: r6
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r6-sw
+  site: r6
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: r7-rt
+  site: r7
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r7-sw
+  site: r7
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+- id: r8-rt
+  site: r8
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: r8-sw
+  site: r8
+  role: l2switch
+  platform: x
+  interfaces:
+  - name: e1
+clouds: []
+circuits:
+- id: cct-ring1
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+- id: cct-ring2
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+- id: cct-ring3
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+- id: cct-ring4
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+- id: cct-ring5
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+- id: cct-ring6
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+- id: cct-ring7
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+- id: cct-ring8
+  provider: キャリア
+  service: 広域Ether専用線
+  bandwidth: 1G
+links:
+- type: lan-cable
+  endpoints:
+  - r1-rt:e1
+  - r1-sw:e1
+- type: lan-cable
+  endpoints:
+  - r2-rt:e1
+  - r2-sw:e1
+- type: lan-cable
+  endpoints:
+  - r3-rt:e1
+  - r3-sw:e1
+- type: lan-cable
+  endpoints:
+  - r4-rt:e1
+  - r4-sw:e1
+- type: lan-cable
+  endpoints:
+  - r5-rt:e1
+  - r5-sw:e1
+- type: lan-cable
+  endpoints:
+  - r6-rt:e1
+  - r6-sw:e1
+- type: lan-cable
+  endpoints:
+  - r7-rt:e1
+  - r7-sw:e1
+- type: lan-cable
+  endpoints:
+  - r8-rt:e1
+  - r8-sw:e1
+- type: wan-circuit
+  endpoints:
+  - r1-rt:e2
+  - r2-rt:e2
+  circuit: cct-ring1
+- type: wan-circuit
+  endpoints:
+  - r2-rt:e3
+  - r3-rt:e2
+  circuit: cct-ring2
+- type: wan-circuit
+  endpoints:
+  - r3-rt:e3
+  - r4-rt:e2
+  circuit: cct-ring3
+- type: wan-circuit
+  endpoints:
+  - r4-rt:e3
+  - r5-rt:e2
+  circuit: cct-ring4
+- type: wan-circuit
+  endpoints:
+  - r5-rt:e3
+  - r6-rt:e2
+  circuit: cct-ring5
+- type: wan-circuit
+  endpoints:
+  - r6-rt:e3
+  - r7-rt:e2
+  circuit: cct-ring6
+- type: wan-circuit
+  endpoints:
+  - r7-rt:e3
+  - r8-rt:e2
+  circuit: cct-ring7
+- type: wan-circuit
+  endpoints:
+  - r8-rt:e3
+  - r1-rt:e3
+  circuit: cct-ring8
+views:
+- id: ring-collapsed
+  title: リング概要図
+  collapse_sites: true
+  layers:
+  - wan-circuit
+- id: ring-physical
+  title: リング物理図
+  layers:
+  - lan-cable
+  - wan-circuit

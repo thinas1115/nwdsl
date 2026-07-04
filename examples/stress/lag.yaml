@@ -1,0 +1,182 @@
+nwdsl: '0.1'
+network:
+  name: stress-lag
+sites:
+- id: dc
+  name: サーバ室
+devices:
+- id: rt01
+  site: dc
+  role: router
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+- id: core01
+  site: dc
+  role: l3switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+  - name: e6
+  - name: e7
+  - name: e8
+  - name: e9
+  - name: e10
+  - name: e11
+- id: core02
+  site: dc
+  role: l3switch
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+  - name: e6
+  - name: e7
+  - name: e8
+  - name: e9
+  - name: e10
+  - name: e11
+- id: srv01
+  site: dc
+  role: server
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: srv02
+  site: dc
+  role: server
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: srv03
+  site: dc
+  role: server
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: srv04
+  site: dc
+  role: server
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: srv05
+  site: dc
+  role: server
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+- id: srv06
+  site: dc
+  role: server
+  platform: x
+  interfaces:
+  - name: e1
+  - name: e2
+clouds:
+- id: wan
+  name: WAN網
+  kind: wan
+circuits:
+- id: cct-d1
+  provider: キャリア
+  service: 回線
+  bandwidth: 1G
+links:
+- type: wan-circuit
+  endpoints:
+  - rt01:e1
+  - wan
+  circuit: cct-d1
+- type: lan-cable
+  endpoints:
+  - rt01:e2
+  - core01:e1
+- type: lan-cable
+  endpoints:
+  - rt01:e3
+  - core02:e1
+- type: lan-cable
+  endpoints:
+  - core01:e2
+  - core02:e2
+- type: lan-cable
+  endpoints:
+  - core01:e3
+  - core02:e3
+- type: lan-cable
+  endpoints:
+  - core01:e4
+  - core02:e4
+- type: lan-cable
+  endpoints:
+  - core01:e5
+  - core02:e5
+- type: lan-cable
+  endpoints:
+  - core01:e6
+  - srv01:e1
+- type: lan-cable
+  endpoints:
+  - core02:e6
+  - srv01:e2
+- type: lan-cable
+  endpoints:
+  - core01:e7
+  - srv02:e1
+- type: lan-cable
+  endpoints:
+  - core02:e7
+  - srv02:e2
+- type: lan-cable
+  endpoints:
+  - core01:e8
+  - srv03:e1
+- type: lan-cable
+  endpoints:
+  - core02:e8
+  - srv03:e2
+- type: lan-cable
+  endpoints:
+  - core01:e9
+  - srv04:e1
+- type: lan-cable
+  endpoints:
+  - core02:e9
+  - srv04:e2
+- type: lan-cable
+  endpoints:
+  - core01:e10
+  - srv05:e1
+- type: lan-cable
+  endpoints:
+  - core02:e10
+  - srv05:e2
+- type: lan-cable
+  endpoints:
+  - core01:e11
+  - srv06:e1
+- type: lan-cable
+  endpoints:
+  - core02:e11
+  - srv06:e2
+views:
+- id: lag
+  title: LAG並列リンク物理図
+  layers:
+  - lan-cable
+  - wan-circuit

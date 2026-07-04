@@ -1,0 +1,465 @@
+nwdsl: '0.1'
+network:
+  name: stress-leafspine
+sites:
+- id: dc
+  name: DC
+devices:
+- id: spine01
+  site: dc
+  role: l3switch
+  platform: 9500-32C
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+  - name: e6
+  - name: e7
+  - name: e8
+  - name: e9
+  - name: e10
+  - name: e11
+  - name: e12
+  - name: e13
+  - name: e14
+- id: spine02
+  site: dc
+  role: l3switch
+  platform: 9500-32C
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+  - name: e6
+  - name: e7
+  - name: e8
+  - name: e9
+  - name: e10
+  - name: e11
+  - name: e12
+  - name: e13
+  - name: e14
+- id: spine03
+  site: dc
+  role: l3switch
+  platform: 9500-32C
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+  - name: e6
+  - name: e7
+  - name: e8
+  - name: e9
+  - name: e10
+  - name: e11
+  - name: e12
+  - name: e13
+  - name: e14
+- id: spine04
+  site: dc
+  role: l3switch
+  platform: 9500-32C
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+  - name: e6
+  - name: e7
+  - name: e8
+  - name: e9
+  - name: e10
+  - name: e11
+  - name: e12
+  - name: e13
+  - name: e14
+- id: leaf01
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf02
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf03
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf04
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf05
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf06
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf07
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf08
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf09
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf10
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf11
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: leaf12
+  site: dc
+  role: l3switch
+  platform: '9300'
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+- id: border01
+  site: dc
+  role: router
+  platform: ASR1001
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+- id: border02
+  site: dc
+  role: router
+  platform: ASR1001
+  interfaces:
+  - name: e1
+  - name: e2
+  - name: e3
+  - name: e4
+  - name: e5
+clouds:
+- id: wan
+  name: WAN網
+  kind: wan
+circuits:
+- id: cct-a1
+  provider: キャリア
+  service: 回線
+  bandwidth: 1G
+- id: cct-a2
+  provider: キャリア
+  service: 回線
+  bandwidth: 1G
+links:
+- type: lan-cable
+  endpoints:
+  - spine01:e1
+  - leaf01:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e2
+  - leaf02:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e3
+  - leaf03:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e4
+  - leaf04:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e5
+  - leaf05:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e6
+  - leaf06:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e7
+  - leaf07:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e8
+  - leaf08:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e9
+  - leaf09:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e10
+  - leaf10:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e11
+  - leaf11:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e12
+  - leaf12:e1
+- type: lan-cable
+  endpoints:
+  - spine02:e1
+  - leaf01:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e2
+  - leaf02:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e3
+  - leaf03:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e4
+  - leaf04:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e5
+  - leaf05:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e6
+  - leaf06:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e7
+  - leaf07:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e8
+  - leaf08:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e9
+  - leaf09:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e10
+  - leaf10:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e11
+  - leaf11:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e12
+  - leaf12:e2
+- type: lan-cable
+  endpoints:
+  - spine03:e1
+  - leaf01:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e2
+  - leaf02:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e3
+  - leaf03:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e4
+  - leaf04:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e5
+  - leaf05:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e6
+  - leaf06:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e7
+  - leaf07:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e8
+  - leaf08:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e9
+  - leaf09:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e10
+  - leaf10:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e11
+  - leaf11:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e12
+  - leaf12:e3
+- type: lan-cable
+  endpoints:
+  - spine04:e1
+  - leaf01:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e2
+  - leaf02:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e3
+  - leaf03:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e4
+  - leaf04:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e5
+  - leaf05:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e6
+  - leaf06:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e7
+  - leaf07:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e8
+  - leaf08:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e9
+  - leaf09:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e10
+  - leaf10:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e11
+  - leaf11:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e12
+  - leaf12:e4
+- type: lan-cable
+  endpoints:
+  - spine01:e13
+  - border01:e1
+- type: lan-cable
+  endpoints:
+  - spine01:e14
+  - border02:e1
+- type: lan-cable
+  endpoints:
+  - spine02:e13
+  - border01:e2
+- type: lan-cable
+  endpoints:
+  - spine02:e14
+  - border02:e2
+- type: lan-cable
+  endpoints:
+  - spine03:e13
+  - border01:e3
+- type: lan-cable
+  endpoints:
+  - spine03:e14
+  - border02:e3
+- type: lan-cable
+  endpoints:
+  - spine04:e13
+  - border01:e4
+- type: lan-cable
+  endpoints:
+  - spine04:e14
+  - border02:e4
+- type: wan-circuit
+  endpoints:
+  - border01:e5
+  - wan
+  circuit: cct-a1
+- type: wan-circuit
+  endpoints:
+  - border02:e5
+  - wan
+  circuit: cct-a2
+views:
+- id: dc
+  title: DCファブリック物理図 (K4x12)
+  layers:
+  - lan-cable
+  - wan-circuit
