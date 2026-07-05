@@ -87,6 +87,7 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 | `endpoints` | list[2] | ✓ | 両端点 (記法は下記) |
 | `circuit` | string | - | 経由する回線契約ID (**wan-circuit では必須、他typeでは指定不可**) |
 | `domain` | string | - | 所属ルーティングドメインID (domains を参照)。色分け+凡例で表現される |
+| `via` | string | - | 経由する網ID (clouds を参照、logical/tunnel のみ)。論理図で「網の雲を通るピアリング」として2分割描画される |
 | `description` | string | - | 補足 (logical/tunnel では図の線ラベルになる) |
 
 ### endpoints の記法

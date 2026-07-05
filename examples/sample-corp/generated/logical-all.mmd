@@ -14,9 +14,12 @@ flowchart TB
     ngy_rt01["ngy-rt01<br>Cisco ISR1100<br>Gi0/1/0: 10.3.10.1/24"]
     seg__ngy_lan(["名古屋LAN<br>VLAN 1 / 10.3.10.0/24"])
   end
+  ipvpn(("NTT Com IP-VPN網"))
   hq_rt02 ---|"IPsec バックアップVPN"| osk_rt01
-  hq_rt01 ---|"BGP (IP-VPN網内)"| osk_rt01
-  hq_rt01 ---|"BGP (IP-VPN網内)"| ngy_rt01
+  ipvpn ---|"BGP"| hq_rt01
+  ipvpn --- osk_rt01
+  ipvpn ---|"BGP"| hq_rt01
+  ipvpn --- ngy_rt01
   hq_sw01 --- seg__hq_server
   hq_sw01 --- seg__hq_client
   osk_rt01 --- seg__osk_lan
@@ -34,8 +37,9 @@ flowchart TB
   classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class hq_rt02,osk_rt01,hq_rt01,ngy_rt01 role_router
+  class ipvpn node_cloud
   class hq_sw01 role_l3switch
   class seg__hq_server,seg__hq_client,seg__osk_lan,seg__ngy_lan node_segment
   linkStyle 0 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
-  linkStyle 1,2 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
-  linkStyle 3,4,5,6 stroke:#0f766e,stroke-width:1.5px
+  linkStyle 1,2,3,4 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
+  linkStyle 5,6,7,8 stroke:#0f766e,stroke-width:1.5px

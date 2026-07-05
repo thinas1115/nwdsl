@@ -757,11 +757,13 @@ links:
   endpoints:
   - hq-rt01
   - osk-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hq-rt01
   - ngy-rt01
+  via: ipvpn
   description: BGP
 segments:
 - id: hq-srv

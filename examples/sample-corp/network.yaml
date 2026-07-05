@@ -184,13 +184,15 @@ links:
     endpoints: ["hq-rt02:Tunnel0", "osk-rt01:Tunnel0"]
     description: IPsec バックアップVPN
 
-  # ---- 論理隣接 (IP-VPN上のBGPピア) ----
+  # ---- 論理隣接 (IP-VPN上のBGPピア。via で網の雲を通して描く) ----
   - type: logical
     endpoints: ["hq-rt01", "osk-rt01"]
-    description: BGP (IP-VPN網内)
+    via: ipvpn
+    description: BGP
   - type: logical
     endpoints: ["hq-rt01", "ngy-rt01"]
-    description: BGP (IP-VPN網内)
+    via: ipvpn
+    description: BGP
 
 segments:
   - id: hq-server

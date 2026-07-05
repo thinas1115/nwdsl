@@ -43,5 +43,7 @@ lbl_3 -- n_site__hq {class: edge-wan-circuit}
 lbl_4: "NTT西 フレッツ光 + OCN 1G" {class: edge-label}
 n_cloud__internet -- lbl_4 {class: edge-wan-circuit}
 lbl_4 -- n_site__osk {class: edge-wan-circuit}
-n_site__hq -- n_site__osk: "BGP" {class: edge-logical}
-n_site__hq -- n_site__ngy: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__hq: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__osk {class: edge-logical}
+n_cloud__ipvpn -- n_site__hq: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__ngy {class: edge-logical}

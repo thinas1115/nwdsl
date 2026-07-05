@@ -22,8 +22,10 @@ flowchart TB
   internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/0)"| hq_rt02
   internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/1)"| osk_rt01
   hq_rt02 -->|"② BGP IPsecトンネルへ経路切替"| osk_rt01
-  hq_rt01 ---|"BGP (IP-VPN網内)"| osk_rt01
-  hq_rt01 ---|"BGP (IP-VPN網内)"| ngy_rt01
+  ipvpn ---|"BGP"| hq_rt01
+  ipvpn --- osk_rt01
+  ipvpn ---|"BGP"| hq_rt01
+  ipvpn --- ngy_rt01
   hq_sw01 --- seg__hq_server
   hq_sw01 --- seg__hq_client
   osk_rt01 --- seg__osk_lan
@@ -46,5 +48,5 @@ flowchart TB
   class internet,ngy_rt01,seg__hq_server,seg__hq_client,seg__osk_lan node_dim
   linkStyle 0 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
   linkStyle 1,2,7 stroke:#c5221f,stroke-width:4px
-  linkStyle 3,4 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 5,6,8,9,10,11,12 stroke:#e8eaed,stroke-width:1px
+  linkStyle 3,4,8,9,10,11 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 5,6,12,13,14 stroke:#e8eaed,stroke-width:1px

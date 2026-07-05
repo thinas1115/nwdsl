@@ -150,8 +150,10 @@ wan("osk-rt01", "ipvpn", "cct-ipvpn-osk")
 wan("ngy-rt01", "ipvpn", "cct-ipvpn-ngy")
 wan("hq-rt02", "internet", "cct-inet-hq")
 wan("osk-rt02", "internet", "cct-inet-osk")
-links.append({"type": "logical", "endpoints": ["hq-rt01", "osk-rt01"], "description": "BGP"})
-links.append({"type": "logical", "endpoints": ["hq-rt01", "ngy-rt01"], "description": "BGP"})
+links.append({"type": "logical", "endpoints": ["hq-rt01", "osk-rt01"],
+              "via": "ipvpn", "description": "BGP"})
+links.append({"type": "logical", "endpoints": ["hq-rt01", "ngy-rt01"],
+              "via": "ipvpn", "description": "BGP"})
 
 doc = {
     "nwdsl": "0.1",

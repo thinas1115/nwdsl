@@ -76,8 +76,10 @@ lbl_11: "キャリアB DC IXインターネット 1G\n(wan1)" {class: edge-label
 n_internet -- lbl_11 {class: edge-wan-circuit; style.opacity: 0.15}
 lbl_11 -- s_dc.n_dc_fw01 {class: edge-wan-circuit; style.opacity: 0.15}
 s_dc.n_dc_fw01 -> s_aws.n_aws_vgw01: "⑥ BGP Site-to-Site VPN経由" {class: edge-tunnel; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-s_hq.n_hq_rt01 -- s_dc.n_dc_rt01: "OSPF (広域Ether網内)" {class: edge-logical; style.opacity: 0.15}
-s_hq.n_hq_rt02 -- s_dc.n_dc_rt01: "OSPF (広域Ether網内)" {class: edge-logical; style.opacity: 0.15}
+n_wide_ether -- s_hq.n_hq_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
+n_wide_ether -- s_dc.n_dc_rt01 {class: edge-logical; style.opacity: 0.15}
+n_wide_ether -- s_hq.n_hq_rt02: "OSPF" {class: edge-logical; style.opacity: 0.15}
+n_wide_ether -- s_dc.n_dc_rt01 {class: edge-logical; style.opacity: 0.15}
 s_dc.n_dc_rt01 -- s_aws.n_aws_vgw01: "BGP (DX上)" {class: edge-logical; style.stroke: "#9aa0a6"; style.stroke-dash: 4; style.opacity: 0.4}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_users {class: edge-segment; source-arrowhead.label: "Vlan100"; style.opacity: 0.15}
 s_dc.n_dc_srv01 -- s_dc.n_seg__dc_servers {class: edge-segment; source-arrowhead.label: "eno1"; style.opacity: 0.15}

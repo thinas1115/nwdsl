@@ -223,7 +223,7 @@ links:
   - {type: logical, endpoints: ["hq-fw01", "hq-core01"], domain: area0}
   - {type: logical, endpoints: ["hq-fw02", "hq-core02"], domain: area0}
   - {type: logical, endpoints: ["hq-core01", "hq-core02"], domain: area0}
-  - {type: logical, endpoints: ["hq-rt01", "osk-rt01"], description: BGP (IP-VPN網内)}
+  - {type: logical, endpoints: ["hq-rt01", "osk-rt01"], via: ipvpn, description: BGP}
 
 domains:
   - {id: area0, name: OSPF Area 0}

@@ -58,23 +58,27 @@ s_ngy: "名古屋営業所" {
   n_seg__ngy_lan: "名古屋ユーザ\nVLAN 100 / 10.52.10.0/24" {class: node-segment}
 }
 
-s_hq.n_hq_rt01 -- s_hq.n_hq_fw01 {class: edge-logical; style.stroke: "#e8710a"}
-s_hq.n_hq_rt02 -- s_hq.n_hq_fw02 {class: edge-logical; style.stroke: "#e8710a"}
-s_hq.n_hq_fw01 -- s_hq.n_hq_core01 {class: edge-logical; style.stroke: "#e8710a"}
-s_hq.n_hq_fw02 -- s_hq.n_hq_core02 {class: edge-logical; style.stroke: "#e8710a"}
-s_hq.n_hq_core01 -- s_hq.n_hq_core02 {class: edge-logical; style.stroke: "#e8710a"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist01 {class: edge-logical; style.stroke: "#0b8043"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist01 {class: edge-logical; style.stroke: "#0b8043"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist02 {class: edge-logical; style.stroke: "#0b8043"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist02 {class: edge-logical; style.stroke: "#0b8043"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist03 {class: edge-logical; style.stroke: "#0b8043"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist03 {class: edge-logical; style.stroke: "#0b8043"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist04 {class: edge-logical; style.stroke: "#0b8043"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist04 {class: edge-logical; style.stroke: "#0b8043"}
-s_osk.n_osk_rt01 -- s_osk.n_osk_core01 {class: edge-logical; style.stroke: "#8430ce"}
-s_osk.n_osk_rt02 -- s_osk.n_osk_core01 {class: edge-logical; style.stroke: "#8430ce"}
-s_hq.n_hq_rt01 -- s_osk.n_osk_rt01: "BGP" {class: edge-logical}
-s_hq.n_hq_rt01 -- s_ngy.n_ngy_rt01: "BGP" {class: edge-logical}
+n_ipvpn: "　IP-VPN網　" {class: node-cloud}
+
+s_hq.n_hq_rt01 -- s_hq.n_hq_fw01: "OSPF Area 0 (バックボーン)" {class: edge-logical; style.stroke: "#e8710a"}
+s_hq.n_hq_rt02 -- s_hq.n_hq_fw02: "OSPF Area 0 (バックボーン)" {class: edge-logical; style.stroke: "#e8710a"}
+s_hq.n_hq_fw01 -- s_hq.n_hq_core01: "OSPF Area 0 (バックボーン)" {class: edge-logical; style.stroke: "#e8710a"}
+s_hq.n_hq_fw02 -- s_hq.n_hq_core02: "OSPF Area 0 (バックボーン)" {class: edge-logical; style.stroke: "#e8710a"}
+s_hq.n_hq_core01 -- s_hq.n_hq_core02: "OSPF Area 0 (バックボーン)" {class: edge-logical; style.stroke: "#e8710a"}
+s_hq.n_hq_core01 -- s_hq.n_hq_dist01: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_hq.n_hq_core02 -- s_hq.n_hq_dist01: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_hq.n_hq_core01 -- s_hq.n_hq_dist02: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_hq.n_hq_core02 -- s_hq.n_hq_dist02: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_hq.n_hq_core01 -- s_hq.n_hq_dist03: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_hq.n_hq_core02 -- s_hq.n_hq_dist03: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_hq.n_hq_core01 -- s_hq.n_hq_dist04: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_hq.n_hq_core02 -- s_hq.n_hq_dist04: "OSPF Area 1 (本社アクセス)" {class: edge-logical; style.stroke: "#0b8043"}
+s_osk.n_osk_rt01 -- s_osk.n_osk_core01: "OSPF Area 2 (大阪)" {class: edge-logical; style.stroke: "#8430ce"}
+s_osk.n_osk_rt02 -- s_osk.n_osk_core01: "OSPF Area 2 (大阪)" {class: edge-logical; style.stroke: "#8430ce"}
+n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical}
+n_ipvpn -- s_osk.n_osk_rt01 {class: edge-logical}
+n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical}
+n_ipvpn -- s_ngy.n_ngy_rt01 {class: edge-logical}
 s_hq.n_hq_core01 -- s_hq.n_seg__hq_srv {class: edge-segment; source-arrowhead.label: "Vlan20"}
 s_hq.n_hq_core02 -- s_hq.n_seg__hq_srv {class: edge-segment; source-arrowhead.label: "Vlan20"}
 s_osk.n_osk_core01 -- s_osk.n_seg__osk_lan {class: edge-segment; source-arrowhead.label: "Vlan100"}

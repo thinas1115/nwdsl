@@ -35,28 +35,47 @@ flowchart TB
   ipvpn ---|"NTT Com IP-VPN 1G<br>(Gi0/2)"| hube_rt01
   ipvpn ---|"NTT Com IP-VPN 1G<br>(Gi0/2)"| hube_rt02
   mobile -->|"③"| hube_rt02
-  hube_rt01 ---|"BGP"| br03_rt01
-  hube_rt01 ---|"BGP"| br04_rt01
-  hube_rt01 ---|"BGP"| br05_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br03_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br04_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br05_rt01
   br06_sw01 -->|"①"| br06_rt01
   ipvpn ---|"NTT Com IP-VPN 100M<br>(Gi0/2)"| br06_rt01
   br06_rt01 -->|"② BGP モバイル閉域網へ切替"| mobile
-  hube_rt01 ---|"BGP"| br06_rt01
-  br06_rt01 ---|"BGP"| hubw_rt01
-  hube_rt01 ---|"BGP"| br07_rt01
-  hube_rt01 ---|"BGP"| br08_rt01
-  hube_rt01 ---|"BGP"| br09_rt01
-  hube_rt01 ---|"BGP"| br10_rt01
-  hube_rt01 ---|"BGP"| br11_rt01
-  hube_rt01 ---|"BGP"| br12_rt01
-  hube_rt01 ---|"BGP"| br13_rt01
-  hube_rt01 ---|"BGP"| br14_rt01
-  hube_rt01 ---|"BGP"| br15_rt01
-  hube_rt01 ---|"BGP"| br16_rt01
-  hube_rt01 ---|"BGP"| br17_rt01
-  hube_rt01 ---|"BGP"| br18_rt01
-  hube_rt01 ---|"BGP"| br19_rt01
-  hube_rt01 ---|"BGP"| br20_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br06_rt01
+  ipvpn ---|"BGP"| hubw_rt01
+  ipvpn --- br06_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br07_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br08_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br09_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br10_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br11_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br12_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br13_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br14_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br15_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br16_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br17_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br18_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br19_rt01
+  ipvpn ---|"BGP"| hube_rt01
+  ipvpn --- br20_rt01
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
   classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
@@ -75,6 +94,6 @@ flowchart TB
   class hube_srv01 role_other
   class mobile node_cloud
   class br06_sw01 role_l2switch
-  linkStyle 0,3,4,6,7,8,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27 stroke:#e8eaed,stroke-width:1px
-  linkStyle 1,2,5,9,11 stroke:#c5221f,stroke-width:4px
-  linkStyle 10 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 0,3,4,6,7,8,9,10,11,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,2,5,12,14 stroke:#c5221f,stroke-width:4px
+  linkStyle 13 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4

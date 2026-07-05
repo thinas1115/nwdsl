@@ -24,6 +24,7 @@ classes: {
 
 n_site__hube: "東日本ハブ" {class: node-site}
 n_site__br03: "支店03" {class: node-site}
+n_cloud__ipvpn: "　IP-VPN網　" {class: node-cloud}
 n_site__hubw: "西日本ハブ" {class: node-site}
 n_site__br04: "支店04" {class: node-site}
 n_site__br05: "支店05" {class: node-site}
@@ -43,39 +44,75 @@ n_site__br18: "支店18" {class: node-site}
 n_site__br19: "支店19" {class: node-site}
 n_site__br20: "支店20" {class: node-site}
 
-n_site__hube -- n_site__br03: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br03: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br04: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br04: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br05: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br05: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br06: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br06: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br07: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br07: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br08: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br08: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br09: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br09: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br10: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br10: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br11: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br11: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br12: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br12: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br13: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br13: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br14: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br14: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br15: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br15: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br16: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br16: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br17: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br17: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br18: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br18: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br19: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br19: "BGP" {class: edge-logical}
-n_site__hube -- n_site__br20: "BGP" {class: edge-logical}
-n_site__hubw -- n_site__br20: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br03 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br03 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br04 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br04 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br05 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br05 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br06 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br06 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br07 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br07 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br08 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br08 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br09 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br09 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br10 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br10 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br11 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br11 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br12 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br12 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br13 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br13 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br14 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br14 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br15 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br15 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br16 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br16 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br17 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br17 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br18 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br18 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br19 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br19 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hube: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br20 {class: edge-logical}
+n_cloud__ipvpn -- n_site__hubw: "BGP" {class: edge-logical}
+n_cloud__ipvpn -- n_site__br20 {class: edge-logical}

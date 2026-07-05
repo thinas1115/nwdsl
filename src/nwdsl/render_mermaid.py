@@ -106,7 +106,10 @@ def render_mermaid(graph: RenderGraph) -> str:
     emphasis_indices: dict[str, list[int]] = {}
     domain_indices: dict[str, list[int]] = {}
     for i, edge in enumerate(graph.edges):
-        label = f'|"{_label(edge.label)}"|' if edge.label else ""
+        label_text = edge.label
+        if not label_text and edge.domain and not edge.continuation:
+            label_text = graph.domains.get(edge.domain)
+        label = f'|"{_label(label_text)}"|' if label_text else ""
         connector = "-->" if edge.directed else "---"
         lines.append(f"  {_key(edge.src)} {connector}{label} {_key(edge.dst)}")
         if edge.emphasis is not None:

@@ -162,10 +162,11 @@ def _domain_hulls(graph: RenderGraph, layout, dmap: dict[str, str]) -> list[str]
         hull = _hull(corners)
         pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in hull)
         color = dmap[dom]
+        # フラットな単色塗り (太い縁取りは二重の帯=グラデ風に見えるため使わない)
         parts.append(
             f'<polygon class="domain-hull" points="{pts}" fill="{color}" '
-            f'fill-opacity="0.07" stroke="{color}" stroke-opacity="0.10" '
-            f'stroke-width="36" stroke-linejoin="round"/>')
+            f'fill-opacity="0.09" stroke="{color}" stroke-opacity="0.35" '
+            f'stroke-width="1.2" stroke-linejoin="round"/>')
         top = min(hull, key=lambda p: (p[1], p[0]))
         parts.append(
             f'<text x="{top[0] + 6:.1f}" y="{top[1] - 6:.1f}" font-size="14" '

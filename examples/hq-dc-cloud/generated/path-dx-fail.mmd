@@ -33,8 +33,10 @@ flowchart TB
   dc_rt01 ---|"エクイニクス経由 AWS Direct Connect 専用線 1G<br>(Te0/0/3 - dx1)"| aws_vgw01
   internet ---|"キャリアB DC IXインターネット 1G<br>(wan1)"| dc_fw01
   dc_fw01 -->|"⑥ BGP Site-to-Site VPN経由"| aws_vgw01
-  hq_rt01 ---|"OSPF (広域Ether網内)"| dc_rt01
-  hq_rt02 ---|"OSPF (広域Ether網内)"| dc_rt01
+  wide_ether ---|"OSPF"| hq_rt01
+  wide_ether --- dc_rt01
+  wide_ether ---|"OSPF"| hq_rt02
+  wide_ether --- dc_rt01
   dc_rt01 ---|"BGP (DX上)"| aws_vgw01
   hq_sw01 --- seg__hq_users
   dc_srv01 --- seg__dc_servers
@@ -58,6 +60,6 @@ flowchart TB
   class dc_fw01 role_firewall
   class wide_ether node_cloud
   linkStyle 0,2,3,7,9,12 stroke:#c5221f,stroke-width:4px
-  linkStyle 1,4,5,6,8,11,13,14,16,17,18,19 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,4,5,6,8,11,13,14,15,16,18,19,20,21 stroke:#e8eaed,stroke-width:1px
   linkStyle 10 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 15 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 17 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4

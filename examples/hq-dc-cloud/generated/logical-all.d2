@@ -48,9 +48,13 @@ s_hq: "本社" {
   n_seg__hq_users: "本社ユーザ\nVLAN 100 / 10.10.100.0/24" {class: node-segment}
 }
 
+n_wide_ether: "　広域Ethernet網　" {class: node-cloud}
+
 s_dc.n_dc_fw01 -- s_aws.n_aws_vgw01: "Site-to-Site VPN (DX障害時のバックアップ)" {class: edge-tunnel}
-s_hq.n_hq_rt01 -- s_dc.n_dc_rt01: "OSPF (広域Ether網内)" {class: edge-logical}
-s_hq.n_hq_rt02 -- s_dc.n_dc_rt01: "OSPF (広域Ether網内)" {class: edge-logical}
+n_wide_ether -- s_hq.n_hq_rt01: "OSPF" {class: edge-logical}
+n_wide_ether -- s_dc.n_dc_rt01 {class: edge-logical}
+n_wide_ether -- s_hq.n_hq_rt02: "OSPF" {class: edge-logical}
+n_wide_ether -- s_dc.n_dc_rt01 {class: edge-logical}
 s_dc.n_dc_rt01 -- s_aws.n_aws_vgw01: "BGP (DX上)" {class: edge-logical}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_users {class: edge-segment; source-arrowhead.label: "Vlan100"}
 s_dc.n_dc_srv01 -- s_dc.n_seg__dc_servers {class: edge-segment; source-arrowhead.label: "eno1"}

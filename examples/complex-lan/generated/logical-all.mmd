@@ -13,10 +13,12 @@ flowchart TB
     osk_rt01["osk-rt01<br>Cisco ISR1100<br>Gi0/1/0: 10.9.1.1/24"]
     seg__osk_lan(["大阪LAN<br>VLAN 1 / 10.9.1.0/24"])
   end
-  hq_fw01 --- hq_core01
-  hq_fw02 --- hq_core02
-  hq_core01 --- hq_core02
-  hq_rt01 ---|"BGP (IP-VPN網内)"| osk_rt01
+  ipvpn(("NTT Com IP-VPN網"))
+  hq_fw01 ---|"OSPF Area 0"| hq_core01
+  hq_fw02 ---|"OSPF Area 0"| hq_core02
+  hq_core01 ---|"OSPF Area 0"| hq_core02
+  ipvpn ---|"BGP"| hq_rt01
+  ipvpn --- osk_rt01
   hq_core01 --- seg__hq_server
   hq_core02 --- seg__hq_server
   hq_core01 --- seg__hq_client
@@ -41,9 +43,10 @@ flowchart TB
   class hq_fw01,hq_fw02 role_firewall
   class hq_core01,hq_core02 role_l3switch
   class hq_rt01,osk_rt01 role_router
+  class ipvpn node_cloud
   class seg__hq_server,seg__hq_client,seg__hq_dmz,seg__osk_lan node_segment
-  linkStyle 3 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
-  linkStyle 4,5,6,7,8,9 stroke:#0f766e,stroke-width:1.5px
+  linkStyle 3,4 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
+  linkStyle 5,6,7,8,9,10 stroke:#0f766e,stroke-width:1.5px
   linkStyle 0,1,2 stroke:#e8710a,stroke-width:2px,stroke-dasharray:3 3
   classDef dom0 fill:#ffffff,stroke:#e8710a,color:#e8710a
   class lg0 dom0

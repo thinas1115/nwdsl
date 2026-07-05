@@ -375,6 +375,19 @@
           "description": "所属ルーティングドメインID (domains を参照)。指定すると図では色分け+凡例で表現され、エッジ個別のラベルは不要になる",
           "title": "Domain"
         },
+        "via": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "経由する網のID (clouds を参照。logical/tunnel のみ)。論理図で『網の雲を通るピアリング』として描かれる",
+          "title": "Via"
+        },
         "description": {
           "anyOf": [
             {

@@ -189,6 +189,17 @@ def test_logical_view_shows_l3_info(doc):
     assert all(n.kind != "segment" for n in g2.nodes)
 
 
+def test_via_routes_logical_through_cloud(doc):
+    """via指定のBGPピアは網の雲を通して2分割で描かれる。"""
+    g = resolve_view(doc, _view(doc, "logical-all"))
+    assert "ipvpn" in {n.id for n in g.nodes}       # 論理図にも網が現れる
+    logical = [e for e in g.edges if e.type == "logical"]
+    pairs = {frozenset((e.src, e.dst)) for e in logical}
+    assert frozenset(("hq-rt01", "ipvpn")) in pairs
+    assert frozenset(("ipvpn", "osk-rt01")) in pairs
+    assert any(e.continuation for e in logical)      # 後半はラベル抑止フラグ付き
+
+
 def test_domains_coloring_and_legend():
     """domain指定: 個別ラベル抑制・凡例・色分け・面塗りが各レンダラに出る。"""
     from nwdsl.loader import load_document as _load_doc

@@ -156,6 +156,14 @@ def validate_document(doc: Document) -> list[Issue]:
                 issues.append(Issue("error", "link.overlay-endpoint",
                                     f"link {label}: {link.type} の端点に cloud は指定できません"))
 
+        if link.via is not None:
+            if link.type not in ("logical", "tunnel"):
+                issues.append(Issue("error", "link.via-forbidden",
+                                    f"link {label}: via は logical/tunnel でのみ指定できます"))
+            elif link.via not in cloud_ids:
+                issues.append(Issue("error", "ref.via",
+                                    f"link {label}: via '{link.via}' が clouds に存在しません"))
+
         # --- 物理ポートの二重使用 ---
         if link.type in PHYSICAL_LINK_TYPES:
             for ep in link.endpoints:

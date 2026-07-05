@@ -580,11 +580,13 @@ links:
   endpoints:
   - hube-rt01
   - br03-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br03-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -599,11 +601,13 @@ links:
   endpoints:
   - hube-rt01
   - br04-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br04-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -618,11 +622,13 @@ links:
   endpoints:
   - hube-rt01
   - br05-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br05-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -642,11 +648,13 @@ links:
   endpoints:
   - hube-rt01
   - br06-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br06-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -661,11 +669,13 @@ links:
   endpoints:
   - hube-rt01
   - br07-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br07-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -680,11 +690,13 @@ links:
   endpoints:
   - hube-rt01
   - br08-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br08-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -704,11 +716,13 @@ links:
   endpoints:
   - hube-rt01
   - br09-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br09-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -723,11 +737,13 @@ links:
   endpoints:
   - hube-rt01
   - br10-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br10-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -742,11 +758,13 @@ links:
   endpoints:
   - hube-rt01
   - br11-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br11-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -766,11 +784,13 @@ links:
   endpoints:
   - hube-rt01
   - br12-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br12-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -785,11 +805,13 @@ links:
   endpoints:
   - hube-rt01
   - br13-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br13-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -804,11 +826,13 @@ links:
   endpoints:
   - hube-rt01
   - br14-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br14-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -828,11 +852,13 @@ links:
   endpoints:
   - hube-rt01
   - br15-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br15-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -847,11 +873,13 @@ links:
   endpoints:
   - hube-rt01
   - br16-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br16-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -866,11 +894,13 @@ links:
   endpoints:
   - hube-rt01
   - br17-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br17-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -890,11 +920,13 @@ links:
   endpoints:
   - hube-rt01
   - br18-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br18-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -909,11 +941,13 @@ links:
   endpoints:
   - hube-rt01
   - br19-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br19-rt01
+  via: ipvpn
   description: BGP
 - type: lan-cable
   endpoints:
@@ -928,11 +962,13 @@ links:
   endpoints:
   - hube-rt01
   - br20-rt01
+  via: ipvpn
   description: BGP
 - type: logical
   endpoints:
   - hubw-rt01
   - br20-rt01
+  via: ipvpn
   description: BGP
 paths:
 - id: br05-normal

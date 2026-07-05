@@ -75,7 +75,7 @@ for n in range(3, 21):
         wan(f"{sid}-rt01", "mobile", f"cct-m-{sid}", "SB", "モバイル閉域網", "50M")
     for hub in ("hube", "hubw"):
         links.append({"type": "logical", "endpoints": [f"{hub}-rt01", f"{sid}-rt01"],
-                      "description": "BGP"})
+                      "via": "ipvpn", "description": "BGP"})
 
 doc = {
     "nwdsl": "0.1",

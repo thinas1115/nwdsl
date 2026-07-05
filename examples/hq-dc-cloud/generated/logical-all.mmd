@@ -16,9 +16,12 @@ flowchart TB
     hq_sw01["hq-sw01<br>Catalyst 9300<br>Vlan100: 10.10.100.1/24"]
     seg__hq_users(["本社ユーザ<br>VLAN 100 / 10.10.100.0/24"])
   end
+  wide_ether(("広域Ethernet網"))
   dc_fw01 ---|"Site-to-Site VPN (DX障害時のバックアップ)"| aws_vgw01
-  hq_rt01 ---|"OSPF (広域Ether網内)"| dc_rt01
-  hq_rt02 ---|"OSPF (広域Ether網内)"| dc_rt01
+  wide_ether ---|"OSPF"| hq_rt01
+  wide_ether --- dc_rt01
+  wide_ether ---|"OSPF"| hq_rt02
+  wide_ether --- dc_rt01
   dc_rt01 ---|"BGP (DX上)"| aws_vgw01
   hq_sw01 --- seg__hq_users
   dc_srv01 --- seg__dc_servers
@@ -38,9 +41,10 @@ flowchart TB
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class dc_fw01 role_firewall
   class aws_vgw01,hq_rt01,dc_rt01,hq_rt02 role_router
+  class wide_ether node_cloud
   class hq_sw01 role_l3switch
   class dc_srv01,dc_srv02 role_other
   class seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_segment
   linkStyle 0 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
-  linkStyle 1,2,3 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
-  linkStyle 4,5,6,7 stroke:#0f766e,stroke-width:1.5px
+  linkStyle 1,2,3,4,5 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
+  linkStyle 6,7,8,9 stroke:#0f766e,stroke-width:1.5px

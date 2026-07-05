@@ -71,29 +71,48 @@ lbl_4 -- s_hube.n_hube_rt02 {class: edge-wan-circuit; style.opacity: 0.15}
 lbl_5: "③" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
 n_mobile -- lbl_5 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_5 -> s_hube.n_hube_rt02 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-s_hube.n_hube_rt01 -- n_br03_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br04_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br05_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br03_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br04_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br05_rt01 {class: edge-logical; style.opacity: 0.15}
 s_br06.n_br06_sw01 -> s_br06.n_br06_rt01: "①" {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-lbl_10: "NTT Com IP-VPN 100M\n(Gi0/2)" {class: edge-label; style.opacity: 0.5}
-n_ipvpn -- lbl_10 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
-lbl_10 -- s_br06.n_br06_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
-lbl_11: "② BGP モバイル閉域網へ切替" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
-s_br06.n_br06_rt01 -- lbl_11 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-lbl_11 -> n_mobile {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-s_hube.n_hube_rt01 -- s_br06.n_br06_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_br06.n_br06_rt01 -- n_hubw_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br07_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br08_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br09_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br10_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br11_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br12_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br13_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br14_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br15_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br16_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br17_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br18_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br19_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-s_hube.n_hube_rt01 -- n_br20_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+lbl_13: "NTT Com IP-VPN 100M\n(Gi0/2)" {class: edge-label; style.opacity: 0.5}
+n_ipvpn -- lbl_13 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
+lbl_13 -- s_br06.n_br06_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
+lbl_14: "② BGP モバイル閉域網へ切替" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
+s_br06.n_br06_rt01 -- lbl_14 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_14 -> n_mobile {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_br06.n_br06_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_hubw_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_br06.n_br06_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br07_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br08_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br09_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br10_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br11_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br12_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br13_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br14_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br15_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br16_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br17_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br18_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br19_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_hube.n_hube_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_br20_rt01 {class: edge-logical; style.opacity: 0.15}

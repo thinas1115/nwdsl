@@ -134,8 +134,8 @@ links:
     endpoints: ["dc-fw01:tunnel.aws", "aws-vgw01:vpn1"]
     description: Site-to-Site VPN (DX障害時のバックアップ)
   # 論理隣接
-  - {type: logical, endpoints: ["hq-rt01", "dc-rt01"], description: OSPF (広域Ether網内)}
-  - {type: logical, endpoints: ["hq-rt02", "dc-rt01"], description: OSPF (広域Ether網内)}
+  - {type: logical, endpoints: ["hq-rt01", "dc-rt01"], via: wide-ether, description: OSPF}
+  - {type: logical, endpoints: ["hq-rt02", "dc-rt01"], via: wide-ether, description: OSPF}
   - {type: logical, endpoints: ["dc-rt01", "aws-vgw01"], description: BGP (DX上)}
 
 segments:

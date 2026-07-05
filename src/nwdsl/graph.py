@@ -36,6 +36,7 @@ class RenderEdge:
     dst_label: Optional[str] = None
     circuit: Optional[str] = None    # 経由回線ID (障害マーク用)
     domain: Optional[str] = None     # 所属ルーティングドメイン (色分け用)
+    continuation: bool = False       # via分割の後半 (ラベル・凡例名の重複表示を抑止)
     emphasis: Optional[str] = None   # None | "path" | "disabled" | "dim" | "failed"
     seq: Optional[int] = None        # 経路上のホップ番号 (1始まり)
     directed: bool = False           # True なら矢印付きで描く
@@ -147,8 +148,19 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
             if link.type == "wan-circuit":
                 circuit = next((c for c in doc.circuits if c.id == link.circuit), None)
                 label = _circuit_label(circuit) if circuit else link.circuit
-            graph.edges.append(RenderEdge(mapped[0], mapped[1], link.type, label,
-                                          domain=link.domain))
+            if link.via and link.via in cloud_by_id and all(
+                    m.startswith("site__") for m in mapped):
+                via_cloud = cloud_by_id[link.via]
+                via_id = f"cloud__{via_cloud.id}"
+                add_node(RenderNode(id=via_id, label=via_cloud.name, kind="cloud",
+                                    role=via_cloud.kind))
+                graph.edges.append(RenderEdge(mapped[0], via_id, link.type, label,
+                                              domain=link.domain))
+                graph.edges.append(RenderEdge(via_id, mapped[1], link.type, None,
+                                              domain=link.domain, continuation=True))
+            else:
+                graph.edges.append(RenderEdge(mapped[0], mapped[1], link.type, label,
+                                              domain=link.domain))
     else:
         # ---- 機器レベルの図 ----
         view_ifs: set[tuple[str, str]] = set()  # このビューに現れた接続のIF
@@ -179,15 +191,25 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                 elif node_id in cloud_by_id:
                     cloud = cloud_by_id[node_id]
                     add_node(RenderNode(id=node_id, label=cloud.name, kind="cloud", role=cloud.kind))
-            edge = RenderEdge(ep_nodes[0], ep_nodes[1], link.type,
-                              _edge_label(doc, link, ifnames),
-                              circuit=link.circuit, domain=link.domain)
-            if link.type == "lan-cable":
-                # IF名は各機器の接続点そばに分散配置する (平行エッジの中央ラベル同士の
-                # 衝突、および1機器に複数WANが刺さる場合の端点ラベル密着を実測して選択)
-                edge.src_label = ifnames.get(ep_nodes[0])
-                edge.dst_label = ifnames.get(ep_nodes[1])
-            graph.edges.append(edge)
+            label = _edge_label(doc, link, ifnames)
+            if link.via and link.via in cloud_by_id:
+                # 網経由のピアリング: 雲を通して2分割で描く (論理図の実務表現)
+                cloud = cloud_by_id[link.via]
+                add_node(RenderNode(id=cloud.id, label=cloud.name, kind="cloud",
+                                    role=cloud.kind))
+                graph.edges.append(RenderEdge(ep_nodes[0], cloud.id, link.type, label,
+                                              domain=link.domain))
+                graph.edges.append(RenderEdge(cloud.id, ep_nodes[1], link.type, None,
+                                              domain=link.domain, continuation=True))
+            else:
+                edge = RenderEdge(ep_nodes[0], ep_nodes[1], link.type, label,
+                                  circuit=link.circuit, domain=link.domain)
+                if link.type == "lan-cable":
+                    # IF名は各機器の接続点そばに分散配置する (平行エッジの中央ラベルの
+                    # 衝突、複数WAN機器での端点ラベル密着を実測して選択)
+                    edge.src_label = ifnames.get(ep_nodes[0])
+                    edge.dst_label = ifnames.get(ep_nodes[1])
+                graph.edges.append(edge)
             view_ifs.update((n, i) for n, i in ifnames.items() if i is not None)
 
         # 純粋なL3ビュー (logicalを含む、または物理レイヤ抜きのtunnelのみ) か
@@ -306,18 +328,19 @@ def _orient_edges(doc: Document, graph: RenderGraph) -> None:
     これと direction: down の組み合わせで「WANが上・LANが下へ降りる」層構造が
     tier 指定なしで保証される。
     """
-    sources = [n.id for n in graph.nodes if n.kind == "cloud"]
-    if not sources:
-        # クラウドが図に無いビュー (論理図等) では WAN 境界機器を起点にする
-        wan_devices: set[str] = set()
-        for link in doc.links:
-            if link.type == "wan-circuit":
-                for ep in link.endpoints:
-                    node_id, _ = parse_endpoint(ep)
-                    wan_devices.add(node_id)
-        node_ids = {n.id for n in graph.nodes}
-        sources = sorted(wan_devices & node_ids)
-    if not sources:
+    # 起点は2段シード: クラウド=距離0、WAN境界機器=距離1。
+    # クラウドのみだと、WAN回線を表示しない論理ビューで冗長側ルーターが
+    # 「下流」と誤認され最下段に落ちる。同格にすると物理図で雲が上に固定されない
+    node_ids = {n.id for n in graph.nodes}
+    clouds = sorted(n.id for n in graph.nodes if n.kind == "cloud")
+    wan_devices: set[str] = set()
+    for link in doc.links:
+        if link.type == "wan-circuit":
+            for ep in link.endpoints:
+                ep_node, _ = parse_endpoint(ep)
+                wan_devices.add(ep_node)
+    wan_seeds = sorted((wan_devices & node_ids) - set(clouds))
+    if not clouds and not wan_seeds:
         return
 
     adjacency: dict[str, set[str]] = defaultdict(set)
@@ -325,8 +348,10 @@ def _orient_edges(doc: Document, graph: RenderGraph) -> None:
         adjacency[edge.src].add(edge.dst)
         adjacency[edge.dst].add(edge.src)
 
-    dist: dict[str, int] = {s: 0 for s in sources}
-    queue = deque(sources)
+    dist: dict[str, int] = {c: 0 for c in clouds}
+    for w in wan_seeds:
+        dist.setdefault(w, 1)
+    queue = deque(clouds + [w for w in wan_seeds if dist[w] == 1])
     while queue:
         current = queue.popleft()
         for neighbor in adjacency[current]:

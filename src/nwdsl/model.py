@@ -130,6 +130,10 @@ class Link(StrictModel):
         default=None,
         description="所属ルーティングドメインID (domains を参照)。指定すると図では"
                     "色分け+凡例で表現され、エッジ個別のラベルは不要になる")
+    via: Optional[str] = Field(
+        default=None,
+        description="経由する網のID (clouds を参照。logical/tunnel のみ)。"
+                    "論理図で『網の雲を通るピアリング』として描かれる")
     description: Optional[str] = Field(default=None, description="補足 (logical/tunnel では図のラベルになる)")
 
 

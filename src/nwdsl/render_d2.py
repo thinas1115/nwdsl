@@ -187,7 +187,12 @@ def render_d2(graph: RenderGraph) -> str:
             lines.append(f"{lkey} {tail} {dst} {{{joined}}}")
             continue
 
-        label = f': "{_label(edge.label)}"' if edge.label else ""
+        # 色分けのみのD2/Mermaidでは、domainのエリア名をラベルとして残す
+        # (面塗りを持つ内蔵SVGは凡例+領域で伝えるためラベル無し)
+        label_text = edge.label
+        if not label_text and edge.domain and not edge.continuation:
+            label_text = graph.domains.get(edge.domain)
+        label = f': "{_label(label_text)}"' if label_text else ""
         connector = "->" if edge.directed else "--"
         lines.append(f"{src} {connector} {dst}{label} {{{'; '.join(attrs)}}}")
 
