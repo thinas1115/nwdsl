@@ -51,7 +51,7 @@ s_aws: "AWS ap-northeast-1" {
 }
 
 n_wide_ether: "　広域Ethernet網　" {class: node-cloud}
-n_internet: "　インターネット　" {class: node-cloud; style.opacity: 0.3}
+n_internet: "　インターネット　" {class: node-cloud}
 
 s_hq.n_hq_sw01 -> s_hq.n_hq_rt01: "① HSRP" {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/1"; target-arrowhead.label: "Gi0/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"; style.opacity: 0.15}
@@ -72,10 +72,11 @@ lbl_9 -> s_dc.n_dc_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style
 lbl_10: "エクイニクス経由 AWS Direct Connect 専用線 1G\n(Te0/0/3 - dx1)" {class: edge-label; style.opacity: 0.5}
 s_dc.n_dc_rt01 -- lbl_10 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
 lbl_10 -- s_aws.n_aws_vgw01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
-lbl_11: "キャリアB DC IXインターネット 1G\n(wan1)" {class: edge-label; style.opacity: 0.15}
-n_internet -- lbl_11 {class: edge-wan-circuit; style.opacity: 0.15}
-lbl_11 -- s_dc.n_dc_fw01 {class: edge-wan-circuit; style.opacity: 0.15}
-s_dc.n_dc_fw01 -> s_aws.n_aws_vgw01: "⑥ BGP Site-to-Site VPN経由" {class: edge-tunnel; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_11: "⑥ IPsec インターネット網経由" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
+s_dc.n_dc_fw01 -- lbl_11 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_11 -> n_internet {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+n_internet -- s_dc.n_dc_fw01: "Site-to-Site VPN (DX障害時のバックアップ)" {class: edge-tunnel; style.opacity: 0.15}
+n_internet -> s_aws.n_aws_vgw01: "⑦ BGP Site-to-Site VPN経由" {class: edge-tunnel; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 n_wide_ether -- s_hq.n_hq_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
 n_wide_ether -- s_dc.n_dc_rt01 {class: edge-logical; style.opacity: 0.15}
 n_wide_ether -- s_hq.n_hq_rt02: "OSPF" {class: edge-logical; style.opacity: 0.15}

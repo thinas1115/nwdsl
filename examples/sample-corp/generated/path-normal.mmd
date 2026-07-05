@@ -21,7 +21,8 @@ flowchart TB
   ipvpn -->|"③"| osk_rt01
   internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/0)"| hq_rt02
   internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/1)"| osk_rt01
-  hq_rt02 ---|"IPsec バックアップVPN"| osk_rt01
+  internet ---|"IPsec バックアップVPN"| hq_rt02
+  internet --- osk_rt01
   ipvpn ---|"BGP"| hq_rt01
   ipvpn --- osk_rt01
   ipvpn ---|"BGP"| hq_rt01
@@ -47,4 +48,4 @@ flowchart TB
   class osk_sw01 role_l2switch
   class ipvpn node_cloud
   linkStyle 0,2,3,4 stroke:#c5221f,stroke-width:4px
-  linkStyle 1,5,6,7,8,9,10,11,12,13,14 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,5,6,7,8,9,10,11,12,13,14,15 stroke:#e8eaed,stroke-width:1px

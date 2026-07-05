@@ -182,6 +182,7 @@ links:
   # ---- オーバーレイ ----
   - type: tunnel
     endpoints: ["hq-rt02:Tunnel0", "osk-rt01:Tunnel0"]
+    via: internet
     description: IPsec バックアップVPN
 
   # ---- 論理隣接 (IP-VPN上のBGPピア。via で網の雲を通して描く) ----
@@ -239,6 +240,9 @@ paths:
       - node: hq-rt02
         protocol: HSRP
         note: standbyがactive昇格
+      - node: internet
+        protocol: IPsec
+        note: インターネット網経由
       - node: osk-rt01
         protocol: BGP
         note: IPsecトンネルへ経路切替

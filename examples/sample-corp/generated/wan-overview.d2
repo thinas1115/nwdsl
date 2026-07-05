@@ -43,4 +43,5 @@ lbl_3 -- n_site__hq {class: edge-wan-circuit}
 lbl_4: "NTT西日本 フレッツ光ネクスト + OCN 1G" {class: edge-label}
 n_cloud__internet -- lbl_4 {class: edge-wan-circuit}
 lbl_4 -- n_site__osk {class: edge-wan-circuit}
-n_site__hq -- n_site__osk: "IPsec バックアップVPN" {class: edge-tunnel}
+n_cloud__internet -- n_site__hq: "IPsec バックアップVPN" {class: edge-tunnel}
+n_cloud__internet -- n_site__osk {class: edge-tunnel}

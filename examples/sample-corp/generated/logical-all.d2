@@ -46,9 +46,11 @@ s_ngy: "名古屋営業所" {
   n_seg__ngy_lan: "名古屋LAN\nVLAN 1 / 10.3.10.0/24" {class: node-segment}
 }
 
+n_internet: "　インターネット　" {class: node-cloud}
 n_ipvpn: "　NTT Com IP-VPN網　" {class: node-cloud}
 
-s_hq.n_hq_rt02 -- s_osk.n_osk_rt01: "IPsec バックアップVPN" {class: edge-tunnel}
+n_internet -- s_hq.n_hq_rt02: "IPsec バックアップVPN" {class: edge-tunnel}
+n_internet -- s_osk.n_osk_rt01 {class: edge-tunnel}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical}
 n_ipvpn -- s_osk.n_osk_rt01 {class: edge-logical}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical}

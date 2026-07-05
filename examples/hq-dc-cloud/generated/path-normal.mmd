@@ -32,7 +32,8 @@ flowchart TB
   wide_ether -->|"③"| dc_rt01
   dc_rt01 -->|"④ BGP Direct Connect経由"| aws_vgw01
   internet ---|"キャリアB DC IXインターネット 1G<br>(wan1)"| dc_fw01
-  dc_fw01 ---|"Site-to-Site VPN (DX障害時のバックアップ)"| aws_vgw01
+  internet ---|"Site-to-Site VPN (DX障害時のバックアップ)"| dc_fw01
+  internet --- aws_vgw01
   wide_ether ---|"OSPF"| hq_rt01
   wide_ether --- dc_rt01
   wide_ether ---|"OSPF"| hq_rt02
@@ -59,4 +60,4 @@ flowchart TB
   class hq_rt02,dc_core01,dc_fw01,dc_srvsw01,dc_srv01,dc_srv02,internet,seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_dim
   class wide_ether node_cloud
   linkStyle 0,7,9,10 stroke:#c5221f,stroke-width:4px
-  linkStyle 1,2,3,4,5,6,8,11,12,13,14,15,16,17,18,19,20,21 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,2,3,4,5,6,8,11,12,13,14,15,16,17,18,19,20,21,22 stroke:#e8eaed,stroke-width:1px

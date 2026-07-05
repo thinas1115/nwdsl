@@ -31,8 +31,9 @@ flowchart TB
   wide_ether ---|"キャリアA 広域Ethernet 1G<br>(Gi0/0/0)"| hq_rt02
   wide_ether -->|"③"| dc_rt01
   dc_rt01 ---|"エクイニクス経由 AWS Direct Connect 専用線 1G<br>(Te0/0/3 - dx1)"| aws_vgw01
-  internet ---|"キャリアB DC IXインターネット 1G<br>(wan1)"| dc_fw01
-  dc_fw01 -->|"⑥ BGP Site-to-Site VPN経由"| aws_vgw01
+  dc_fw01 -->|"⑥ IPsec インターネット網経由"| internet
+  internet ---|"Site-to-Site VPN (DX障害時のバックアップ)"| dc_fw01
+  internet -->|"⑦ BGP Site-to-Site VPN経由"| aws_vgw01
   wide_ether ---|"OSPF"| hq_rt01
   wide_ether --- dc_rt01
   wide_ether ---|"OSPF"| hq_rt02
@@ -56,10 +57,10 @@ flowchart TB
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class hq_rt01,dc_rt01,aws_vgw01 role_router
   class hq_sw01,dc_core01 role_l3switch
-  class hq_rt02,dc_srvsw01,dc_srv01,dc_srv02,internet,seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_dim
+  class hq_rt02,dc_srvsw01,dc_srv01,dc_srv02,seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_dim
   class dc_fw01 role_firewall
-  class wide_ether node_cloud
-  linkStyle 0,2,3,7,9,12 stroke:#c5221f,stroke-width:4px
-  linkStyle 1,4,5,6,8,11,13,14,15,16,18,19,20,21 stroke:#e8eaed,stroke-width:1px
+  class wide_ether,internet node_cloud
+  linkStyle 0,2,3,7,9,11,13 stroke:#c5221f,stroke-width:4px
+  linkStyle 1,4,5,6,8,12,14,15,16,17,19,20,21,22 stroke:#e8eaed,stroke-width:1px
   linkStyle 10 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 17 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 18 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4

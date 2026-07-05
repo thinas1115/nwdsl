@@ -11,10 +11,11 @@ flowchart TB
   end
   internet(("インターネット"))
   tk_sw01 -->|"① 静的ルート 192.168.20.0/24 → tunnel1"| tk_rt01
-  fk_rt01 -->|"③"| fk_sw01
-  internet ---|"NTT東日本 フレッツ光クロス + OCN 10G<br>(lan2)"| tk_rt01
-  internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G<br>(lan2)"| fk_rt01
-  tk_rt01 -->|"② IPsec"| fk_rt01
+  fk_rt01 -->|"④"| fk_sw01
+  tk_rt01 -->|"② IPsec インターネット網経由"| internet
+  internet -->|"③ IPsec"| fk_rt01
+  internet ---|"IPsec本線 (経路は静的)"| tk_rt01
+  internet --- fk_rt01
   tk_rt01 --- seg__tk_lan
   fk_rt01 --- seg__fk_lan
 
@@ -31,6 +32,7 @@ flowchart TB
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class tk_rt01,fk_rt01 role_router
   class tk_sw01,fk_sw01 role_l2switch
-  class internet,seg__tk_lan,seg__fk_lan node_dim
-  linkStyle 0,1,4 stroke:#c5221f,stroke-width:4px
-  linkStyle 2,3,5,6 stroke:#e8eaed,stroke-width:1px
+  class internet node_cloud
+  class seg__tk_lan,seg__fk_lan node_dim
+  linkStyle 0,1,2,3 stroke:#c5221f,stroke-width:4px
+  linkStyle 4,5,6,7 stroke:#e8eaed,stroke-width:1px

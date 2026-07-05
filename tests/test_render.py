@@ -37,8 +37,8 @@ def test_collapse_sites_folds_devices(doc):
     assert kinds == {"site", "cloud"}
     # 拠点内で閉じる lan-cable 由来のエッジは存在しない (layersにも含まれない)
     assert len([e for e in g.edges if e.type == "wan-circuit"]) == 5
-    # 本社-大阪の IPsec トンネルは拠点間エッジとして残る
-    assert len([e for e in g.edges if e.type == "tunnel"]) == 1
+    # 本社-大阪の IPsec トンネルは via: internet で2区間 (拠点-クラウド) に分割される
+    assert len([e for e in g.edges if e.type == "tunnel"]) == 2
 
 
 def test_include_sites_filters_and_keeps_clouds(doc):
@@ -87,11 +87,11 @@ def test_edges_oriented_wan_to_lan(doc):
 
 
 def test_orientation_fallback_without_clouds(doc):
-    """クラウドを含まないビューではWAN境界機器を起点に向き付けする。"""
+    """tunnel レイヤのみのビューでも、via: internet がクラウドを持ち込み
+    クラウド起点で向き付けされる。"""
     g = resolve_view(doc, _view(doc, "logical-all"))
-    tunnel = next(e for e in g.edges if e.type == "tunnel")
-    # hq-rt02 / osk-rt01 はともにWAN境界(距離0)なので向きは安定 (入替なし)
-    assert {tunnel.src, tunnel.dst} == {"hq-rt02", "osk-rt01"}
+    tunnel_pairs = {(e.src, e.dst) for e in g.edges if e.type == "tunnel"}
+    assert tunnel_pairs == {("internet", "hq-rt02"), ("internet", "osk-rt01")}
 
 
 def test_d2_output_structure(doc):
@@ -133,13 +133,14 @@ def test_path_view_overlay(doc):
     nodes = {n.id: n for n in g.nodes}
     # 障害コンポーネントは failed、経路外は dim、経路上は通常
     assert nodes["ipvpn"].emphasis == "failed"
-    assert nodes["internet"].emphasis == "dim"      # 経路外
+    assert nodes["internet"].emphasis is None       # バックアップ経路上のクラウドなので淡色化しない
     assert nodes["hq-rt01"].emphasis is None        # fallback経路上は淡色化しない
     assert nodes["hq-rt02"].emphasis is None
-    # 経路エッジ: ホップ順に directed + seq
+    # 経路エッジ: ホップ順に directed + seq (internet クラウドを経由する2区間を含む)
     path_edges = sorted((e for e in g.edges if e.emphasis == "path"), key=lambda e: e.seq)
     assert [(e.src, e.dst) for e in path_edges] == [
-        ("hq-sw01", "hq-rt02"), ("hq-rt02", "osk-rt01"), ("osk-rt01", "osk-sw01")]
+        ("hq-sw01", "hq-rt02"), ("hq-rt02", "internet"),
+        ("internet", "osk-rt01"), ("osk-rt01", "osk-sw01")]
     assert all(e.directed for e in path_edges)
     assert "HSRP" in path_edges[0].label
     # 無効化された正常経路 (fallback_of) は disabled

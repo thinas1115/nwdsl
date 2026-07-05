@@ -38,16 +38,17 @@ s_fukuoka: "福岡営業所" {
   n_seg__fk_lan: "福岡LAN\nVLAN 1 / 192.168.20.0/24" {class: node-segment; style.opacity: 0.3}
 }
 
-n_internet: "　インターネット　" {class: node-cloud; style.opacity: 0.3}
+n_internet: "　インターネット　" {class: node-cloud}
 
 s_tokyo.n_tk_sw01 -> s_tokyo.n_tk_rt01: "① 静的ルート 192.168.20.0/24 → tunnel1" {class: edge-lan-cable; source-arrowhead.label: "port1"; target-arrowhead.label: "lan1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-s_fukuoka.n_fk_rt01 -> s_fukuoka.n_fk_sw01: "③" {class: edge-lan-cable; source-arrowhead.label: "lan1"; target-arrowhead.label: "port1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-lbl_2: "NTT東日本 フレッツ光クロス + OCN 10G\n(lan2)" {class: edge-label; style.opacity: 0.15}
-n_internet -- lbl_2 {class: edge-wan-circuit; style.opacity: 0.15}
-lbl_2 -- s_tokyo.n_tk_rt01 {class: edge-wan-circuit; style.opacity: 0.15}
-lbl_3: "NTT西日本 フレッツ光ネクスト + OCN 1G\n(lan2)" {class: edge-label; style.opacity: 0.15}
-n_internet -- lbl_3 {class: edge-wan-circuit; style.opacity: 0.15}
-lbl_3 -- s_fukuoka.n_fk_rt01 {class: edge-wan-circuit; style.opacity: 0.15}
-s_tokyo.n_tk_rt01 -> s_fukuoka.n_fk_rt01: "② IPsec" {class: edge-tunnel; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_fukuoka.n_fk_rt01 -> s_fukuoka.n_fk_sw01: "④" {class: edge-lan-cable; source-arrowhead.label: "lan1"; target-arrowhead.label: "port1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_2: "② IPsec インターネット網経由" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
+s_tokyo.n_tk_rt01 -- lbl_2 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_2 -> n_internet {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_3: "③ IPsec" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
+n_internet -- lbl_3 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_3 -> s_fukuoka.n_fk_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+n_internet -- s_tokyo.n_tk_rt01: "IPsec本線 (経路は静的)" {class: edge-tunnel; style.opacity: 0.15}
+n_internet -- s_fukuoka.n_fk_rt01 {class: edge-tunnel; style.opacity: 0.15}
 s_tokyo.n_tk_rt01 -- s_tokyo.n_seg__tk_lan {class: edge-segment; source-arrowhead.label: "lan1"; style.opacity: 0.15}
 s_fukuoka.n_fk_rt01 -- s_fukuoka.n_seg__fk_lan {class: edge-segment; source-arrowhead.label: "lan1"; style.opacity: 0.15}

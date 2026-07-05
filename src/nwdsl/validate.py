@@ -205,7 +205,13 @@ def validate_document(doc: Document) -> list[Issue]:
     for link in doc.links:
         a, _ = parse_endpoint(link.endpoints[0])
         b, _ = parse_endpoint(link.endpoints[1])
-        adjacent.add(frozenset((a, b)))
+        if link.via:
+            # via で網を経由する場合、実際の描画は a--via--b の2区間になるため
+            # ホップ隣接もその2区間で判定する (a--b の直接隣接ではない)
+            adjacent.add(frozenset((a, link.via)))
+            adjacent.add(frozenset((link.via, b)))
+        else:
+            adjacent.add(frozenset((a, b)))
 
     for path in doc.paths:
         for hop in path.hops:

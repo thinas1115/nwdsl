@@ -88,6 +88,7 @@ links:
     circuit: cct-fk
   - type: tunnel
     endpoints: ["tk-rt01:tunnel1", "fk-rt01:tunnel1"]
+    via: internet
     description: IPsec本線 (経路は静的)
 
 segments:
@@ -109,6 +110,9 @@ paths:
       - node: tk-sw01
       - node: tk-rt01
         note: 静的ルート 192.168.20.0/24 → tunnel1
+      - node: internet
+        protocol: IPsec
+        note: インターネット網経由
       - node: fk-rt01
         protocol: IPsec
       - node: fk-sw01

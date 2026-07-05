@@ -37,11 +37,11 @@
 | hq-sw01 | Vlan20 | 10.1.20.1/24 | hq-client | - | クライアントセグメントGW |
 | osk-rt01 | Gi0/0/0 | 172.16.255.5/30 | - | NTT Com IP-VPN網 | IP-VPNアクセス回線 |
 | osk-rt01 | Gi0/0/1 | 198.51.100.10/30 | - | インターネット | インターネット回線 (IPsec用) |
-| osk-rt01 | Gi0/1/0 | 10.2.10.1/24 | - | osk-sw01 Gi1/0/1 | フロアSWへ |
+| osk-rt01 | Gi0/1/0 | 10.2.10.1/24 | osk-lan | osk-sw01 Gi1/0/1 | フロアSWへ (LAN GW) |
 | osk-rt01 | Tunnel0 | 172.31.0.2/30 | - | - | 本社向けIPsecトンネル |
 | osk-sw01 | Gi1/0/1 | - | - | osk-rt01 Gi0/1/0 | osk-rt01へ |
 | ngy-rt01 | Gi0/0/0 | 172.16.255.9/30 | - | NTT Com IP-VPN網 | IP-VPNアクセス回線 |
-| ngy-rt01 | Gi0/1/0 | 10.3.10.1/24 | - | ngy-sw01 Gi1/0/1 | フロアSWへ |
+| ngy-rt01 | Gi0/1/0 | 10.3.10.1/24 | ngy-lan | ngy-sw01 Gi1/0/1 | フロアSWへ (LAN GW) |
 | ngy-sw01 | Gi1/0/1 | - | - | ngy-rt01 Gi0/1/0 | ngy-rt01へ |
 
 ## 回線一覧
@@ -56,20 +56,20 @@
 
 ## 接続一覧
 
-| 種別 | 端点1 | 端点2 | 回線 | 備考 |
-|---|---|---|---|---|
-| 構内配線 | hq-rt01:Gi0/0/1 | hq-sw01:Gi1/0/1 | - | - |
-| 構内配線 | hq-rt02:Gi0/0/1 | hq-sw01:Gi1/0/2 | - | - |
-| 構内配線 | osk-rt01:Gi0/1/0 | osk-sw01:Gi1/0/1 | - | - |
-| 構内配線 | ngy-rt01:Gi0/1/0 | ngy-sw01:Gi1/0/1 | - | - |
-| WAN回線 | hq-rt01:Gi0/0/0 | ipvpn | cct-ipvpn-hq | - |
-| WAN回線 | osk-rt01:Gi0/0/0 | ipvpn | cct-ipvpn-osk | - |
-| WAN回線 | ngy-rt01:Gi0/0/0 | ipvpn | cct-ipvpn-ngy | - |
-| WAN回線 | hq-rt02:Gi0/0/0 | internet | cct-inet-hq | - |
-| WAN回線 | osk-rt01:Gi0/0/1 | internet | cct-inet-osk | - |
-| トンネル | hq-rt02:Tunnel0 | osk-rt01:Tunnel0 | - | IPsec バックアップVPN |
-| 論理隣接 | hq-rt01 | osk-rt01 | - | BGP (IP-VPN網内) |
-| 論理隣接 | hq-rt01 | ngy-rt01 | - | BGP (IP-VPN網内) |
+| 種別 | 端点1 | 端点2 | 回線 | ドメイン | 備考 |
+|---|---|---|---|---|---|
+| 構内配線 | hq-rt01:Gi0/0/1 | hq-sw01:Gi1/0/1 | - | - | - |
+| 構内配線 | hq-rt02:Gi0/0/1 | hq-sw01:Gi1/0/2 | - | - | - |
+| 構内配線 | osk-rt01:Gi0/1/0 | osk-sw01:Gi1/0/1 | - | - | - |
+| 構内配線 | ngy-rt01:Gi0/1/0 | ngy-sw01:Gi1/0/1 | - | - | - |
+| WAN回線 | hq-rt01:Gi0/0/0 | ipvpn | cct-ipvpn-hq | - | - |
+| WAN回線 | osk-rt01:Gi0/0/0 | ipvpn | cct-ipvpn-osk | - | - |
+| WAN回線 | ngy-rt01:Gi0/0/0 | ipvpn | cct-ipvpn-ngy | - | - |
+| WAN回線 | hq-rt02:Gi0/0/0 | internet | cct-inet-hq | - | - |
+| WAN回線 | osk-rt01:Gi0/0/1 | internet | cct-inet-osk | - | - |
+| トンネル | hq-rt02:Tunnel0 | osk-rt01:Tunnel0 | - | - | IPsec バックアップVPN |
+| 論理隣接 | hq-rt01 | osk-rt01 | - | - | BGP |
+| 論理隣接 | hq-rt01 | ngy-rt01 | - | - | BGP |
 
 ## セグメント一覧
 
@@ -77,5 +77,5 @@
 |---|---|---|---|---|---|---|
 | hq-server | 本社 | 10 | 10.1.10.0/24 | 本社サーバ | hq-sw01 Vlan10 (10.1.10.1/24) | - |
 | hq-client | 本社 | 20 | 10.1.20.0/24 | 本社クライアント | hq-sw01 Vlan20 (10.1.20.1/24) | - |
-| osk-lan | 大阪支店 | 1 | 10.2.10.0/24 | 大阪LAN | - | - |
-| ngy-lan | 名古屋営業所 | 1 | 10.3.10.0/24 | 名古屋LAN | - | - |
+| osk-lan | 大阪支店 | 1 | 10.2.10.0/24 | 大阪LAN | osk-rt01 Gi0/1/0 (10.2.10.1/24) | - |
+| ngy-lan | 名古屋営業所 | 1 | 10.3.10.0/24 | 名古屋LAN | ngy-rt01 Gi0/1/0 (10.3.10.1/24) | - |

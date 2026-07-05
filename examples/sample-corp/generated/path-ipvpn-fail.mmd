@@ -16,12 +16,13 @@ flowchart TB
   ngy_rt01["ngy-rt01<br>(名古屋営業所)"]
   hq_rt01 --- hq_sw01
   hq_sw01 -->|"① HSRP standbyがactive昇格"| hq_rt02
-  osk_rt01 -->|"③"| osk_sw01
+  osk_rt01 -->|"④"| osk_sw01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M<br>(Gi0/0/0)"| hq_rt01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M<br>(Gi0/0/0)"| osk_rt01
-  internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/0)"| hq_rt02
-  internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/1)"| osk_rt01
-  hq_rt02 -->|"② BGP IPsecトンネルへ経路切替"| osk_rt01
+  hq_rt02 -->|"② IPsec インターネット網経由"| internet
+  internet -->|"③ BGP IPsecトンネルへ経路切替"| osk_rt01
+  internet ---|"IPsec バックアップVPN"| hq_rt02
+  internet --- osk_rt01
   ipvpn ---|"BGP"| hq_rt01
   ipvpn --- osk_rt01
   ipvpn ---|"BGP"| hq_rt01
@@ -45,8 +46,9 @@ flowchart TB
   class hq_sw01 role_l3switch
   class osk_sw01 role_l2switch
   class ipvpn node_failed
-  class internet,ngy_rt01,seg__hq_server,seg__hq_client,seg__osk_lan node_dim
+  class internet node_cloud
+  class ngy_rt01,seg__hq_server,seg__hq_client,seg__osk_lan node_dim
   linkStyle 0 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 1,2,7 stroke:#c5221f,stroke-width:4px
-  linkStyle 3,4,8,9,10,11 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 5,6,12,13,14 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,2,5,6 stroke:#c5221f,stroke-width:4px
+  linkStyle 3,4,9,10,11,12 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 7,8,13,14,15 stroke:#e8eaed,stroke-width:1px

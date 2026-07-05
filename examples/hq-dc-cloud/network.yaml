@@ -132,6 +132,7 @@ links:
   - {type: wan-circuit, endpoints: ["dc-fw01:wan1", "internet"], circuit: cct-inet-dc}
   - type: tunnel
     endpoints: ["dc-fw01:tunnel.aws", "aws-vgw01:vpn1"]
+    via: internet
     description: Site-to-Site VPN (DX障害時のバックアップ)
   # 論理隣接
   - {type: logical, endpoints: ["hq-rt01", "dc-rt01"], via: wide-ether, description: OSPF}
@@ -163,6 +164,7 @@ paths:
       - {node: dc-rt01}
       - {node: dc-core01}
       - {node: dc-fw01, note: 経路広報の切替でVPNへ}
+      - {node: internet, protocol: IPsec, note: インターネット網経由}
       - {node: aws-vgw01, protocol: BGP, note: Site-to-Site VPN経由}
 
 views:
