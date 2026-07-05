@@ -15,11 +15,11 @@ flowchart TB
   internet(("インターネット"))
   ngy_rt01["ngy-rt01<br>(名古屋営業所)"]
   hq_rt01 --- hq_sw01
-  hq_sw01 -->|"① HSRP standbyがactive昇格"| hq_rt02
+  hq_rt02 -->|"① HSRP standbyがactive昇格"| hq_sw01
   osk_rt01 -->|"④"| osk_sw01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M<br>(Gi0/0/0)"| hq_rt01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M<br>(Gi0/0/0)"| osk_rt01
-  hq_rt02 -->|"② IPsec インターネット網経由"| internet
+  internet -->|"② IPsec インターネット網経由"| hq_rt02
   internet -->|"③ BGP IPsecトンネルへ経路切替"| osk_rt01
   internet ---|"IPsec バックアップVPN"| hq_rt02
   internet --- osk_rt01

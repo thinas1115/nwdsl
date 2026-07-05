@@ -444,9 +444,11 @@ def _resolve_path_view(doc: Document, view: View) -> RenderGraph:
         edge.emphasis = "path"
         edge.seq = i + 1
         edge.directed = True
-        if edge.src != prev.node:  # 経路の進行方向に向きを合わせる
-            edge.src, edge.dst = edge.dst, edge.src
-            edge.src_label, edge.dst_label = edge.dst_label, edge.src_label
+        # 矢印の向きは常にレイアウトの向き付け (ADR-0005) 通りの src/dst を維持する。
+        # ホップ進行方向に合わせて src/dst を入れ替えると、D2/Mermaid/内蔵SVG いずれも
+        # 記述順をランク(階層位置)に使うため、経路ごとに階層が変わり正常時/障害時で
+        # 拠点・クラウドの位置がズレる原因になっていた。実際の進行方向はホップ番号
+        # (①②③...) で示す。
         annotation = " ".join(x for x in (nxt.protocol, nxt.note) if x)
         edge.label = f"{_seq_mark(i)} {annotation}".strip()
 

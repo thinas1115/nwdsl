@@ -10,9 +10,9 @@ flowchart TB
     seg__fk_lan(["福岡LAN<br>VLAN 1 / 192.168.20.0/24"])
   end
   internet(("インターネット"))
-  tk_sw01 -->|"① 静的ルート 192.168.20.0/24 → tunnel1"| tk_rt01
+  tk_rt01 -->|"① 静的ルート 192.168.20.0/24 → tunnel1"| tk_sw01
   fk_rt01 -->|"④"| fk_sw01
-  tk_rt01 -->|"② IPsec インターネット網経由"| internet
+  internet -->|"② IPsec インターネット網経由"| tk_rt01
   internet -->|"③ IPsec"| fk_rt01
   internet ---|"IPsec本線 (経路は静的)"| tk_rt01
   internet --- fk_rt01

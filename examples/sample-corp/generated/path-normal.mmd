@@ -14,10 +14,10 @@ flowchart TB
   ipvpn(("NTT Com IP-VPN網"))
   internet(("インターネット"))
   ngy_rt01["ngy-rt01<br>(名古屋営業所)"]
-  hq_sw01 -->|"① HSRP active側GW"| hq_rt01
+  hq_rt01 -->|"① HSRP active側GW"| hq_sw01
   hq_rt02 --- hq_sw01
   osk_rt01 -->|"④"| osk_sw01
-  hq_rt01 -->|"② BGP IP-VPN網経由"| ipvpn
+  ipvpn -->|"② BGP IP-VPN網経由"| hq_rt01
   ipvpn -->|"③"| osk_rt01
   internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/0)"| hq_rt02
   internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/1)"| osk_rt01

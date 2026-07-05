@@ -136,10 +136,12 @@ def test_path_view_overlay(doc):
     assert nodes["internet"].emphasis is None       # バックアップ経路上のクラウドなので淡色化しない
     assert nodes["hq-rt01"].emphasis is None        # fallback経路上は淡色化しない
     assert nodes["hq-rt02"].emphasis is None
-    # 経路エッジ: ホップ順に directed + seq (internet クラウドを経由する2区間を含む)
+    # 経路エッジ: ホップ順に directed + seq (internet クラウドを経由する2区間を含む)。
+    # src/dst はレイアウトの向き付け(ADR-0005)を維持するため、ホップの進行方向と
+    # 逆向きになる区間があってもここでは入れ替えない (進行方向は seq/ラベルで示す)
     path_edges = sorted((e for e in g.edges if e.emphasis == "path"), key=lambda e: e.seq)
     assert [(e.src, e.dst) for e in path_edges] == [
-        ("hq-sw01", "hq-rt02"), ("hq-rt02", "internet"),
+        ("hq-rt02", "hq-sw01"), ("internet", "hq-rt02"),
         ("internet", "osk-rt01"), ("osk-rt01", "osk-sw01")]
     assert all(e.directed for e in path_edges)
     assert "HSRP" in path_edges[0].label

@@ -20,18 +20,18 @@ flowchart TB
   end
   wide_ether(("広域Ethernet網"))
   internet(("インターネット"))
-  hq_sw01 -->|"① HSRP"| hq_rt01
+  hq_rt01 -->|"① HSRP"| hq_sw01
   hq_rt02 --- hq_sw01
   dc_rt01 -->|"④"| dc_core01
-  dc_core01 -->|"⑤ 経路広報の切替でVPNへ"| dc_fw01
+  dc_fw01 -->|"⑤ 経路広報の切替でVPNへ"| dc_core01
   dc_core01 --- dc_srvsw01
   dc_srvsw01 --- dc_srv01
   dc_srvsw01 --- dc_srv02
-  hq_rt01 -->|"② OSPF"| wide_ether
+  wide_ether -->|"② OSPF"| hq_rt01
   wide_ether ---|"キャリアA 広域Ethernet 1G<br>(Gi0/0/0)"| hq_rt02
   wide_ether -->|"③"| dc_rt01
   dc_rt01 ---|"エクイニクス経由 AWS Direct Connect 専用線 1G<br>(Te0/0/3 - dx1)"| aws_vgw01
-  dc_fw01 -->|"⑥ IPsec インターネット網経由"| internet
+  internet -->|"⑥ IPsec インターネット網経由"| dc_fw01
   internet ---|"Site-to-Site VPN (DX障害時のバックアップ)"| dc_fw01
   internet -->|"⑦ BGP Site-to-Site VPN経由"| aws_vgw01
   wide_ether ---|"OSPF"| hq_rt01

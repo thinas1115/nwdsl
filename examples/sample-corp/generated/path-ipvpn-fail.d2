@@ -26,7 +26,7 @@ s_hq: "本社" {
   class: group-site
   label.near: outside-top-left
   n_hq_rt01: "hq-rt01\nCisco ISR4331\nGi0/0/0: 172.16.255.1/30\nGi0/0/1: 10.1.0.2/24" {class: role-router}
-  n_hq_sw01: "hq-sw01\nCisco Catalyst 9300\nVlan10: 10.1.10.1/24\nVlan20: 10.1.20.1/24" {class: role-l3switch; width: 270}
+  n_hq_sw01: "hq-sw01\nCisco Catalyst 9300\nVlan10: 10.1.10.1/24\nVlan20: 10.1.20.1/24" {class: role-l3switch; width: 180}
   n_hq_rt02: "hq-rt02\nCisco ISR4331\nGi0/0/0: 203.0.113.10/29\nGi0/0/1: 10.1.0.3/24\nTunnel0: 172.31.0.1/30" {class: role-router}
   n_seg__hq_server: "本社サーバ\nVLAN 10 / 10.1.10.0/24" {class: node-segment; style.opacity: 0.3}
   n_seg__hq_client: "本社クライアント\nVLAN 20 / 10.1.20.0/24" {class: node-segment; style.opacity: 0.3}
@@ -45,7 +45,7 @@ n_internet: "　インターネット　" {class: node-cloud}
 n_ngy_rt01: "ngy-rt01\n(名古屋営業所)" {class: node-external; style.opacity: 0.3}
 
 s_hq.n_hq_rt01 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/1"; style.stroke: "#9aa0a6"; style.stroke-dash: 4; style.opacity: 0.4}
-s_hq.n_hq_sw01 -> s_hq.n_hq_rt02: "① HSRP standbyがactive昇格" {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/2"; target-arrowhead.label: "Gi0/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hq.n_hq_rt02 -> s_hq.n_hq_sw01: "① HSRP standbyがactive昇格" {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 s_osk.n_osk_rt01 -> s_osk.n_osk_sw01: "④" {class: edge-lan-cable; source-arrowhead.label: "Gi0/1/0"; target-arrowhead.label: "Gi1/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_3: "NTTコミュニケーションズ IP-VPN 100M\n(Gi0/0/0)" {class: edge-label; style.opacity: 0.5}
 n_ipvpn -- lbl_3 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
@@ -54,8 +54,8 @@ lbl_4: "NTTコミュニケーションズ IP-VPN 50M\n(Gi0/0/0)" {class: edge-la
 n_ipvpn -- lbl_4 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
 lbl_4 -- s_osk.n_osk_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
 lbl_5: "② IPsec インターネット網経由" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
-s_hq.n_hq_rt02 -- lbl_5 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-lbl_5 -> n_internet {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+n_internet -- lbl_5 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_5 -> s_hq.n_hq_rt02 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_6: "③ BGP IPsecトンネルへ経路切替" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
 n_internet -- lbl_6 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_6 -> s_osk.n_osk_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}

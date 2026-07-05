@@ -53,7 +53,7 @@ s_aws: "AWS ap-northeast-1" {
 n_wide_ether: "　広域Ethernet網　" {class: node-cloud}
 n_internet: "　インターネット　" {class: node-cloud; style.opacity: 0.3}
 
-s_hq.n_hq_sw01 -> s_hq.n_hq_rt01: "① HSRP active側GW" {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/1"; target-arrowhead.label: "Gi0/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hq.n_hq_rt01 -> s_hq.n_hq_sw01: "① HSRP active側GW" {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"; style.opacity: 0.15}
 s_dc.n_dc_rt01 -- s_dc.n_dc_core01 {class: edge-lan-cable; source-arrowhead.label: "Te0/0/1"; target-arrowhead.label: "Eth1/1"; style.opacity: 0.15}
 s_dc.n_dc_fw01 -- s_dc.n_dc_core01 {class: edge-lan-cable; source-arrowhead.label: "internal1"; target-arrowhead.label: "Eth1/2"; style.opacity: 0.15}
@@ -61,8 +61,8 @@ s_dc.n_dc_core01 -- s_dc.n_dc_srvsw01 {class: edge-lan-cable; source-arrowhead.l
 s_dc.n_dc_srvsw01 -- s_dc.n_dc_srv01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/11"; target-arrowhead.label: "eno1"; style.opacity: 0.15}
 s_dc.n_dc_srvsw01 -- s_dc.n_dc_srv02 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/12"; target-arrowhead.label: "eno1"; style.opacity: 0.15}
 lbl_7: "② OSPF" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
-s_hq.n_hq_rt01 -- lbl_7 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-lbl_7 -> n_wide_ether {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+n_wide_ether -- lbl_7 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_7 -> s_hq.n_hq_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_8: "キャリアA 広域Ethernet 1G\n(Gi0/0/0)" {class: edge-label; style.opacity: 0.15}
 n_wide_ether -- lbl_8 {class: edge-wan-circuit; style.opacity: 0.15}
 lbl_8 -- s_hq.n_hq_rt02 {class: edge-wan-circuit; style.opacity: 0.15}

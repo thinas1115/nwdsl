@@ -20,14 +20,14 @@ flowchart TB
   end
   wide_ether(("広域Ethernet網"))
   internet(("インターネット"))
-  hq_sw01 -->|"① HSRP active側GW"| hq_rt01
+  hq_rt01 -->|"① HSRP active側GW"| hq_sw01
   hq_rt02 --- hq_sw01
   dc_rt01 --- dc_core01
   dc_fw01 --- dc_core01
   dc_core01 --- dc_srvsw01
   dc_srvsw01 --- dc_srv01
   dc_srvsw01 --- dc_srv02
-  hq_rt01 -->|"② OSPF"| wide_ether
+  wide_ether -->|"② OSPF"| hq_rt01
   wide_ether ---|"キャリアA 広域Ethernet 1G<br>(Gi0/0/0)"| hq_rt02
   wide_ether -->|"③"| dc_rt01
   dc_rt01 -->|"④ BGP Direct Connect経由"| aws_vgw01
