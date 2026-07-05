@@ -99,6 +99,19 @@ class Circuit(StrictModel):
     description: Optional[str] = Field(default=None, description="補足")
 
 
+class Domain(StrictModel):
+    """ルーティングドメイン (OSPFエリア / BGP AS / VRF等)。
+
+    図では所属エッジの色分け+凡例で表現される (エリア名を線1本ずつにラベル
+    しない、実務の描き方に合わせるため)。内蔵SVGエンジンでは所属機器を囲む
+    半透明の面塗りとしても描かれる。色はレンダラが自動割当し、DSLでは指定しない。
+    """
+
+    id: str = Field(description="ドメインID (ファイル内で一意)")
+    name: str = Field(description="表示名 (例: OSPF Area 0)。凡例・面塗りラベルに使用")
+    description: Optional[str] = Field(default=None, description="補足")
+
+
 class Link(StrictModel):
     """機器間・機器-網間の接続。type が線の意味を決める。
 
@@ -113,6 +126,10 @@ class Link(StrictModel):
     endpoints: list[str] = Field(min_length=2, max_length=2, description="両端点")
     circuit: Optional[str] = Field(
         default=None, description="経由する回線契約ID (wan-circuit では必須、他typeでは指定不可)")
+    domain: Optional[str] = Field(
+        default=None,
+        description="所属ルーティングドメインID (domains を参照)。指定すると図では"
+                    "色分け+凡例で表現され、エッジ個別のラベルは不要になる")
     description: Optional[str] = Field(default=None, description="補足 (logical/tunnel では図のラベルになる)")
 
 
@@ -203,6 +220,7 @@ class Document(StrictModel):
     circuits: list[Circuit] = Field(default_factory=list)
     links: list[Link] = Field(default_factory=list)
     segments: list[Segment] = Field(default_factory=list)
+    domains: list[Domain] = Field(default_factory=list)
     paths: list[Path] = Field(default_factory=list)
     views: list[View] = Field(default_factory=list)
 

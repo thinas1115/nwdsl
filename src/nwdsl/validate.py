@@ -179,6 +179,15 @@ def validate_document(doc: Document) -> list[Issue]:
                                 f"circuit '{cct.id}' が{n}本の link から参照されています "
                                 f"(1契約=1結線。複数回線は circuits を分けてください)"))
 
+    # ---- domains ----
+    _check_duplicates(issues, [d.id for d in doc.domains], "domains")
+    domain_ids = {d.id for d in doc.domains}
+    for i, link in enumerate(doc.links):
+        if link.domain is not None and link.domain not in domain_ids:
+            issues.append(Issue("error", "ref.domain",
+                                f"link {_link_label(i, link)}: domain '{link.domain}' が "
+                                f"domains に存在しません"))
+
     # ---- paths ----
     _check_duplicates(issues, [p.id for p in doc.paths], "paths")
     path_ids = {p.id for p in doc.paths}

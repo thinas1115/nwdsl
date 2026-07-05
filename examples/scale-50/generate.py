@@ -127,22 +127,22 @@ for dev_id, seg_id, vlan, gw_ip in (
                               "ipv4": gw_ip, "segment": seg_id})
 
 
-def ospf(a: str, b: str) -> None:
-    links.append({"type": "logical", "endpoints": [a, b], "description": "OSPF Area0"})
+def ospf(a: str, b: str, dom: str = "area0") -> None:
+    # エリアは線のラベルではなくdomain参照で表す (図では色分け+凡例/面塗り)
+    links.append({"type": "logical", "endpoints": [a, b], "domain": dom})
 
 
-# 本社: rt→fw→core→dist のルーティング階層
+# 本社: rt→fw→core がバックボーン (Area0)、core→dist はArea1、大阪はArea2
 ospf("hq-rt01", "hq-fw01")
 ospf("hq-rt02", "hq-fw02")
 ospf("hq-fw01", "hq-core01")
 ospf("hq-fw02", "hq-core02")
 ospf("hq-core01", "hq-core02")
 for n in range(1, 5):
-    ospf("hq-core01", f"hq-dist0{n}")
-    ospf("hq-core02", f"hq-dist0{n}")
-# 大阪: ルーター2台→コア
-ospf("osk-rt01", "osk-core01")
-ospf("osk-rt02", "osk-core01")
+    ospf("hq-core01", f"hq-dist0{n}", "area1")
+    ospf("hq-core02", f"hq-dist0{n}", "area1")
+ospf("osk-rt01", "osk-core01", "area2")
+ospf("osk-rt02", "osk-core01", "area2")
 
 # ---- WAN ----
 wan("hq-rt01", "ipvpn", "cct-ipvpn-hq")
@@ -175,6 +175,11 @@ doc = {
     ],
     "links": links,
     "segments": segments,
+    "domains": [
+        {"id": "area0", "name": "OSPF Area 0 (バックボーン)"},
+        {"id": "area1", "name": "OSPF Area 1 (本社アクセス)"},
+        {"id": "area2", "name": "OSPF Area 2 (大阪)"},
+    ],
     "views": [
         {"id": "physical-all", "title": "全社物理構成図 (50台)",
          "layers": ["lan-cable", "wan-circuit"]},

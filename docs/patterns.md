@@ -137,7 +137,23 @@ views:
   - {id: path-fail, title: IP-VPN障害時経路, type: path, path: hq-osk-backup}
 ```
 
-## 9. ビューの定番セット
+## 9. OSPFエリアの表し方 (domains)
+
+エリア名を線1本ずつにラベルせず、`domains` への参照で表す。図ではエリア別の色分け+凡例(内蔵SVGでは所属機器を囲む面塗りも)になり、ABRは複数エリアの領域の重なりに立つ。
+
+```yaml
+domains:
+  - {id: area0, name: OSPF Area 0 (バックボーン)}
+  - {id: area1, name: OSPF Area 1 (支店側)}
+
+links:
+  - {type: logical, endpoints: ["rt01", "core01"], domain: area0}
+  - {type: logical, endpoints: ["core01", "dist01"], domain: area1}  # core01がABR
+```
+
+- 色はレンダラが自動割当(DSLに色は書かない)。BGP等ドメイン外の隣接は従来どおり `description` でラベル
+
+## 10. ビューの定番セット
 
 用途別に4種類を定義しておくと設計書の図がほぼ揃う。
 

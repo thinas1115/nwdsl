@@ -222,6 +222,41 @@
       "title": "Device",
       "type": "object"
     },
+    "Domain": {
+      "additionalProperties": false,
+      "description": "ルーティングドメイン (OSPFエリア / BGP AS / VRF等)。\n\n図では所属エッジの色分け+凡例で表現される (エリア名を線1本ずつにラベル\nしない、実務の描き方に合わせるため)。内蔵SVGエンジンでは所属機器を囲む\n半透明の面塗りとしても描かれる。色はレンダラが自動割当し、DSLでは指定しない。",
+      "properties": {
+        "id": {
+          "description": "ドメインID (ファイル内で一意)",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "description": "表示名 (例: OSPF Area 0)。凡例・面塗りラベルに使用",
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "補足",
+          "title": "Description"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Domain",
+      "type": "object"
+    },
     "Interface": {
       "additionalProperties": false,
       "properties": {
@@ -326,6 +361,19 @@
           "default": null,
           "description": "経由する回線契約ID (wan-circuit では必須、他typeでは指定不可)",
           "title": "Circuit"
+        },
+        "domain": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "所属ルーティングドメインID (domains を参照)。指定すると図では色分け+凡例で表現され、エッジ個別のラベルは不要になる",
+          "title": "Domain"
         },
         "description": {
           "anyOf": [
@@ -797,6 +845,13 @@
         "$ref": "#/$defs/Segment"
       },
       "title": "Segments",
+      "type": "array"
+    },
+    "domains": {
+      "items": {
+        "$ref": "#/$defs/Domain"
+      },
+      "title": "Domains",
       "type": "array"
     },
     "paths": {

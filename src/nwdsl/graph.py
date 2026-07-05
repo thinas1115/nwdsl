@@ -35,6 +35,7 @@ class RenderEdge:
     src_label: Optional[str] = None  # 端点付近に描く小ラベル (IF名)
     dst_label: Optional[str] = None
     circuit: Optional[str] = None    # 経由回線ID (障害マーク用)
+    domain: Optional[str] = None     # 所属ルーティングドメイン (色分け用)
     emphasis: Optional[str] = None   # None | "path" | "disabled" | "dim" | "failed"
     seq: Optional[int] = None        # 経路上のホップ番号 (1始まり)
     directed: bool = False           # True なら矢印付きで描く
@@ -46,6 +47,17 @@ class RenderGraph:
     groups: list[tuple[str, str]] = field(default_factory=list)  # (site_id, 表示名)
     nodes: list[RenderNode] = field(default_factory=list)
     edges: list[RenderEdge] = field(default_factory=list)
+    domains: dict[str, str] = field(default_factory=dict)  # id -> 表示名 (凡例用)
+
+
+_DOMAIN_PALETTE = ["#e8710a", "#0b8043", "#8430ce", "#00838f",
+                   "#a56500", "#d01884", "#3949ab", "#5f6368"]
+
+
+def domain_colors(graph: RenderGraph) -> dict[str, str]:
+    """ドメインIDへ決定的に色を割り当てる (DSLには色を書かせない方針)。"""
+    return {d: _DOMAIN_PALETTE[i % len(_DOMAIN_PALETTE)]
+            for i, d in enumerate(sorted(graph.domains))}
 
 
 def _circuit_label(circuit: Circuit) -> str:
@@ -73,8 +85,10 @@ def _edge_label(doc: Document, link, ifnames: dict[str, Optional[str]]) -> Optio
             # 縦レイアウトではWAN線同士が空間的に分離するため2行目にIFを添えられる
             label += f"\n({' - '.join(dev_if)})"
         return label
-    # tunnel / logical
-    return link.description or link.type
+    # tunnel / logical: domain指定時は凡例が意味を伝えるため個別ラベルを出さない
+    if link.description:
+        return link.description
+    return None if link.domain else link.type
 
 
 def resolve_view(doc: Document, view: View) -> RenderGraph:
@@ -133,7 +147,8 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
             if link.type == "wan-circuit":
                 circuit = next((c for c in doc.circuits if c.id == link.circuit), None)
                 label = _circuit_label(circuit) if circuit else link.circuit
-            graph.edges.append(RenderEdge(mapped[0], mapped[1], link.type, label))
+            graph.edges.append(RenderEdge(mapped[0], mapped[1], link.type, label,
+                                          domain=link.domain))
     else:
         # ---- 機器レベルの図 ----
         view_ifs: set[tuple[str, str]] = set()  # このビューに現れた接続のIF
@@ -165,7 +180,8 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                     cloud = cloud_by_id[node_id]
                     add_node(RenderNode(id=node_id, label=cloud.name, kind="cloud", role=cloud.kind))
             edge = RenderEdge(ep_nodes[0], ep_nodes[1], link.type,
-                              _edge_label(doc, link, ifnames), circuit=link.circuit)
+                              _edge_label(doc, link, ifnames),
+                              circuit=link.circuit, domain=link.domain)
             if link.type == "lan-cable":
                 # IF名は各機器の接続点そばに分散配置する (平行エッジの中央ラベル同士の
                 # 衝突、および1機器に複数WANが刺さる場合の端点ラベル密着を実測して選択)
@@ -248,6 +264,8 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
 
     graph.nodes = list(nodes.values())
     graph.groups = [(sid, site_by_id[sid].name) for sid in used_sites if sid in site_by_id]
+    used_domains = {e.domain for e in graph.edges if e.domain}
+    graph.domains = {d.id: d.name for d in doc.domains if d.id in used_domains}
     _bundle_parallel_cables(graph)
     _orient_edges(doc, graph)
     return graph

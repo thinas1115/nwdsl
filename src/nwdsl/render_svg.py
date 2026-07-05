@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 
-from .graph import RenderEdge, RenderGraph, RenderNode
+from .graph import RenderEdge, RenderGraph, RenderNode, domain_colors
 from .svg_layout import Placed, RoutedEdge, layout_view, text_w
 
 _ROLE_FILL = {
@@ -26,9 +26,12 @@ def _esc(text: str) -> str:
             .replace('"', "&quot;"))
 
 
-def _edge_attrs(edge: RenderEdge) -> tuple[str, float, str | None, float, bool]:
+def _edge_attrs(edge: RenderEdge,
+                dmap: dict[str, str] | None = None) -> tuple[str, float, str | None, float, bool]:
     """(色, 太さ, dasharray, opacity, animated)"""
     color, width, dash = _EDGE_STYLE.get(edge.type, ("#4a4a4a", 2.0, None))
+    if dmap and edge.domain and edge.emphasis is None:
+        color = dmap[edge.domain]
     opacity, animated = 1.0, False
     if edge.emphasis == "path":
         color, width, dash, animated = "#c5221f", 4.0, "10 6", True
@@ -82,8 +85,9 @@ def _node_svg(p: Placed) -> list[str]:
     return parts
 
 
-def _edge_svg(r: RoutedEdge, marker_ids: set[str]) -> list[str]:
-    color, width, dash, opacity, animated = _edge_attrs(r.edge)
+def _edge_svg(r: RoutedEdge, marker_ids: set[str],
+              dmap: dict[str, str] | None = None) -> list[str]:
+    color, width, dash, opacity, animated = _edge_attrs(r.edge, dmap)
     pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in r.points)
     dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
     marker = ""
@@ -117,9 +121,84 @@ def _edge_svg(r: RoutedEdge, marker_ids: set[str]) -> list[str]:
     return parts
 
 
+def _hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    """凸包 (Andrew's monotone chain)。"""
+    pts = sorted(set(points))
+    if len(pts) <= 2:
+        return pts
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    lower: list = []
+    for p in pts:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+    upper: list = []
+    for p in reversed(pts):
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+    return lower[:-1] + upper[:-1]
+
+
+def _domain_hulls(graph: RenderGraph, layout, dmap: dict[str, str]) -> list[str]:
+    """ドメインの所属機器を囲む半透明の面塗り (I2の対象外: 背面レイヤ)。"""
+    parts: list[str] = []
+    for dom in sorted(graph.domains):
+        members = {e.src for e in graph.edges if e.domain == dom}
+        members |= {e.dst for e in graph.edges if e.domain == dom}
+        corners: list[tuple[float, float]] = []
+        pad = 20.0
+        for nid in members:
+            p = layout.placed.get(nid)
+            if p is None:
+                continue
+            corners += [(p.x - pad, p.y - pad), (p.x + p.w + pad, p.y - pad),
+                        (p.x - pad, p.y + p.h + pad), (p.x + p.w + pad, p.y + p.h + pad)]
+        if len(corners) < 4:
+            continue
+        hull = _hull(corners)
+        pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in hull)
+        color = dmap[dom]
+        parts.append(
+            f'<polygon class="domain-hull" points="{pts}" fill="{color}" '
+            f'fill-opacity="0.07" stroke="{color}" stroke-opacity="0.10" '
+            f'stroke-width="36" stroke-linejoin="round"/>')
+        top = min(hull, key=lambda p: (p[1], p[0]))
+        parts.append(
+            f'<text x="{top[0] + 6:.1f}" y="{top[1] - 6:.1f}" font-size="14" '
+            f'font-weight="600" fill="{color}" opacity="0.85">'
+            f"{_esc(graph.domains[dom])}</text>")
+    return parts
+
+
+def _legend(graph: RenderGraph, layout, dmap: dict[str, str]) -> list[str]:
+    if not graph.domains:
+        return []
+    names = [graph.domains[d] for d in sorted(graph.domains)]
+    w = max(text_w(n, 13) for n in names) + 64
+    h = 20 * len(names) + 30
+    x = layout.width - w - 20
+    y = 42.0
+    parts = [f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h}" rx="8" '
+             f'fill="#ffffff" stroke="#c3ccd6"/>',
+             f'<text x="{x + 12:.1f}" y="{y + 19:.1f}" font-size="12" '
+             f'fill="#64748b">凡例</text>']
+    for i, dom in enumerate(sorted(graph.domains)):
+        ly = y + 38 + i * 20
+        parts.append(f'<line x1="{x + 12:.1f}" y1="{ly - 4:.1f}" x2="{x + 40:.1f}" '
+                     f'y2="{ly - 4:.1f}" stroke="{dmap[dom]}" stroke-width="3"/>')
+        parts.append(f'<text x="{x + 48:.1f}" y="{ly:.1f}" font-size="12.5" '
+                     f'fill="#1e293b">{_esc(graph.domains[dom])}</text>')
+    return parts
+
+
 def render_svg(graph: RenderGraph) -> str:
     layout = layout_view(graph)
     w, h = layout.width, layout.height
+    dmap = domain_colors(graph)
     parts: list[str] = []
     parts.append(f'<text x="24" y="30" font-size="19" font-weight="700" '
                  f'fill="#1e293b">{_esc(layout.title)}</text>')
@@ -130,11 +209,13 @@ def render_svg(graph: RenderGraph) -> str:
         parts.append(
             f'<text x="{box.x + 4:.1f}" y="{box.y - 8:.1f}" font-size="14.5" '
             f'font-weight="600" fill="#33475b">{_esc(box.label)}</text>')
+    parts.extend(_domain_hulls(graph, layout, dmap))  # 面塗りは拠点枠の上・線の下
     marker_ids: set[str] = set()
     edge_parts: list[str] = []
     for r in sorted(layout.routed, key=lambda r: 1 if r.edge.emphasis == "path" else 0):
-        edge_parts.extend(_edge_svg(r, marker_ids))
+        edge_parts.extend(_edge_svg(r, marker_ids, dmap))
     parts.extend(edge_parts)
+    parts.extend(_legend(graph, layout, dmap))
     for p in layout.placed.values():
         parts.extend(_node_svg(p))
     markers = "".join(

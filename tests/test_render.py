@@ -189,6 +189,24 @@ def test_logical_view_shows_l3_info(doc):
     assert all(n.kind != "segment" for n in g2.nodes)
 
 
+def test_domains_coloring_and_legend():
+    """domain指定: 個別ラベル抑制・凡例・色分け・面塗りが各レンダラに出る。"""
+    from nwdsl.loader import load_document as _load_doc
+    d = _load_doc(Path(__file__).parent.parent / "examples" / "scale-50" / "network.yaml")
+    view = next(v for v in d.views if v.id == "logical-all")
+    g = resolve_view(d, view)
+    assert set(g.domains) == {"area0", "area1", "area2"}
+    area1_edges = [e for e in g.edges if e.domain == "area1"]
+    assert area1_edges and all(e.label is None for e in area1_edges)  # ラベル抑制
+    d2 = render_d2(g)
+    assert "凡例" in d2 and "OSPF Area 1" in d2
+    svg_out = __import__("nwdsl.render_svg", fromlist=["render_svg"]).render_svg(g)
+    assert 'class="domain-hull"' in svg_out   # 面塗り (段階2)
+    assert "凡例" in svg_out
+    mmd = render_mermaid(g)
+    assert "legend" in mmd and "classDef dom0" in mmd
+
+
 def test_tunnel_only_view_gets_auto_l3():
     """静的経路構成 (logicalなし・tunnelのみ) の論理図でもL3が自動表示される。"""
     from nwdsl.loader import load_document as _load_doc

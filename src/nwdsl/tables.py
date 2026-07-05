@@ -114,10 +114,11 @@ def circuits_table(doc: Document) -> str:
 
 
 def links_table(doc: Document) -> str:
+    domain_names = {d.id: d.name for d in doc.domains}
     rows = [[_LINK_TYPE_LABELS.get(l.type, l.type), l.endpoints[0], l.endpoints[1],
-             l.circuit, l.description]
+             l.circuit, domain_names.get(l.domain, l.domain), l.description]
             for l in doc.links]
-    return _table(["種別", "端点1", "端点2", "回線", "備考"], rows)
+    return _table(["種別", "端点1", "端点2", "回線", "ドメイン", "備考"], rows)
 
 
 def segments_table(doc: Document) -> str:

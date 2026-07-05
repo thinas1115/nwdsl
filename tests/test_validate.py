@@ -165,6 +165,16 @@ def test_duplicate_device_cloud_id(tmp_path):
     assert "dup.id" in _codes(validate_document(doc))
 
 
+def test_unknown_domain_ref(tmp_path):
+    doc = _load(tmp_path, """
+    links:
+      - type: logical
+        endpoints: ["rt1", "rt2"]
+        domain: nowhere
+    """)
+    assert "ref.domain" in _codes(validate_document(doc))
+
+
 def test_path_hop_not_adjacent(tmp_path):
     doc = _load(tmp_path, """
     links:

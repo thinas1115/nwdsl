@@ -154,6 +154,8 @@ def _render_svg(d2_source: str, d2_bin: Path) -> str:
 def handle_render(payload: dict, d2_bin: Path | None) -> dict:
     """POST /api/render の本体。テストから直接呼べるよう分離してある。"""
     source = payload.get("yaml", "")
+    if not isinstance(source, str):
+        return {"ok": False, "errors": ["yaml フィールドは文字列で指定してください"]}
     try:
         raw = yaml.safe_load(source)
     except yaml.YAMLError as exc:
@@ -208,6 +210,9 @@ def handle_render(payload: dict, d2_bin: Path | None) -> dict:
 
 
 class PlaygroundHandler(BaseHTTPRequestHandler):
+    # HTTP/1.1 にしないと大きなPOSTボディの Expect: 100-continue を処理できず
+    # 接続が切れる (PowerShellクライアント等)。keep-alive も有効になる
+    protocol_version = "HTTP/1.1"
     d2_bin: Path | None = None
 
     def _send(self, status: int, body: bytes, content_type: str) -> None:
@@ -256,7 +261,12 @@ class PlaygroundHandler(BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             self._send_json({"ok": False, "errors": ["不正なリクエストです"]}, 400)
             return
-        self._send_json(handle_render(payload, self.d2_bin))
+        try:
+            self._send_json(handle_render(payload, self.d2_bin))
+        except Exception as exc:  # noqa: BLE001  想定外でも接続を落とさず500で返す
+            self._send_json({"ok": False,
+                             "errors": [f"サーバー内部エラー: {type(exc).__name__}: {exc}"]},
+                            500)
 
     def log_message(self, fmt: str, *args) -> None:  # アクセスログは静かに
         pass

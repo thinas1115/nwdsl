@@ -86,6 +86,7 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 | `type` | enum | ✓ | 線の意味 (下表) |
 | `endpoints` | list[2] | ✓ | 両端点 (記法は下記) |
 | `circuit` | string | - | 経由する回線契約ID (**wan-circuit では必須、他typeでは指定不可**) |
+| `domain` | string | - | 所属ルーティングドメインID (domains を参照)。色分け+凡例で表現される |
 | `description` | string | - | 補足 (logical/tunnel では図の線ラベルになる) |
 
 ### endpoints の記法
@@ -115,6 +116,21 @@ IP-VPN網・広域Ethernet網・インターネットなど、内部構造を持
 | `vlan` | int | - | VLAN ID (1〜4094) |
 | `ipv4` | string | - | ネットワークアドレス (例: `10.1.10.0/24`。ホストビットが立っていると構文エラー) |
 | `description` | string | - | 補足 |
+
+## domains (ルーティングドメイン)
+
+OSPFエリア・BGP AS・VRFなどの所属を表す。**エリア名を線1本ずつにラベルせず、色分け+凡例で表す**実務の描き方に対応する(色はレンダラが自動割当。DSLに色は書けない)。
+
+| フィールド | 型 | 必須 | 説明 |
+|---|---|---|---|
+| `id` | string | ✓ | ドメインID (一意) |
+| `name` | string | ✓ | 表示名 (例: `OSPF Area 0`)。凡例・面塗りラベルに使用 |
+| `description` | string | - | 補足 |
+
+link 側は `domain: <id>` で参照する。指定したエッジは:
+
+- **全エンジン**: ドメイン色で描画され、図に凡例が自動追加される。`description` が無ければエッジ個別ラベルは出ない
+- **内蔵SVGのみ**: 所属機器を囲む**半透明の面塗り(凸包)**も描かれ、複数エリアに属するABRは領域の重なり部分に立つ
 
 ## paths (通信経路)
 

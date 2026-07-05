@@ -657,77 +657,77 @@ links:
   endpoints:
   - hq-rt01
   - hq-fw01
-  description: OSPF Area0
+  domain: area0
 - type: logical
   endpoints:
   - hq-rt02
   - hq-fw02
-  description: OSPF Area0
+  domain: area0
 - type: logical
   endpoints:
   - hq-fw01
   - hq-core01
-  description: OSPF Area0
+  domain: area0
 - type: logical
   endpoints:
   - hq-fw02
   - hq-core02
-  description: OSPF Area0
+  domain: area0
 - type: logical
   endpoints:
   - hq-core01
   - hq-core02
-  description: OSPF Area0
+  domain: area0
 - type: logical
   endpoints:
   - hq-core01
   - hq-dist01
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - hq-core02
   - hq-dist01
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - hq-core01
   - hq-dist02
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - hq-core02
   - hq-dist02
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - hq-core01
   - hq-dist03
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - hq-core02
   - hq-dist03
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - hq-core01
   - hq-dist04
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - hq-core02
   - hq-dist04
-  description: OSPF Area0
+  domain: area1
 - type: logical
   endpoints:
   - osk-rt01
   - osk-core01
-  description: OSPF Area0
+  domain: area2
 - type: logical
   endpoints:
   - osk-rt02
   - osk-core01
-  description: OSPF Area0
+  domain: area2
 - type: wan-circuit
   endpoints:
   - hq-rt01:Gi0/2
@@ -799,6 +799,13 @@ segments:
   vlan: 104
   ipv4: 10.50.14.0/24
   name: 本社4Fユーザ
+domains:
+- id: area0
+  name: OSPF Area 0 (バックボーン)
+- id: area1
+  name: OSPF Area 1 (本社アクセス)
+- id: area2
+  name: OSPF Area 2 (大阪)
 views:
 - id: physical-all
   title: 全社物理構成図 (50台)

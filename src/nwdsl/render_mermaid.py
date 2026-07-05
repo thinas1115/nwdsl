@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 
-from .graph import RenderGraph, RenderNode
+from .graph import RenderGraph, RenderNode, domain_colors
 
 _EDGE_STYLES = {
     "lan-cable": "stroke:#4a4a4a,stroke-width:2px",
@@ -101,16 +101,26 @@ def render_mermaid(graph: RenderGraph) -> str:
     for node in graph.nodes:
         class_members.setdefault(_node_class(node), []).append(_key(node.id))
 
+    dmap = domain_colors(graph)
     edge_indices: dict[str, list[int]] = {}
     emphasis_indices: dict[str, list[int]] = {}
+    domain_indices: dict[str, list[int]] = {}
     for i, edge in enumerate(graph.edges):
         label = f'|"{_label(edge.label)}"|' if edge.label else ""
         connector = "-->" if edge.directed else "---"
         lines.append(f"  {_key(edge.src)} {connector}{label} {_key(edge.dst)}")
         if edge.emphasis is not None:
             emphasis_indices.setdefault(edge.emphasis, []).append(i)
+        elif edge.domain is not None:
+            domain_indices.setdefault(edge.domain, []).append(i)
         else:
             edge_indices.setdefault(edge.type, []).append(i)
+
+    if graph.domains:  # 凡例 (ドメイン=色の対応)
+        lines.append('  subgraph legend["凡例"]')
+        for k, dom in enumerate(sorted(graph.domains)):
+            lines.append(f'    lg{k}(["{_label(graph.domains[dom])}"])')
+        lines.append("  end")
 
     lines.append("")
     lines.extend(f"  {line}" for line in _CLASS_DEFS.splitlines())
@@ -120,5 +130,12 @@ def render_mermaid(graph: RenderGraph) -> str:
         lines.append(f"  linkStyle {','.join(map(str, idxs))} {_EDGE_STYLES[etype]}")
     for emphasis, idxs in emphasis_indices.items():
         lines.append(f"  linkStyle {','.join(map(str, idxs))} {_EDGE_EMPHASIS_STYLES[emphasis]}")
+    for k, dom in enumerate(sorted(graph.domains)):
+        color = dmap[dom]
+        if dom in domain_indices:
+            lines.append(f"  linkStyle {','.join(map(str, domain_indices[dom]))} "
+                         f"stroke:{color},stroke-width:2px,stroke-dasharray:3 3")
+        lines.append(f"  classDef dom{k} fill:#ffffff,stroke:{color},color:{color}")
+        lines.append(f"  class lg{k} dom{k}")
 
     return "\n".join(lines) + "\n"

@@ -42,9 +42,9 @@ s_osk: "大阪支店" {
   n_seg__osk_lan: "大阪LAN\nVLAN 1 / 10.9.1.0/24" {class: node-segment}
 }
 
-s_hq.n_hq_fw01 -- s_hq.n_hq_core01: "OSPF Area0" {class: edge-logical}
-s_hq.n_hq_fw02 -- s_hq.n_hq_core02: "OSPF Area0" {class: edge-logical}
-s_hq.n_hq_core01 -- s_hq.n_hq_core02: "OSPF Area0" {class: edge-logical}
+s_hq.n_hq_fw01 -- s_hq.n_hq_core01 {class: edge-logical; style.stroke: "#e8710a"}
+s_hq.n_hq_fw02 -- s_hq.n_hq_core02 {class: edge-logical; style.stroke: "#e8710a"}
+s_hq.n_hq_core01 -- s_hq.n_hq_core02 {class: edge-logical; style.stroke: "#e8710a"}
 s_hq.n_hq_rt01 -- s_osk.n_osk_rt01: "BGP (IP-VPN網内)" {class: edge-logical}
 s_hq.n_hq_core01 -- s_hq.n_seg__hq_server {class: edge-segment; source-arrowhead.label: "Vlan10"}
 s_hq.n_hq_core02 -- s_hq.n_seg__hq_server {class: edge-segment; source-arrowhead.label: "Vlan10"}
@@ -52,3 +52,9 @@ s_hq.n_hq_core01 -- s_hq.n_seg__hq_client {class: edge-segment; source-arrowhead
 s_hq.n_hq_core02 -- s_hq.n_seg__hq_client {class: edge-segment; source-arrowhead.label: "Vlan20"}
 s_hq.n_hq_fw01 -- s_hq.n_seg__hq_dmz {class: edge-segment; source-arrowhead.label: "eth1/3"}
 s_osk.n_osk_rt01 -- s_osk.n_seg__osk_lan {class: edge-segment; source-arrowhead.label: "Gi0/1/0"}
+
+_legend: "凡例" {
+  near: bottom-center
+  style.fill: "#ffffff"; style.stroke: "#c3ccd6"
+  d0: "━━ OSPF Area 0" {shape: text; style.font-color: "#e8710a"; style.bold: true}
+}

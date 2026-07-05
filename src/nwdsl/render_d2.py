@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 
-from .graph import RenderGraph, RenderNode
+from .graph import RenderGraph, RenderNode, domain_colors
 
 _NODE_CLASSES = """\
 classes: {
@@ -119,6 +119,7 @@ def render_d2(graph: RenderGraph) -> str:
 
     node_path: dict[str, str] = {}  # node.id -> D2 参照パス
     min_widths = _min_widths(graph)
+    dmap = domain_colors(graph)
 
     grouped: dict[str, list[RenderNode]] = {}
     ungrouped: list[RenderNode] = []
@@ -162,6 +163,8 @@ def render_d2(graph: RenderGraph) -> str:
             attrs.append(f'source-arrowhead.label: "{_label(edge.src_label)}"')
         if edge.dst_label:
             attrs.append(f'target-arrowhead.label: "{_label(edge.dst_label)}"')
+        if edge.domain and edge.emphasis is None:
+            attrs.append(f'style.stroke: "{dmap[edge.domain]}"')
         attrs.extend(_EDGE_EMPHASIS_STYLES.get(edge.emphasis, []))
 
         if edge.type == "wan-circuit" and edge.label:
@@ -187,5 +190,16 @@ def render_d2(graph: RenderGraph) -> str:
         label = f': "{_label(edge.label)}"' if edge.label else ""
         connector = "->" if edge.directed else "--"
         lines.append(f"{src} {connector} {dst}{label} {{{'; '.join(attrs)}}}")
+
+    if graph.domains:
+        lines.append("")
+        lines.append('_legend: "凡例" {')
+        lines.append("  near: bottom-center")
+        lines.append('  style.fill: "#ffffff"; style.stroke: "#c3ccd6"')
+        for i, dom in enumerate(sorted(graph.domains)):
+            lines.append(f'  d{i}: "━━ {_label(graph.domains[dom])}" '
+                         f'{{shape: text; style.font-color: "{dmap[dom]}"; '
+                         f"style.bold: true}}")
+        lines.append("}")
 
     return "\n".join(lines) + "\n"

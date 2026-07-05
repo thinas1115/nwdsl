@@ -219,11 +219,14 @@ links:
   # 大阪
   - {type: lan-cable, endpoints: ["osk-rt01:Gi0/1/0", "osk-sw01:Gi1/0/1"]}
 
-  # ---- 論理隣接 ----
-  - {type: logical, endpoints: ["hq-fw01", "hq-core01"], description: OSPF Area0}
-  - {type: logical, endpoints: ["hq-fw02", "hq-core02"], description: OSPF Area0}
-  - {type: logical, endpoints: ["hq-core01", "hq-core02"], description: OSPF Area0}
+  # ---- 論理隣接 (OSPFエリアは domain 参照 → 図では色分け+凡例) ----
+  - {type: logical, endpoints: ["hq-fw01", "hq-core01"], domain: area0}
+  - {type: logical, endpoints: ["hq-fw02", "hq-core02"], domain: area0}
+  - {type: logical, endpoints: ["hq-core01", "hq-core02"], domain: area0}
   - {type: logical, endpoints: ["hq-rt01", "osk-rt01"], description: BGP (IP-VPN網内)}
+
+domains:
+  - {id: area0, name: OSPF Area 0}
 
 segments:
   - {id: hq-server, site: hq, vlan: 10, ipv4: 10.1.10.0/24, name: 本社サーバ}
