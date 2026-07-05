@@ -2,8 +2,9 @@
 
 ネットワーク構成(拠点・機器・回線・接続)を **1つの YAML ソース**で記述し、そこから
 
-- **複数種類の構成図**(物理 / 論理 / 全社概要 / 拠点詳細)を D2・Mermaid で生成
+- **複数種類の構成図**(物理 / 論理 / 全社概要 / 拠点詳細 / 経路)を D2・Mermaid・内蔵SVGエンジンで生成
 - **設計書向けの表**(拠点・機器・IF・回線・接続・セグメント一覧)を Markdown で生成
+- ブラウザで試せる **playground**(`nwdsl serve`)
 
 するためのスキーマと CLI。図と表が同一ソースから導出されるため、設計ドキュメント間の不整合が構造的に発生しない。AI がパースしやすい形式なので、OpenSpec 等による仕様駆動のドキュメント生成の土台になる。
 
@@ -17,6 +18,9 @@
 | 図と表の不整合 | 表の「接続先」「回線収容先」も links から導出。手書き二重管理が発生しない |
 | 図の配置が意味と一致しない | クラウド起点BFSでエッジを向き付けし「WANが上・LANが下」を構造的に保証([ADR-0005](docs/adr/0005-layout-bfs-orientation.md))。複雑な多段LANでもスケール |
 | 正常時/障害時の通信経路を示せない | `paths` にホップ列+プロトコル注記を明示し、経路図(赤太線+ホップ番号、障害✕、迂回表示)を生成([ADR-0006](docs/adr/0006-path-visualization.md)) |
+| OSPFエリア等を回線ラベルで表すと実務の描き方と合わない | `domains` でエリア/ゾーンを宣言し、機器・回線を色分け+凡例で表現(内蔵SVGは半透明の面塗りも追加)。DSL側に色を書かせない |
+| BGP等のピアリングを論理図に描くと網(IP-VPN等)がどこにも現れない | `links[].via` でクラウドを経由させ、「網の雲を通る線」として2分割描画。論理図でも下層の伝送路が見える |
+| 論理構成図にすると孤立して見える機器が出る | L3情報(IPv4/セグメント)を持たない機器はビューの性質(`show_l3`)に応じて自動的に除外し、意味のある機器だけを表示 |
 
 ## サンプル出力
 
@@ -36,7 +40,7 @@
 
 生成された表: [examples/sample-corp/generated/tables.md](examples/sample-corp/generated/tables.md)
 
-> **描画エンジンは2系統**: D2(ELK)は木構造系の構成で最も美しいが、leaf-spineファブリック・メトロリング・10拠点超のWAN概要では破綻する([ADR-0007](docs/adr/0007-renderer-strategy.md)、[examples/stress/](examples/stress/) で再現可能)。このため**「どのパターンでも破綻しない」ことを不変条件(ノード/ラベル重なりゼロ・線のノード貫通ゼロ)として保証する内蔵SVGエンジン**を実装している(`--format svg`、[ADR-0008](docs/adr/0008-invariant-renderer.md))。内蔵エンジンはリングを円環に、ファブリックを2段扇状に自動配置し、全サンプル×全ビューの不変条件をテストで機械検証している。
+> **描画エンジンは3系統**(D2 / Mermaid / 内蔵SVG)。D2(ELK)は木構造系の構成で最も美しいが、leaf-spineファブリック・メトロリング・10拠点超のWAN概要では破綻する([ADR-0007](docs/adr/0007-renderer-strategy.md)、[examples/stress/](examples/stress/) で再現可能)。このため**「どのパターンでも破綻しない」ことを不変条件(ノード/ラベル重なりゼロ・線のノード貫通ゼロ)として保証する内蔵SVGエンジン**を実装している(`--format svg`、[ADR-0008](docs/adr/0008-invariant-renderer.md))。内蔵エンジンはリングを円環に、ファブリックを2段扇状に自動配置し、全サンプル×全ビューの不変条件をテストで機械検証している。D2のバイナリすら不要(標準ライブラリのみで動作)なので、playgroundは追加インストールなしでこのエンジンを既定にしている。
 
 ## クイックスタート
 
@@ -51,7 +55,13 @@ nwdsl tables   examples\sample-corp\network.yaml -o out\tables.md
 nwdsl schema   -o nwdsl.schema.json                      # エディタ補完用 JSON Schema
 ```
 
-`nwdsl serve` は http://127.0.0.1:8321/ にローカルの playground を起動する。左ペインで YAML を編集すると自動で検証+描画され、サンプル(最小構成〜50台規模)の読み込み、ビュー切替、表/D2/Mermaid の確認、チュートリアル・リファレンス・ADR の閲覧が画面内でできる。初見の人はまずこれ。
+`nwdsl serve` は http://127.0.0.1:8321/ にローカルの playground(標準ライブラリのみ、127.0.0.1限定)を起動する。左ペインの YAML を編集すると自動で検証+描画され、以下がブラウザ内だけで完結する。初見の人はまずこれ。
+
+- サンプル読み込み(最小構成〜50台規模、7種)とビュー切替
+- 描画エンジン切替(自動 / D2 / Mermaid / 内蔵SVG)、パン(ドラッグ)+ズーム(ホイール)
+- 表 / D2ソース / Mermaidソース / SVG それぞれのコピー・ダウンロード
+- YAML editor のシンタックスハイライト、左右ペイン幅のドラッグ調整
+- チュートリアル・リファレンス・パターン集・FAQ・ADR の閲覧(各ページに Markdown をそのままコピーするボタンあり。AIに読み込ませる用途を想定)
 
 SVG 化には [D2](https://github.com/terrastruct/d2/releases)(単一バイナリ)を使う:
 
@@ -97,6 +107,18 @@ views:
     collapse_sites: true                    # 拠点を1ノードに畳む
 ```
 
+OSPFエリア色分けと、論理図でのBGPピアリングの網経由描画:
+
+```yaml
+domains:
+  - {id: area0, name: "OSPF Area 0 (バックボーン)"}
+  - {id: area1, name: "OSPF Area 1 (本社アクセス)"}
+
+links:
+  - {type: logical, endpoints: ["hq-rt01", "dc-rt01"], domain: area0, description: OSPF}
+  - {type: logical, endpoints: ["dc-rt01", "aws-vgw01"], via: ipvpn, description: BGP}
+```
+
 ## サンプル一覧 (playgroundのサンプル選択にも表示される)
 
 | サンプル | 規模 | 見どころ |
@@ -113,21 +135,37 @@ views:
 
 - [チュートリアル](docs/tutorial.md) — 最小構成から30分で(全ステップ実機検証済み)
 - [リファレンス](docs/reference.md) — 全フィールド・バリデーション規則・CLI
+- [実務パターン集](docs/patterns.md) — 冗長構成・網接続・専用線・DMZ・OSPFエリア等10パターンの書き方
+- [FAQ](docs/faq.md) — エラーコード対処表 + よくある質問
 - [OpenSpec 統合ガイド](docs/openspec-integration.md) — 仕様駆動ドキュメント生成への組み込み
-- [設計判断記録 (ADR)](docs/adr/) — 先行事例調査、新DSL策定の判断、スキーマ設計の根拠
+- [設計判断記録 (ADR)](docs/adr/) — 先行事例調査、新DSL策定の判断、スキーマ設計の根拠、レンダラ戦略
 - [調査ログ](docs/notes/phase0-survey-log.md) — 検討過程の記録
+
+playground内の各ドキュメントページには、内容をそのまま Markdown でコピーするボタンがある(AIにコンテキストとして読み込ませる用途)。
 
 ## リポジトリ構成
 
 ```
-src/nwdsl/          # model(スキーマ) / validate / graph(ビュー解決) / render_d2 / render_mermaid / tables / cli
-tests/              # pytest (サンプル正常系 + 異常系)
-examples/sample-corp/   # サンプル構成と生成物一式
+src/nwdsl/
+  model.py            # スキーマ定義 (pydantic, 単一ソース)
+  validate.py         # 意味的整合性検査
+  graph.py            # ビュー解決・向き付け・レイヤ/domains/via/経路のロジック (フォーマット非依存の中間表現)
+  render_d2.py / render_mermaid.py / render_svg.py  # 3系統の描画エンジン
+  svg_layout.py       # 内蔵SVGのレイアウトエンジン (Sugiyama法 + 不変条件保証)
+  tables.py           # Markdown表生成
+  webapp.py + static/playground.html  # ローカルplayground (`nwdsl serve`)
+  cli.py
+tests/              # pytest (サンプル正常系 + 異常系 + レイアウト不変条件)
+examples/           # 7サンプル(2〜50台規模) + stress/(描画エンジン限界検証)
 schema/nwdsl.schema.json
-docs/
+docs/               # チュートリアル・リファレンス・パターン集・FAQ・ADR
 ```
 
 ## 動作環境
 
-- Python 3.11+ (pydantic v2, PyYAML)
-- 図のSVG化: D2 v0.7+ (dagre/ELK同梱の単一バイナリ)
+- Python 3.11+ (pydantic v2, PyYAML)。追加インストールなしで内蔵SVGエンジン・playgroundが使える
+- D2/Mermaid出力をSVG化する場合のみ [D2](https://github.com/terrastruct/d2/releases) v0.7+ (dagre/ELK同梱の単一バイナリ) が別途必要
+
+## ライセンス
+
+[MIT](LICENSE)
