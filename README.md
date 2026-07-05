@@ -26,19 +26,45 @@
 
 `examples/sample-corp/network.yaml`(3拠点 + IP-VPN + インターネットVPNバックアップ + HSRP冗長)からの生成例:
 
-| 全社物理構成図 | 全社WAN概要図 (`collapse_sites`) |
-|---|---|
-| ![物理構成図](examples/sample-corp/generated/physical-all.svg) | ![WAN概要図](examples/sample-corp/generated/wan-overview.svg) |
+**全社物理構成図**
+![物理構成図](examples/sample-corp/generated/physical-all.svg)
 
-| 全社論理構成図 | 本社詳細図 (`include_sites`) |
-|---|---|
-| ![論理構成図](examples/sample-corp/generated/logical-all.svg) | ![本社詳細図](examples/sample-corp/generated/hq-physical.svg) |
+**全社WAN概要図** (`collapse_sites`)
+![WAN概要図](examples/sample-corp/generated/wan-overview.svg)
 
-| 通信経路図 正常時 (`type: path`) | 通信経路図 IP-VPN障害時 (`failure` + `fallback_of`) |
-|---|---|
-| ![正常時経路](examples/sample-corp/generated/path-normal.svg) | ![障害時経路](examples/sample-corp/generated/path-ipvpn-fail.svg) |
+**全社論理構成図**
+![論理構成図](examples/sample-corp/generated/logical-all.svg)
+
+**本社詳細図** (`include_sites`)
+![本社詳細図](examples/sample-corp/generated/hq-physical.svg)
+
+**通信経路図 正常時** (`type: path`)
+![正常時経路](examples/sample-corp/generated/path-normal.svg)
+
+**通信経路図 IP-VPN障害時** (`failure` + `fallback_of`)
+![障害時経路](examples/sample-corp/generated/path-ipvpn-fail.svg)
 
 生成された表: [examples/sample-corp/generated/tables.md](examples/sample-corp/generated/tables.md)
+
+### 描画エンジン比較: OSPFエリア表示
+
+`examples/scale-50`(3拠点50台)の全社論理構成図。同じYAMLの`domains`定義から、D2は色分け+エリア名ラベル、内蔵SVGは色分け+半透明の面塗り+凡例で表現する。
+
+**D2 (ELK)**
+![OSPFエリア D2](examples/scale-50/generated/logical-all.svg)
+
+**内蔵SVG**
+![OSPFエリア 内蔵SVG](examples/scale-50/generated-svg/logical-all.svg)
+
+### 大規模パターン: 20拠点ハブ&スポーク
+
+`examples/branch-20`(20拠点44台、東西DRハブ+モバイル閉域網バックアップ)のWAN概要図(`collapse_sites`)。拠点数が増えるとD2(ELK)は横に間延びしていく一方、内蔵SVGは不変条件(重なりゼロ)を保ったままコンパクトに収まる([ADR-0007](docs/adr/0007-renderer-strategy.md))。
+
+**D2 (ELK)**
+![20拠点WAN概要図 D2](examples/branch-20/generated/wan-overview.svg)
+
+**内蔵SVG**
+![20拠点WAN概要図 内蔵SVG](examples/branch-20/generated-svg/wan-overview.svg)
 
 > **描画エンジンは3系統**(D2 / Mermaid / 内蔵SVG)。D2(ELK)は木構造系の構成で最も美しいが、leaf-spineファブリック・メトロリング・10拠点超のWAN概要では破綻する([ADR-0007](docs/adr/0007-renderer-strategy.md)、[examples/stress/](examples/stress/) で再現可能)。このため**「どのパターンでも破綻しない」ことを不変条件(ノード/ラベル重なりゼロ・線のノード貫通ゼロ)として保証する内蔵SVGエンジン**を実装している(`--format svg`、[ADR-0008](docs/adr/0008-invariant-renderer.md))。内蔵エンジンはリングを円環に、ファブリックを2段扇状に自動配置し、全サンプル×全ビューの不変条件をテストで機械検証している。D2のバイナリすら不要(標準ライブラリのみで動作)なので、playgroundは追加インストールなしでこのエンジンを既定にしている。
 
