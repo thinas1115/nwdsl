@@ -84,6 +84,28 @@ def test_svg_emits(doc, view):
     assert "<polyline" in svg
 
 
+def test_order_declared_matches_across_views():
+    """order: declared なら、layers が異なるビュー間でも拠点の左右順序が
+    sites 宣言順で揃うこと(内蔵SVGエンジンのみ対象)。"""
+    doc = load_document(EXAMPLES / "sample-corp" / "network.yaml")
+    physical = next(v for v in doc.views if v.id == "physical-all")
+    logical = next(v for v in doc.views if v.id == "logical-all")
+    assert physical.order == logical.order == "declared"
+    declared_site_ids = [s.id for s in doc.sites]
+
+    for view in (physical, logical):
+        layout = layout_view(resolve_view(doc, view))
+        by_x = sorted(layout.site_boxes, key=lambda b: b.x)
+        assert [b.site_id for b in by_x] == declared_site_ids, (
+            f"{view.id}: 拠点順序が宣言順と不一致")
+
+
+def test_order_auto_is_default():
+    doc = load_document(EXAMPLES / "sample-corp" / "network.yaml")
+    view = next(v for v in doc.views if v.id == "wan-overview")
+    assert view.order == "auto"
+
+
 def test_ring_detected():
     doc = load_document(EXAMPLES / "stress" / "ring.yaml")
     view = next(v for v in doc.views if v.id == "ring-collapsed")

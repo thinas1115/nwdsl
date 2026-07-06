@@ -66,7 +66,7 @@
 **内蔵SVG**
 ![20拠点WAN概要図 内蔵SVG](examples/branch-20/generated-svg/wan-overview.svg)
 
-> **描画エンジンは3系統**(D2 / Mermaid / 内蔵SVG)。D2(ELK)は木構造系の構成で最も美しいが、leaf-spineファブリック・メトロリング・10拠点超のWAN概要では破綻する([ADR-0007](docs/adr/0007-renderer-strategy.md)、[examples/stress/](examples/stress/) で再現可能)。このため**「どのパターンでも破綻しない」ことを不変条件(ノード/ラベル重なりゼロ・線のノード貫通ゼロ)として保証する内蔵SVGエンジン**を実装している(`--format svg`、[ADR-0008](docs/adr/0008-invariant-renderer.md))。内蔵エンジンはリングを円環に、ファブリックを2段扇状に自動配置し、全サンプル×全ビューの不変条件をテストで機械検証している。D2のバイナリすら不要(標準ライブラリのみで動作)なので、playgroundは追加インストールなしでこのエンジンを既定にしている。
+> **描画エンジンは3系統**(D2 / Mermaid / 内蔵SVG)。D2(ELK)は木構造系の構成で最も美しいが、leaf-spineファブリック・メトロリング・10拠点超のWAN概要では破綻する([ADR-0007](docs/adr/0007-renderer-strategy.md)、[examples/stress/](examples/stress/) で再現可能)。このため**「どのパターンでも破綻しない」ことを不変条件(ノード/ラベル重なりゼロ・線のノード貫通ゼロ)として保証する内蔵SVGエンジン**を実装している(`--format svg`、[ADR-0008](docs/adr/0008-invariant-renderer.md))。内蔵エンジンはリングを円環に、ファブリックを2段扇状に自動配置し、全サンプル×全ビューの不変条件をテストで機械検証している。D2のバイナリすら不要(標準ライブラリのみで動作)なので、playgroundは追加インストールなしでこのエンジンを既定にしている。同様に、拠点の左右順序も**D2(ELK)はクロス最小化ヒューリスティック任せで保証できない一方、内蔵SVGは`views[].order: declared`でsites宣言順に固定できる**(見た目最適化 vs 一貫性、の使い分け。[ADR-0005 補遺3](docs/adr/0005-layout-bfs-orientation.md)、`examples/sample-corp`で実演)。
 
 ## クイックスタート
 

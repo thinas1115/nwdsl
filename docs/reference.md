@@ -169,9 +169,12 @@ link 側は `domain: <id>` で参照する。指定したエッジは:
 | `exclude_sites` | list | - | 除外する拠点 |
 | `collapse_sites` | bool | - | true で拠点を1ノードに畳む。拠点内で閉じる接続は消え、拠点間接続だけが残る (全社概要図向け) |
 | `show_l3` | bool / enum | - | L3表示 (IF IPv4一覧+セグメントノード)。`view`=このビューに現れる接続のIFのみ (`true` と同義・既定挙動) / `used`=いずれかのlinkで使用中のIF / `all`=IPv4を持つ全IF / `false`=非表示。**省略時は純粋なL3ビュー (logical を含む、または物理レイヤ抜きの tunnel のみ) で view モードが自動有効**。セグメントGWのIFは常に表示対象 |
+| `order` | enum | - | 拠点の左右順序。`auto`(既定)=クロス最小化で見た目を最適化 / `declared`=`sites`の宣言順で固定しビュー間の順序を一致させる。**内蔵SVGエンジンのみ有効。D2(ELK)は外部エンジンのため順序を保証できず`auto`と同じ挙動になる** |
 | `description` | string | - | 補足 |
 
 典型的なビュー: 物理図=`[lan-cable, wan-circuit]` / 論理図=`[logical, tunnel]` / 全社概要図=`[wan-circuit, tunnel]` + `collapse_sites` / 拠点詳細図=`include_sites`。
+
+物理図・論理図など複数のビューで同じ拠点を同じ左右位置に揃えたい場合は、両方のビューに `order: declared` を付けて内蔵SVGエンジンで描画する(`examples/sample-corp`で実演)。
 
 ## スコープ (v0.1) — 何を入れて、何を入れないか
 

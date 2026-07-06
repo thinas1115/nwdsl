@@ -252,6 +252,7 @@ views:
   - id: physical-all
     title: 全社物理構成図
     layers: [lan-cable, wan-circuit]
+    order: declared    # 拠点の左右順序をsites宣言順(hq/osk/ngy)に固定し論理図と揃える
   - id: wan-overview
     title: 全社WAN概要図
     layers: [wan-circuit, tunnel]
@@ -259,6 +260,7 @@ views:
   - id: logical-all
     title: 全社論理構成図
     layers: [logical, tunnel]
+    order: declared
   - id: hq-physical
     title: 本社 物理構成図
     layers: [lan-cable, wan-circuit]

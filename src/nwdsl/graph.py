@@ -50,6 +50,8 @@ class RenderGraph:
     nodes: list[RenderNode] = field(default_factory=list)
     edges: list[RenderEdge] = field(default_factory=list)
     domains: dict[str, str] = field(default_factory=dict)  # id -> 表示名 (凡例用)
+    site_order: dict[str, int] = field(default_factory=dict)  # site_id -> sites宣言順index
+    order: str = "auto"  # "auto" (クロス最小化) | "declared" (site_order優先、内蔵SVGのみ)
 
 
 _DOMAIN_PALETTE = ["#e8710a", "#0b8043", "#8430ce", "#00838f",
@@ -113,7 +115,8 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
 
     selected = [l for l in doc.links if l.type in view.layers]
 
-    graph = RenderGraph(title=view.title)
+    graph = RenderGraph(title=view.title, order=view.order,
+                       site_order={s.id: i for i, s in enumerate(doc.sites)})
     nodes: dict[str, RenderNode] = {}
     used_sites: list[str] = []
 
@@ -314,7 +317,12 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                                 dev.id, seg_node_id, "segment", src_label=intf.name))
 
     graph.nodes = list(nodes.values())
-    graph.groups = [(sid, site_by_id[sid].name) for sid in used_sites if sid in site_by_id]
+    if view.order == "declared":
+        site_ids = sorted((s for s in used_sites if s in site_by_id),
+                          key=lambda s: graph.site_order.get(s, 0))
+    else:
+        site_ids = [s for s in used_sites if s in site_by_id]
+    graph.groups = [(sid, site_by_id[sid].name) for sid in site_ids]
     used_domains = {e.domain for e in graph.edges if e.domain}
     graph.domains = {d.id: d.name for d in doc.domains if d.id in used_domains}
     _bundle_parallel_cables(graph)

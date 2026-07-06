@@ -211,6 +211,11 @@ class View(StrictModel):
                     "used=いずれかのlinkで使用中のIF / all=IPv4を持つ全IF / false=非表示。"
                     "省略時は layers に logical を含むビューで view モードが自動有効")
     description: Optional[str] = Field(default=None, description="補足")
+    order: Literal["auto", "declared"] = Field(
+        default="auto",
+        description="拠点の左右順序。auto=クロス最小化で見た目を最適化 (既定) / "
+                    "declared=sites の宣言順で固定しビュー間の順序を一致させる。"
+                    "内蔵SVGエンジンのみ有効、D2(ELK)では保証されない")
 
 
 class Document(StrictModel):
