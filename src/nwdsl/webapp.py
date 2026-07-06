@@ -276,7 +276,9 @@ def serve(port: int = 8321, open_browser: bool = True) -> None:
     PlaygroundHandler.d2_bin = find_d2()
     server = ThreadingHTTPServer(("127.0.0.1", port), PlaygroundHandler)
     url = f"http://127.0.0.1:{port}/"
-    d2_note = PlaygroundHandler.d2_bin or "見つかりません (SVGプレビュー無効。D2を導入してください)"
+    d2_note = (PlaygroundHandler.d2_bin
+              or "見つかりません (D2(ELK)描画のみ無効。内蔵SVGエンジンでプレビューは引き続き使えます。"
+                 "D2を導入するとELKレイアウトも選べます)")
     print(f"nwdsl playground: {url}")
     print(f"D2: {d2_note}")
     print("Ctrl+C で停止します")

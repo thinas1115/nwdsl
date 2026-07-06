@@ -20,7 +20,7 @@
 まずエンジンを切り替える (playground右上 or CLI `--format`)。木構造系はD2が最も整い、リング・leaf-spine・多拠点概要・確実性優先なら内蔵SVG (重なりゼロを機械検証済み)。Markdownに埋め込むならMermaid。
 
 **Q. D2バイナリはどこから?**
-[GitHub Releases](https://github.com/terrastruct/d2/releases) の tar.gz を展開してPATHへ (管理者権限不要)。リポジトリの `.tools/` に置いても自動検出される。無くても内蔵SVGエンジンで描画できる。
+Windowsは `.\scripts\install_d2.ps1` を実行すると [GitHub Releases](https://github.com/terrastruct/d2/releases) から `.tools/` に取得され自動検出される(`.tools/` は`.gitignore`対象なのでclone後に各自実行が必要)。手動で入れる場合はtar.gzを展開してPATHへ、またはリポジトリの `.tools/` に置いても自動検出される。無くても内蔵SVGエンジンで描画できる。
 
 **Q. インターフェースを自動生成してくれないの?**
 しない (設計判断)。IF宣言の強制はタイポ検出とIF一覧表の品質保証のため。書くのが手間な場合は playground でエラーを見ながら追記するのが速い。

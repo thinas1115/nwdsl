@@ -9,11 +9,12 @@
 git clone <this-repo> ; cd nw-config-dsl
 python -m venv .venv
 .\.venv\Scripts\pip install -e .
-nwdsl --help    # または .\.venv\Scripts\nwdsl --help
+.\.venv\Scripts\Activate.ps1   # nwdsl コマンドを直接使えるようにする (pip install -e . だけではPATHが通らない)
+nwdsl --help    # 実行ポリシーでActivate.ps1が弾かれる場合は .\.venv\Scripts\nwdsl.exe --help と読み替える
 ```
 
-図をSVG化する場合は [D2](https://github.com/terrastruct/d2/releases) のバイナリを入れておく
-(Windows は tar.gz を展開して PATH を通すだけ。管理者権限不要)。
+図をSVG化する場合は [D2](https://github.com/terrastruct/d2/releases) のバイナリを入れておく(無くても内蔵SVGエンジンでこのチュートリアルは進められる)。
+Windowsは `.\scripts\install_d2.ps1` を実行するとリポジトリの `.tools\` に取得され自動検出される(`.tools\` は`.gitignore`対象なのでclone直後は各自実行が必要)。
 
 > **いちばん簡単な試し方**: `nwdsl serve` を実行するとブラウザで playground が開く。
 > YAML を編集すると自動で検証+描画され、このチュートリアルも画面内で読める。
@@ -69,7 +70,8 @@ nwdsl validate network.yaml
 # OK: エラー 0件 / 警告 0件
 
 nwdsl render network.yaml -o diagrams
-d2 --layout=elk diagrams\physical.d2 diagrams\physical.svg
+.\.tools\d2-v0.7.1\bin\d2.exe --layout=elk diagrams\physical.d2 diagrams\physical.svg
+# D2をPATHに別途インストール済みなら: d2 --layout=elk diagrams\physical.d2 diagrams\physical.svg
 ```
 
 ## 2. 拠点を増やして WAN でつなぐ
