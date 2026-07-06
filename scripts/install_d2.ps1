@@ -1,4 +1,4 @@
-<#
+﻿<#
 D2 (v0.7.1, Windows amd64) を .tools/ にダウンロードして展開する。
 .tools/ は .gitignore 対象のため、clone直後は誰の環境にも存在しない。
 
