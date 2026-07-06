@@ -214,7 +214,8 @@ nwdsl は「構成図・経路図・設計書表を生成するための最小NW
 
 ## CLI
 
-コピペで動く実行例(リポジトリ直下、`pip install -e .` 済みの前提。自分のファイルに使うときはパスを差し替える):
+コピペで動く実行例(リポジトリ直下、`pip install -e .` 済みの前提。自分のファイルに使うときはパスを差し替える)。
+`nwdsl` が見つからない場合は `.\.venv\Scripts\Activate.ps1` を実行するか、各コマンドを `.\.venv\Scripts\nwdsl.exe ...` と読み替える(`pip install -e .` だけではPATHが通らない):
 
 ```powershell
 nwdsl validate examples\sample-corp\network.yaml            # 整合性検査

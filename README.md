@@ -73,6 +73,7 @@
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\pip install -e .
+.\.venv\Scripts\Activate.ps1   # これで以降 nwdsl コマンドがそのまま通る (実行ポリシーで弾かれる場合は下記参照)
 
 nwdsl serve                                              # ブラウザで試す (playground)
 nwdsl validate examples\sample-corp\network.yaml         # 整合性検査
@@ -80,6 +81,8 @@ nwdsl render   examples\sample-corp\network.yaml -o out  # 図ソース生成 (.
 nwdsl tables   examples\sample-corp\network.yaml -o out\tables.md
 nwdsl schema   -o nwdsl.schema.json                      # エディタ補完用 JSON Schema
 ```
+
+`pip install -e .` だけでは `.venv\Scripts` にPATHが通らず `nwdsl` コマンドが見つからない(`Activate.ps1` の実行が必要)。PowerShellの実行ポリシーで `Activate.ps1` 自体が弾かれる場合は、activateせず毎回 `.\.venv\Scripts\nwdsl.exe` とフルパスで呼ぶ(例: `.\.venv\Scripts\nwdsl.exe serve`)。
 
 `nwdsl serve` は http://127.0.0.1:8321/ にローカルの playground(標準ライブラリのみ、127.0.0.1限定)を起動する。左ペインの YAML を編集すると自動で検証+描画され、以下がブラウザ内だけで完結する。初見の人はまずこれ。
 
