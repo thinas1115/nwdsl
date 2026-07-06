@@ -181,11 +181,14 @@ src/nwdsl/
   tables.py           # Markdown表生成
   webapp.py + static/playground.html  # ローカルplayground (`nwdsl serve`)
   cli.py
-tests/              # pytest (サンプル正常系 + 異常系 + レイアウト不変条件)
+tests/              # pytest (サンプル正常系 + 異常系 + レイアウト不変条件 + examples鮮度検証)
 examples/           # 7サンプル(2〜50台規模) + stress/(描画エンジン限界検証)
+scripts/regen_examples.py  # examples配下の全成果物 (d2/mmd/tables/内蔵SVG/D2コンパイル済みSVG) を一括再生成
 schema/nwdsl.schema.json
 docs/               # チュートリアル・リファレンス・パターン集・FAQ・ADR
 ```
+
+`graph.py` やレンダラを変更したら、コミット前に必ず `python scripts/regen_examples.py` を実行して `examples/` の成果物(README埋め込み画像を含む)を再生成すること。`tests/test_examples_fresh.py` が再生成漏れを検出する(D2コンパイル済みSVGの検証はD2バイナリがある場合のみ)。
 
 ## 動作環境
 
