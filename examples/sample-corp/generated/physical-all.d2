@@ -28,6 +28,7 @@ s_hq: "本社" {
   n_hq_rt01: "hq-rt01\nCisco ISR4331" {class: role-router}
   n_hq_sw01: "hq-sw01\nCisco Catalyst 9300" {class: role-l3switch; width: 180}
   n_hq_rt02: "hq-rt02\nCisco ISR4331" {class: role-router}
+  n_hq_srv01: "hq-srv01\nPowerEdge R760" {class: role-other}
 }
 
 s_osk: "大阪支店" {
@@ -51,18 +52,19 @@ s_hq.n_hq_rt01 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label:
 s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"}
 s_osk.n_osk_rt01 -- s_osk.n_osk_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1/0"; target-arrowhead.label: "Gi1/0/1"}
 s_ngy.n_ngy_rt01 -- s_ngy.n_ngy_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1/0"; target-arrowhead.label: "Gi1/0/1"}
-lbl_4: "NTTコミュニケーションズ IP-VPN 100M\n(Gi0/0/0)" {class: edge-label}
-n_ipvpn -- lbl_4 {class: edge-wan-circuit}
-lbl_4 -- s_hq.n_hq_rt01 {class: edge-wan-circuit}
-lbl_5: "NTTコミュニケーションズ IP-VPN 50M\n(Gi0/0/0)" {class: edge-label}
+s_hq.n_hq_sw01 -- s_hq.n_hq_srv01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/3"; target-arrowhead.label: "eno1"}
+lbl_5: "NTTコミュニケーションズ IP-VPN 100M\n(Gi0/0/0)" {class: edge-label}
 n_ipvpn -- lbl_5 {class: edge-wan-circuit}
-lbl_5 -- s_osk.n_osk_rt01 {class: edge-wan-circuit}
+lbl_5 -- s_hq.n_hq_rt01 {class: edge-wan-circuit}
 lbl_6: "NTTコミュニケーションズ IP-VPN 50M\n(Gi0/0/0)" {class: edge-label}
 n_ipvpn -- lbl_6 {class: edge-wan-circuit}
-lbl_6 -- s_ngy.n_ngy_rt01 {class: edge-wan-circuit}
-lbl_7: "NTT東日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/0)" {class: edge-label}
-n_internet -- lbl_7 {class: edge-wan-circuit}
-lbl_7 -- s_hq.n_hq_rt02 {class: edge-wan-circuit}
-lbl_8: "NTT西日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/1)" {class: edge-label}
+lbl_6 -- s_osk.n_osk_rt01 {class: edge-wan-circuit}
+lbl_7: "NTTコミュニケーションズ IP-VPN 50M\n(Gi0/0/0)" {class: edge-label}
+n_ipvpn -- lbl_7 {class: edge-wan-circuit}
+lbl_7 -- s_ngy.n_ngy_rt01 {class: edge-wan-circuit}
+lbl_8: "NTT東日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/0)" {class: edge-label}
 n_internet -- lbl_8 {class: edge-wan-circuit}
-lbl_8 -- s_osk.n_osk_rt01 {class: edge-wan-circuit}
+lbl_8 -- s_hq.n_hq_rt02 {class: edge-wan-circuit}
+lbl_9: "NTT西日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/1)" {class: edge-label}
+n_internet -- lbl_9 {class: edge-wan-circuit}
+lbl_9 -- s_osk.n_osk_rt01 {class: edge-wan-circuit}

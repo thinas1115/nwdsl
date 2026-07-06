@@ -3,6 +3,7 @@ flowchart TB
     hq_rt02["hq-rt02<br>Cisco ISR4331<br>Tunnel0: 172.31.0.1/30"]
     hq_rt01["hq-rt01<br>Cisco ISR4331"]
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300<br>Vlan10: 10.1.10.1/24<br>Vlan20: 10.1.20.1/24"]
+    hq_srv01["hq-srv01<br>PowerEdge R760<br>eno1: 10.1.10.5/24"]
     seg__hq_server(["本社サーバ<br>VLAN 10 / 10.1.10.0/24"])
     seg__hq_client(["本社クライアント<br>VLAN 20 / 10.1.20.0/24"])
   end
@@ -42,6 +43,7 @@ flowchart TB
   class hq_rt02,osk_rt01,hq_rt01,ngy_rt01 role_router
   class internet,ipvpn node_cloud
   class hq_sw01 role_l3switch
+  class hq_srv01 role_other
   class seg__hq_server,seg__hq_client,seg__osk_lan,seg__ngy_lan node_segment
   linkStyle 0,1 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
   linkStyle 2,3,4 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3

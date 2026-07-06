@@ -28,7 +28,11 @@ s_hq: "本社" {
   n_hq_rt02: "hq-rt02\nCisco ISR4331\nTunnel0: 172.31.0.1/30" {class: role-router}
   n_hq_rt01: "hq-rt01\nCisco ISR4331" {class: role-router}
   n_hq_sw01: "hq-sw01\nCisco Catalyst 9300\nVlan10: 10.1.10.1/24\nVlan20: 10.1.20.1/24" {class: role-l3switch; width: 180}
-  n_seg__hq_server: "本社サーバ\nVLAN 10 / 10.1.10.0/24" {class: node-segment}
+  n_seg__hq_server: "本社サーバ\nVLAN 10 / 10.1.10.0/24" {
+    class: node-segment
+    label.near: outside-top-left
+    n_hq_srv01: "hq-srv01\nPowerEdge R760\neno1: 10.1.10.5/24" {class: role-other}
+  }
   n_seg__hq_client: "本社クライアント\nVLAN 20 / 10.1.20.0/24" {class: node-segment}
 }
 

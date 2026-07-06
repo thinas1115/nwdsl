@@ -62,6 +62,17 @@ devices:
         description: クライアントセグメントGW
         ipv4: 10.1.20.1/24
         segment: hq-client
+      - name: Gi1/0/3
+        description: hq-srv01へ
+  - id: hq-srv01
+    site: hq
+    role: server
+    platform: PowerEdge R760
+    interfaces:
+      - name: eno1
+        description: サーバセグメントへ
+        ipv4: 10.1.10.5/24
+        segment: hq-server
 
   # ---- 大阪支店 ----
   - id: osk-rt01
@@ -161,6 +172,8 @@ links:
     endpoints: ["osk-rt01:Gi0/1/0", "osk-sw01:Gi1/0/1"]
   - type: lan-cable
     endpoints: ["ngy-rt01:Gi0/1/0", "ngy-sw01:Gi1/0/1"]
+  - type: lan-cable
+    endpoints: ["hq-sw01:Gi1/0/3", "hq-srv01:eno1"]
 
   # ---- WANアクセス回線 ----
   - type: wan-circuit

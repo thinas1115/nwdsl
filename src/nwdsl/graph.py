@@ -52,6 +52,7 @@ class RenderGraph:
     domains: dict[str, str] = field(default_factory=dict)  # id -> 表示名 (凡例用)
     site_order: dict[str, int] = field(default_factory=dict)  # site_id -> sites宣言順index
     order: str = "auto"  # "auto" (クロス最小化) | "declared" (site_order優先、内蔵SVGのみ)
+    segment_members: dict[str, list[str]] = field(default_factory=dict)  # segment_node_id -> 内包する端末device_id列
 
 
 _DOMAIN_PALETTE = ["#e8710a", "#0b8043", "#8430ce", "#00838f",
@@ -221,6 +222,17 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                    or ("tunnel" in view.layers
                        and not {"lan-cable", "wan-circuit"} & set(view.layers)))
 
+        # 機器ごとの参照セグメント集合 (末端機器判定に使う。孤立機器補完・
+        # セグメント処理の両方で参照するためここで1回だけ計算する)
+        dev_segments: dict[str, set[str]] = defaultdict(set)
+        for dev in doc.devices:
+            for intf in dev.interfaces:
+                if intf.segment:
+                    dev_segments[dev.id].add(intf.segment)
+
+        def _is_segment_member(dev) -> bool:
+            return dev.role == "server" and len(dev_segments[dev.id]) == 1
+
         # 接続を持たない範囲内の機器も孤立ノードとして表示する。
         # ただし純L3ビューでは、L3情報を持たない機器 (L2アクセスSW等) は省く
         for dev in doc.devices:
@@ -235,9 +247,11 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
         # 誰とも繋がらず「外部から浮いている」ように見えることがある。実際には
         # lan-cableで他機器と繋がっているはずなので、その配線を通常のlan-cable
         # 描画 (黒細線+IF名) で補って「どう到達するか」を示す。
+        # ただしセグメントの内包物になる機器 (下記) は、そちら側の描画で
+        # 到達経路が示されるため対象外にする (重複配線防止)
         connected = {n for e in graph.edges for n in (e.src, e.dst)}
         for dev in doc.devices:
-            if dev.id not in nodes or dev.id in connected:
+            if dev.id not in nodes or dev.id in connected or _is_segment_member(dev):
                 continue
             for link in doc.links:
                 if link.type != "lan-cable":
@@ -247,6 +261,9 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                     continue
                 other = next((e for e in ep_ids if e != dev.id), None)
                 if other is None or other not in nodes:
+                    continue
+                other_dev = device_by_id.get(other)
+                if other_dev is not None and _is_segment_member(other_dev):
                     continue
                 ifnames = {parse_endpoint(ep)[0]: parse_endpoint(ep)[1]
                           for ep in link.endpoints}
@@ -313,8 +330,12 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                         continue
                     for intf in dev.interfaces:
                         if intf.segment == seg.id:
-                            graph.edges.append(RenderEdge(
-                                dev.id, seg_node_id, "segment", src_label=intf.name))
+                            if _is_segment_member(dev):
+                                graph.segment_members.setdefault(
+                                    seg_node_id, []).append(dev.id)
+                            else:
+                                graph.edges.append(RenderEdge(
+                                    dev.id, seg_node_id, "segment", src_label=intf.name))
 
     graph.nodes = list(nodes.values())
     if view.order == "declared":

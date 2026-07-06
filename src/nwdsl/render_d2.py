@@ -129,6 +129,12 @@ def render_d2(graph: RenderGraph) -> str:
         else:
             ungrouped.append(node)
 
+    nodes_by_id = {n.id: n for n in graph.nodes}
+    # セグメントに内包される端末は、拠点直下ではなくセグメントのサブコンテナに
+    # 描くため、拠点の平坦なメンバー一覧からは除外する
+    nested_device_ids = {dev_id for members in graph.segment_members.values()
+                         for dev_id in members}
+
     for site_id, site_label in graph.groups:
         members = grouped.get(site_id, [])
         if not members:
@@ -140,9 +146,27 @@ def render_d2(graph: RenderGraph) -> str:
         # 内側配置や外側中央では狭い拠点でIFラベル・回線と衝突することを実測で確認済み
         lines.append("  label.near: outside-top-left")
         for node in members:
+            if node.id in nested_device_ids:
+                continue
             nkey = f"n_{_key(node.id)}"
             node_path[node.id] = f"{gkey}.{nkey}"
-            lines.append(f'  {nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node, min_widths.get(node.id))}}}')
+            if node.kind == "segment" and node.id in graph.segment_members:
+                # 末端機器 (role: server で単一セグメント所属) を子として持つ
+                # サブコンテナとして描く。GW側からの接続は今まで通り箱自体を指す
+                lines.append(f'  {nkey}: "{_label(_node_label(node))}" {{')
+                lines.append(f"    class: {_node_class(node)}")
+                lines.append("    label.near: outside-top-left")
+                for member_id in graph.segment_members[node.id]:
+                    member = nodes_by_id.get(member_id)
+                    if member is None:
+                        continue
+                    mkey = f"n_{_key(member_id)}"
+                    node_path[member_id] = f"{gkey}.{nkey}.{mkey}"
+                    lines.append(f'    {mkey}: "{_label(_node_label(member))}" '
+                                f'{{{_node_attrs(member, min_widths.get(member_id))}}}')
+                lines.append("  }")
+            else:
+                lines.append(f'  {nkey}: "{_label(_node_label(node))}" {{{_node_attrs(node, min_widths.get(node.id))}}}')
         lines.append("}")
         lines.append("")
 

@@ -27,8 +27,6 @@ flowchart TB
   hq_rt01 --- hq_sw01
   hq_rt02 --- hq_sw01
   hq_sw01 --- seg__hq_users
-  dc_srv01 --- seg__dc_servers
-  dc_srv02 --- seg__dc_servers
   aws_vgw01 --- seg__aws_vpc_app
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
@@ -51,4 +49,4 @@ flowchart TB
   linkStyle 0,1 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
   linkStyle 2,3,4,5 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
   linkStyle 6,7 stroke:#4a4a4a,stroke-width:2px
-  linkStyle 8,9,10,11 stroke:#0f766e,stroke-width:1.5px
+  linkStyle 8,9 stroke:#0f766e,stroke-width:1.5px

@@ -38,9 +38,12 @@ s_dc: "DCコロケーション" {
   n_dc_core01: "dc-core01\nNexus 93180" {class: role-l3switch; width: 180}
   n_dc_fw01: "dc-fw01\nFortiGate 600F\nwan1: 198.51.100.20/29\ntunnel.aws: 169.254.200.1/30" {class: role-firewall}
   n_dc_srvsw01: "dc-srvsw01\nCatalyst 9200" {class: role-l2switch; width: 180; style.opacity: 0.3}
-  n_dc_srv01: "dc-srv01\nPowerEdge R760 (基幹AP)\neno1: 10.20.10.11/24" {class: role-other; style.opacity: 0.3}
-  n_dc_srv02: "dc-srv02\nPowerEdge R760 (DB)\neno1: 10.20.10.12/24" {class: role-other; style.opacity: 0.3}
-  n_seg__dc_servers: "DCサーバ\nVLAN 20 / 10.20.10.0/24" {class: node-segment; width: 180; style.opacity: 0.3}
+  n_seg__dc_servers: "DCサーバ\nVLAN 20 / 10.20.10.0/24" {
+    class: node-segment
+    label.near: outside-top-left
+    n_dc_srv01: "dc-srv01\nPowerEdge R760 (基幹AP)\neno1: 10.20.10.11/24" {class: role-other; style.opacity: 0.3}
+    n_dc_srv02: "dc-srv02\nPowerEdge R760 (DB)\neno1: 10.20.10.12/24" {class: role-other; style.opacity: 0.3}
+  }
 }
 
 s_aws: "AWS ap-northeast-1" {
@@ -58,8 +61,8 @@ s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label:
 s_dc.n_dc_rt01 -> s_dc.n_dc_core01: "④" {class: edge-lan-cable; source-arrowhead.label: "Te0/0/1"; target-arrowhead.label: "Eth1/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 s_dc.n_dc_fw01 -> s_dc.n_dc_core01: "⑤ 経路広報の切替でVPNへ" {class: edge-lan-cable; source-arrowhead.label: "internal1"; target-arrowhead.label: "Eth1/2"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 s_dc.n_dc_core01 -- s_dc.n_dc_srvsw01 {class: edge-lan-cable; source-arrowhead.label: "Eth1/3"; target-arrowhead.label: "Gi1/0/1"; style.opacity: 0.15}
-s_dc.n_dc_srvsw01 -- s_dc.n_dc_srv01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/11"; target-arrowhead.label: "eno1"; style.opacity: 0.15}
-s_dc.n_dc_srvsw01 -- s_dc.n_dc_srv02 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/12"; target-arrowhead.label: "eno1"; style.opacity: 0.15}
+s_dc.n_dc_srvsw01 -- s_dc.n_seg__dc_servers.n_dc_srv01 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/11"; target-arrowhead.label: "eno1"; style.opacity: 0.15}
+s_dc.n_dc_srvsw01 -- s_dc.n_seg__dc_servers.n_dc_srv02 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/12"; target-arrowhead.label: "eno1"; style.opacity: 0.15}
 lbl_7: "② OSPF" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
 n_wide_ether -- lbl_7 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_7 -> s_hq.n_hq_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
@@ -82,6 +85,4 @@ n_wide_ether -- s_dc.n_dc_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15
 n_wide_ether -- s_hq.n_hq_rt02: "OSPF" {class: edge-logical; style.opacity: 0.15}
 s_dc.n_dc_rt01 -- s_aws.n_aws_vgw01: "BGP (DX上)" {class: edge-logical; style.stroke: "#9aa0a6"; style.stroke-dash: 4; style.opacity: 0.4}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_users {class: edge-segment; source-arrowhead.label: "Vlan100"; style.opacity: 0.15}
-s_dc.n_dc_srv01 -- s_dc.n_seg__dc_servers {class: edge-segment; source-arrowhead.label: "eno1"; style.opacity: 0.15}
-s_dc.n_dc_srv02 -- s_dc.n_seg__dc_servers {class: edge-segment; source-arrowhead.label: "eno1"; style.opacity: 0.15}
 s_aws.n_aws_vgw01 -- s_aws.n_seg__aws_vpc_app {class: edge-segment; source-arrowhead.label: "vpc1"; style.opacity: 0.15}
