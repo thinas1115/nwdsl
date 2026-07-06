@@ -1,1 +1,842 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2462" height="692" viewBox="0 0 2462 692" font-family="'Segoe UI','Hiragino Sans','Noto Sans JP',Meiryo,sans-serif"><defs></defs><rect width="100%" height="100%" fill="#ffffff"/><text x="24" y="30" font-size="19" font-weight="700" fill="#1e293b">20拠点 WAN概要図</text><polyline points="1114.2,122.0 1114.2,140.0 88.1,140.0 88.1,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="16.2" y="402.0" width="143.8" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="88.1" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 1G</text><polyline points="1120.8,122.0 1120.8,158.0 112.2,158.0 112.2,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="40.3" y="438.0" width="143.8" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="112.2" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 1G</text><polyline points="902.3,122.0 902.3,176.0 64.1,176.0 64.1,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="-18.9" y="474.0" width="165.9" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="64.1" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 100M</text><polyline points="1127.3,122.0 1127.3,194.0 214.4,194.0 214.4,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="142.5" y="510.0" width="143.8" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="214.4" y="523.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 1G</text><polyline points="1133.8,122.0 1133.8,212.0 238.4,212.0 238.4,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="166.6" y="474.0" width="143.8" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="238.4" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 1G</text><polyline points="920.5,122.0 920.5,230.0 190.3,230.0 190.3,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="107.4" y="546.0" width="165.9" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="190.3" y="559.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 100M</text><polyline points="1140.3,122.0 1140.3,248.0 352.5,248.0 352.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="272.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="352.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="938.7,122.0 938.7,266.0 322.5,266.0 322.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="243.4" y="438.0" width="158.1" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="322.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 50M</text><polyline points="1146.8,122.0 1146.8,284.0 457.5,284.0 457.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="377.9" y="474.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="457.5" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1153.4,122.0 1153.4,302.0 577.5,302.0 577.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="497.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="577.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1159.9,122.0 1159.9,320.0 712.5,320.0 712.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="632.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="712.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="956.9,122.0 956.9,338.0 682.5,338.0 682.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="603.4" y="474.0" width="158.1" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="682.5" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 50M</text><polyline points="1166.4,122.0 1166.4,356.0 817.5,356.0 817.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="737.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="817.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1172.9,122.0 1172.9,176.0 937.5,176.0 937.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="857.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="937.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1179.5,122.0 1179.5,230.0 1072.5,230.0 1072.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="992.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1072.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="975.0,122.0 975.0,230.0 1042.5,230.0 1042.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="963.4" y="474.0" width="158.1" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1042.5" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 50M</text><polyline points="1186.0,122.0 1186.0,140.0 1177.5,140.0 1177.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1097.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1177.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1192.5,122.0 1192.5,158.0 1297.5,158.0 1297.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1217.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1297.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1199.0,122.0 1199.0,140.0 1432.5,140.0 1432.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1352.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1432.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="993.2,122.0 993.2,266.0 1402.5,266.0 1402.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1323.4" y="474.0" width="158.1" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1402.5" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 50M</text><polyline points="1205.5,122.0 1205.5,176.0 1537.5,176.0 1537.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1457.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1537.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1212.1,122.0 1212.1,194.0 1657.5,194.0 1657.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1577.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1657.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1218.6,122.0 1218.6,212.0 1792.5,212.0 1792.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1712.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1792.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1011.4,122.0 1011.4,338.0 1762.5,338.0 1762.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1683.4" y="474.0" width="158.1" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1762.5" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 50M</text><polyline points="1225.1,122.0 1225.1,230.0 1897.5,230.0 1897.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1817.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="1897.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1231.6,122.0 1231.6,248.0 2017.5,248.0 2017.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="1937.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="2017.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1238.1,122.0 1238.1,284.0 2152.5,284.0 2152.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="2072.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="2152.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1029.5,122.0 1029.5,374.0 2122.5,374.0 2122.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="2043.4" y="474.0" width="158.1" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="2122.5" y="487.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">SB モバイル閉域網 50M</text><polyline points="1244.7,122.0 1244.7,302.0 2257.5,302.0 2257.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="2177.9" y="402.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="2257.5" y="415.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><polyline points="1251.2,122.0 1251.2,320.0 2377.5,320.0 2377.5,606.0" fill="none" stroke="#1a73e8" stroke-width="3.5" opacity="1.0"></polyline><rect x="2297.9" y="438.0" width="159.2" height="24.0" rx="4" fill="#ffffff" fill-opacity="0.92" opacity="1.0"/><text x="2377.5" y="451.0" text-anchor="middle" font-size="12" font-style="italic" font-weight="400" fill="#5f6368" opacity="1.0">NTT Com IP-VPN 100M</text><ellipse cx="965.9" cy="84.0" rx="81.8" ry="38.0" fill="#f1f3f4" stroke="#5f6368" stroke-width="1.6"/><text x="965.9" y="84.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">モバイル閉域網</text><ellipse cx="1182.7" cy="84.0" rx="75.0" ry="38.0" fill="#f1f3f4" stroke="#5f6368" stroke-width="1.6"/><text x="1182.7" y="84.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">IP-VPN網</text><rect x="40.0" y="606.0" width="96.2" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="88.1" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">東日本ハブ</text><rect x="166.2" y="606.0" width="96.2" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="214.4" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">西日本ハブ</text><rect x="292.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="337.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店03</text><rect x="412.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="457.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店04</text><rect x="532.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="577.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店05</text><rect x="652.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="697.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店06</text><rect x="772.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="817.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店07</text><rect x="892.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="937.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店08</text><rect x="1012.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1057.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店09</text><rect x="1132.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1177.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店10</text><rect x="1252.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1297.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店11</text><rect x="1372.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1417.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店12</text><rect x="1492.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1537.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店13</text><rect x="1612.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1657.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店14</text><rect x="1732.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1777.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店15</text><rect x="1852.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="1897.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店16</text><rect x="1972.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="2017.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店17</text><rect x="2092.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="2137.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店18</text><rect x="2212.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="2257.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店19</text><rect x="2332.5" y="606.0" width="90.0" height="46.0" rx="4" fill="#fff8e1" stroke="#b58105" stroke-width="1.4"/><text x="2377.5" y="629.0" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#1e293b">支店20</text></svg>
+<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-d2-version="v0.7.1" preserveAspectRatio="xMinYMin meet" viewBox="0 0 6410 1396"><svg class="d2-522310084 d2-svg" width="6410" height="1396" viewBox="-89 -160 6410 1396"><rect x="-89.000000" y="-160.000000" width="6410.000000" height="1396.000000" rx="0.000000" fill="#FFFFFF" class=" fill-N7" stroke-width="0" /><style type="text/css"><![CDATA[
+.d2-522310084 .text {
+	font-family: "d2-522310084-font-regular";
+}
+@font-face {
+	font-family: d2-522310084-font-regular;
+	src: url("data:application/font-woff;base64,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");
+}
+@font-face {
+	font-family: d2-522310084-font-semibold;
+	src: url("data:application/font-woff;base64,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");
+}
+.d2-522310084 .text-bold {
+	font-family: "d2-522310084-font-bold";
+}
+@font-face {
+	font-family: d2-522310084-font-bold;
+	src: url("data:application/font-woff;base64,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");
+}]]></style><style type="text/css"><![CDATA[.shape {
+  shape-rendering: geometricPrecision;
+  stroke-linejoin: round;
+}
+.connection {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.blend {
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+		.d2-522310084 .fill-N1{fill:#0A0F25;}
+		.d2-522310084 .fill-N2{fill:#676C7E;}
+		.d2-522310084 .fill-N3{fill:#9499AB;}
+		.d2-522310084 .fill-N4{fill:#CFD2DD;}
+		.d2-522310084 .fill-N5{fill:#DEE1EB;}
+		.d2-522310084 .fill-N6{fill:#EEF1F8;}
+		.d2-522310084 .fill-N7{fill:#FFFFFF;}
+		.d2-522310084 .fill-B1{fill:#0D32B2;}
+		.d2-522310084 .fill-B2{fill:#0D32B2;}
+		.d2-522310084 .fill-B3{fill:#E3E9FD;}
+		.d2-522310084 .fill-B4{fill:#E3E9FD;}
+		.d2-522310084 .fill-B5{fill:#EDF0FD;}
+		.d2-522310084 .fill-B6{fill:#F7F8FE;}
+		.d2-522310084 .fill-AA2{fill:#4A6FF3;}
+		.d2-522310084 .fill-AA4{fill:#EDF0FD;}
+		.d2-522310084 .fill-AA5{fill:#F7F8FE;}
+		.d2-522310084 .fill-AB4{fill:#EDF0FD;}
+		.d2-522310084 .fill-AB5{fill:#F7F8FE;}
+		.d2-522310084 .stroke-N1{stroke:#0A0F25;}
+		.d2-522310084 .stroke-N2{stroke:#676C7E;}
+		.d2-522310084 .stroke-N3{stroke:#9499AB;}
+		.d2-522310084 .stroke-N4{stroke:#CFD2DD;}
+		.d2-522310084 .stroke-N5{stroke:#DEE1EB;}
+		.d2-522310084 .stroke-N6{stroke:#EEF1F8;}
+		.d2-522310084 .stroke-N7{stroke:#FFFFFF;}
+		.d2-522310084 .stroke-B1{stroke:#0D32B2;}
+		.d2-522310084 .stroke-B2{stroke:#0D32B2;}
+		.d2-522310084 .stroke-B3{stroke:#E3E9FD;}
+		.d2-522310084 .stroke-B4{stroke:#E3E9FD;}
+		.d2-522310084 .stroke-B5{stroke:#EDF0FD;}
+		.d2-522310084 .stroke-B6{stroke:#F7F8FE;}
+		.d2-522310084 .stroke-AA2{stroke:#4A6FF3;}
+		.d2-522310084 .stroke-AA4{stroke:#EDF0FD;}
+		.d2-522310084 .stroke-AA5{stroke:#F7F8FE;}
+		.d2-522310084 .stroke-AB4{stroke:#EDF0FD;}
+		.d2-522310084 .stroke-AB5{stroke:#F7F8FE;}
+		.d2-522310084 .background-color-N1{background-color:#0A0F25;}
+		.d2-522310084 .background-color-N2{background-color:#676C7E;}
+		.d2-522310084 .background-color-N3{background-color:#9499AB;}
+		.d2-522310084 .background-color-N4{background-color:#CFD2DD;}
+		.d2-522310084 .background-color-N5{background-color:#DEE1EB;}
+		.d2-522310084 .background-color-N6{background-color:#EEF1F8;}
+		.d2-522310084 .background-color-N7{background-color:#FFFFFF;}
+		.d2-522310084 .background-color-B1{background-color:#0D32B2;}
+		.d2-522310084 .background-color-B2{background-color:#0D32B2;}
+		.d2-522310084 .background-color-B3{background-color:#E3E9FD;}
+		.d2-522310084 .background-color-B4{background-color:#E3E9FD;}
+		.d2-522310084 .background-color-B5{background-color:#EDF0FD;}
+		.d2-522310084 .background-color-B6{background-color:#F7F8FE;}
+		.d2-522310084 .background-color-AA2{background-color:#4A6FF3;}
+		.d2-522310084 .background-color-AA4{background-color:#EDF0FD;}
+		.d2-522310084 .background-color-AA5{background-color:#F7F8FE;}
+		.d2-522310084 .background-color-AB4{background-color:#EDF0FD;}
+		.d2-522310084 .background-color-AB5{background-color:#F7F8FE;}
+		.d2-522310084 .color-N1{color:#0A0F25;}
+		.d2-522310084 .color-N2{color:#676C7E;}
+		.d2-522310084 .color-N3{color:#9499AB;}
+		.d2-522310084 .color-N4{color:#CFD2DD;}
+		.d2-522310084 .color-N5{color:#DEE1EB;}
+		.d2-522310084 .color-N6{color:#EEF1F8;}
+		.d2-522310084 .color-N7{color:#FFFFFF;}
+		.d2-522310084 .color-B1{color:#0D32B2;}
+		.d2-522310084 .color-B2{color:#0D32B2;}
+		.d2-522310084 .color-B3{color:#E3E9FD;}
+		.d2-522310084 .color-B4{color:#E3E9FD;}
+		.d2-522310084 .color-B5{color:#EDF0FD;}
+		.d2-522310084 .color-B6{color:#F7F8FE;}
+		.d2-522310084 .color-AA2{color:#4A6FF3;}
+		.d2-522310084 .color-AA4{color:#EDF0FD;}
+		.d2-522310084 .color-AA5{color:#F7F8FE;}
+		.d2-522310084 .color-AB4{color:#EDF0FD;}
+		.d2-522310084 .color-AB5{color:#F7F8FE;}.appendix text.text{fill:#0A0F25}.md{--color-fg-default:#0A0F25;--color-fg-muted:#676C7E;--color-fg-subtle:#9499AB;--color-canvas-default:#FFFFFF;--color-canvas-subtle:#EEF1F8;--color-border-default:#0D32B2;--color-border-muted:#0D32B2;--color-neutral-muted:#EEF1F8;--color-accent-fg:#0D32B2;--color-accent-emphasis:#0D32B2;--color-attention-subtle:#676C7E;--color-danger-fg:red;}.sketch-overlay-B1{fill:url(#streaks-darker-d2-522310084);mix-blend-mode:lighten}.sketch-overlay-B2{fill:url(#streaks-darker-d2-522310084);mix-blend-mode:lighten}.sketch-overlay-B3{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-B4{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-B5{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-B6{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-AA2{fill:url(#streaks-dark-d2-522310084);mix-blend-mode:overlay}.sketch-overlay-AA4{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-AA5{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-AB4{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-AB5{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-N1{fill:url(#streaks-darker-d2-522310084);mix-blend-mode:lighten}.sketch-overlay-N2{fill:url(#streaks-dark-d2-522310084);mix-blend-mode:overlay}.sketch-overlay-N3{fill:url(#streaks-normal-d2-522310084);mix-blend-mode:color-burn}.sketch-overlay-N4{fill:url(#streaks-normal-d2-522310084);mix-blend-mode:color-burn}.sketch-overlay-N5{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-N6{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.sketch-overlay-N7{fill:url(#streaks-bright-d2-522310084);mix-blend-mode:darken}.light-code{display: block}.dark-code{display: none}]]></style><style type="text/css">.d2-522310084 .md em,
+.d2-522310084 .md dfn {
+  font-family: "d2-522310084-font-italic";
+}
+
+.d2-522310084 .md b,
+.d2-522310084 .md strong {
+  font-family: "d2-522310084-font-bold";
+}
+
+.d2-522310084 .md code,
+.d2-522310084 .md kbd,
+.d2-522310084 .md pre,
+.d2-522310084 .md samp {
+  font-family: "d2-522310084-font-mono";
+  font-size: 1em;
+}
+
+.d2-522310084 .md {
+  tab-size: 4;
+}
+
+/* variables are provided in d2renderers/d2svg/d2svg.go */
+
+.d2-522310084 .md {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  margin: 0;
+  background-color: transparent; /* we don't want to define the background color */
+  font-family: "d2-522310084-font-regular";
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.d2-522310084 .md details,
+.d2-522310084 .md figcaption,
+.d2-522310084 .md figure {
+  display: block;
+}
+
+.d2-522310084 .md summary {
+  display: list-item;
+}
+
+.d2-522310084 .md [hidden] {
+  display: none !important;
+}
+
+.d2-522310084 .md a {
+  background-color: transparent;
+  color: var(--color-accent-fg);
+  text-decoration: none;
+}
+
+.d2-522310084 .md a:active,
+.d2-522310084 .md a:hover {
+  outline-width: 0;
+}
+
+.d2-522310084 .md abbr[title] {
+  border-bottom: none;
+  text-decoration: underline dotted;
+}
+
+.d2-522310084 .md dfn {
+  font-style: italic;
+}
+
+.d2-522310084 .md h1 {
+  margin: 0.67em 0;
+  padding-bottom: 0.3em;
+  font-size: 2em;
+  border-bottom: 1px solid var(--color-border-muted);
+}
+
+.d2-522310084 .md mark {
+  background-color: var(--color-attention-subtle);
+  color: var(--color-text-primary);
+}
+
+.d2-522310084 .md small {
+  font-size: 90%;
+}
+
+.d2-522310084 .md sub,
+.d2-522310084 .md sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.d2-522310084 .md sub {
+  bottom: -0.25em;
+}
+
+.d2-522310084 .md sup {
+  top: -0.5em;
+}
+
+.d2-522310084 .md img {
+  border-style: none;
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: var(--color-canvas-default);
+}
+
+.d2-522310084 .md figure {
+  margin: 1em 40px;
+}
+
+.d2-522310084 .md hr {
+  box-sizing: content-box;
+  overflow: hidden;
+  background: transparent;
+  border-bottom: 1px solid var(--color-border-muted);
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--color-border-default);
+  border: 0;
+}
+
+.d2-522310084 .md input {
+  font: inherit;
+  margin: 0;
+  overflow: visible;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.d2-522310084 .md [type="button"],
+.d2-522310084 .md [type="reset"],
+.d2-522310084 .md [type="submit"] {
+  -webkit-appearance: button;
+}
+
+.d2-522310084 .md [type="button"]::-moz-focus-inner,
+.d2-522310084 .md [type="reset"]::-moz-focus-inner,
+.d2-522310084 .md [type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+.d2-522310084 .md [type="button"]:-moz-focusring,
+.d2-522310084 .md [type="reset"]:-moz-focusring,
+.d2-522310084 .md [type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+.d2-522310084 .md [type="checkbox"],
+.d2-522310084 .md [type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.d2-522310084 .md [type="number"]::-webkit-inner-spin-button,
+.d2-522310084 .md [type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+.d2-522310084 .md [type="search"] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+
+.d2-522310084 .md [type="search"]::-webkit-search-cancel-button,
+.d2-522310084 .md [type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.d2-522310084 .md ::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.54;
+}
+
+.d2-522310084 .md ::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+.d2-522310084 .md a:hover {
+  text-decoration: underline;
+}
+
+.d2-522310084 .md hr::before {
+  display: table;
+  content: "";
+}
+
+.d2-522310084 .md hr::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.d2-522310084 .md table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.d2-522310084 .md td,
+.d2-522310084 .md th {
+  padding: 0;
+}
+
+.d2-522310084 .md details summary {
+  cursor: pointer;
+}
+
+.d2-522310084 .md details:not([open]) > *:not(summary) {
+  display: none !important;
+}
+
+.d2-522310084 .md kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  color: var(--color-fg-default);
+  vertical-align: middle;
+  background-color: var(--color-canvas-subtle);
+  border: solid 1px var(--color-neutral-muted);
+  border-bottom-color: var(--color-neutral-muted);
+  border-radius: 6px;
+  box-shadow: inset 0 -1px 0 var(--color-neutral-muted);
+}
+
+.d2-522310084 .md h1,
+.d2-522310084 .md h2,
+.d2-522310084 .md h3,
+.d2-522310084 .md h4,
+.d2-522310084 .md h5,
+.d2-522310084 .md h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+  font-family: "d2-522310084-font-semibold";
+}
+
+.d2-522310084 .md h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.5em;
+  border-bottom: 1px solid var(--color-border-muted);
+}
+
+.d2-522310084 .md h3 {
+  font-size: 1.25em;
+}
+
+.d2-522310084 .md h4 {
+  font-size: 1em;
+}
+
+.d2-522310084 .md h5 {
+  font-size: 0.875em;
+}
+
+.d2-522310084 .md h6 {
+  font-size: 0.85em;
+  color: var(--color-fg-muted);
+}
+
+.d2-522310084 .md p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.d2-522310084 .md blockquote {
+  margin: 0;
+  padding: 0 1em;
+  color: var(--color-fg-muted);
+  border-left: 0.25em solid var(--color-border-default);
+}
+
+.d2-522310084 .md ul,
+.d2-522310084 .md ol {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 2em;
+}
+
+.d2-522310084 .md ol ol,
+.d2-522310084 .md ul ol {
+  list-style-type: lower-roman;
+}
+
+.d2-522310084 .md ul ul ol,
+.d2-522310084 .md ul ol ol,
+.d2-522310084 .md ol ul ol,
+.d2-522310084 .md ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.d2-522310084 .md dd {
+  margin-left: 0;
+}
+
+.d2-522310084 .md pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  word-wrap: normal;
+}
+
+.d2-522310084 .md ::placeholder {
+  color: var(--color-fg-subtle);
+  opacity: 1;
+}
+
+.d2-522310084 .md input::-webkit-outer-spin-button,
+.d2-522310084 .md input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.d2-522310084 .md::before {
+  display: table;
+  content: "";
+}
+
+.d2-522310084 .md::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.d2-522310084 .md > *:first-child {
+  margin-top: 0 !important;
+}
+
+.d2-522310084 .md > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.d2-522310084 .md a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.d2-522310084 .md .absent {
+  color: var(--color-danger-fg);
+}
+
+.d2-522310084 .md .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.d2-522310084 .md .anchor:focus {
+  outline: none;
+}
+
+.d2-522310084 .md p,
+.d2-522310084 .md blockquote,
+.d2-522310084 .md ul,
+.d2-522310084 .md ol,
+.d2-522310084 .md dl,
+.d2-522310084 .md table,
+.d2-522310084 .md pre,
+.d2-522310084 .md details {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.d2-522310084 .md blockquote > :first-child {
+  margin-top: 0;
+}
+
+.d2-522310084 .md blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.d2-522310084 .md sup > a::before {
+  content: "[";
+}
+
+.d2-522310084 .md sup > a::after {
+  content: "]";
+}
+
+.d2-522310084 .md h1:hover .anchor,
+.d2-522310084 .md h2:hover .anchor,
+.d2-522310084 .md h3:hover .anchor,
+.d2-522310084 .md h4:hover .anchor,
+.d2-522310084 .md h5:hover .anchor,
+.d2-522310084 .md h6:hover .anchor {
+  text-decoration: none;
+}
+
+.d2-522310084 .md h1 tt,
+.d2-522310084 .md h1 code,
+.d2-522310084 .md h2 tt,
+.d2-522310084 .md h2 code,
+.d2-522310084 .md h3 tt,
+.d2-522310084 .md h3 code,
+.d2-522310084 .md h4 tt,
+.d2-522310084 .md h4 code,
+.d2-522310084 .md h5 tt,
+.d2-522310084 .md h5 code,
+.d2-522310084 .md h6 tt,
+.d2-522310084 .md h6 code {
+  padding: 0 0.2em;
+  font-size: inherit;
+}
+
+.d2-522310084 .md ul.no-list,
+.d2-522310084 .md ol.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.d2-522310084 .md ol[type="1"] {
+  list-style-type: decimal;
+}
+
+.d2-522310084 .md ol[type="a"] {
+  list-style-type: lower-alpha;
+}
+
+.d2-522310084 .md ol[type="i"] {
+  list-style-type: lower-roman;
+}
+
+.d2-522310084 .md div > ol:not([type]) {
+  list-style-type: decimal;
+}
+
+.d2-522310084 .md ul ul,
+.d2-522310084 .md ul ol,
+.d2-522310084 .md ol ol,
+.d2-522310084 .md ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.d2-522310084 .md li > p {
+  margin-top: 16px;
+}
+
+.d2-522310084 .md li + li {
+  margin-top: 0.25em;
+}
+
+.d2-522310084 .md dl {
+  padding: 0;
+}
+
+.d2-522310084 .md dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-family: "d2-522310084-font-semibold";
+}
+
+.d2-522310084 .md dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.d2-522310084 .md table th {
+  font-family: "d2-522310084-font-semibold";
+}
+
+.d2-522310084 .md table th,
+.d2-522310084 .md table td {
+  padding: 6px 13px;
+  border: 1px solid var(--color-border-default);
+}
+
+.d2-522310084 .md table tr {
+  background-color: var(--color-canvas-default);
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.d2-522310084 .md table tr:nth-child(2n) {
+  background-color: var(--color-canvas-subtle);
+}
+
+.d2-522310084 .md table img {
+  background-color: transparent;
+}
+
+.d2-522310084 .md img[align="right"] {
+  padding-left: 20px;
+}
+
+.d2-522310084 .md img[align="left"] {
+  padding-right: 20px;
+}
+
+.d2-522310084 .md span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.d2-522310084 .md span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-default);
+}
+
+.d2-522310084 .md span.frame span img {
+  display: block;
+  float: left;
+}
+
+.d2-522310084 .md span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: var(--color-fg-default);
+}
+
+.d2-522310084 .md span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.d2-522310084 .md span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.d2-522310084 .md span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.d2-522310084 .md span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.d2-522310084 .md span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.d2-522310084 .md span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.d2-522310084 .md span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.d2-522310084 .md span.float-left span {
+  margin: 13px 0 0;
+}
+
+.d2-522310084 .md span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.d2-522310084 .md span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.d2-522310084 .md code,
+.d2-522310084 .md tt {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--color-neutral-muted);
+  border-radius: 6px;
+}
+
+.d2-522310084 .md code br,
+.d2-522310084 .md tt br {
+  display: none;
+}
+
+.d2-522310084 .md del code {
+  text-decoration: inherit;
+}
+
+.d2-522310084 .md pre code {
+  font-size: 100%;
+}
+
+.d2-522310084 .md pre > code {
+  padding: 0;
+  margin: 0;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.d2-522310084 .md .highlight {
+  margin-bottom: 16px;
+}
+
+.d2-522310084 .md .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.d2-522310084 .md .highlight pre,
+.d2-522310084 .md pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--color-canvas-subtle);
+  border-radius: 6px;
+}
+
+.d2-522310084 .md pre code,
+.d2-522310084 .md pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.d2-522310084 .md .csv-data td,
+.d2-522310084 .md .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.d2-522310084 .md .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: var(--color-canvas-default);
+  border: 0;
+}
+
+.d2-522310084 .md .csv-data tr {
+  border-top: 0;
+}
+
+.d2-522310084 .md .csv-data th {
+  font-family: "d2-522310084-font-semibold";
+  background: var(--color-canvas-subtle);
+  border-top: 0;
+}
+
+.d2-522310084 .md .footnotes {
+  font-size: 12px;
+  color: var(--color-fg-muted);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.d2-522310084 .md .footnotes ol {
+  padding-left: 16px;
+}
+
+.d2-522310084 .md .footnotes li {
+  position: relative;
+}
+
+.d2-522310084 .md .footnotes li:target::before {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -24px;
+  pointer-events: none;
+  content: "";
+  border: 2px solid var(--color-accent-emphasis);
+  border-radius: 6px;
+}
+
+.d2-522310084 .md .footnotes li:target {
+  color: var(--color-fg-default);
+}
+
+.d2-522310084 .md .task-list-item {
+  list-style-type: none;
+}
+
+.d2-522310084 .md .task-list-item label {
+  font-weight: 400;
+}
+
+.d2-522310084 .md .task-list-item.enabled label {
+  cursor: pointer;
+}
+
+.d2-522310084 .md .task-list-item + .task-list-item {
+  margin-top: 3px;
+}
+
+.d2-522310084 .md .task-list-item .handle {
+  display: none;
+}
+
+.d2-522310084 .md .task-list-item-checkbox {
+  margin: 0 0.2em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.d2-522310084 .md .contains-task-list:dir(rtl) .task-list-item-checkbox {
+  margin: 0 -1.6em 0.25em 0.2em;
+}
+</style><g class="dGl0bGU="><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="2961.000000" y="-59.000000" width="309" height="51"><div xmlns="http://www.w3.org/1999/xhtml" class="md color-N1"><h1>20拠点 WAN概要図</h1>
+</div></foreignObject></g></g><g class="bl9zaXRlX19odWJl node-site"><g class="shape" ><rect x="2062.000000" y="1069.000000" width="145.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="2134.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">東日本ハブ</text></g><g class="bl9jbG91ZF9faXB2cG4= node-cloud"><g class="shape" ><path d="M 3735 41 C 3735 42 3729 43 3723 43 C 3648 44 3590 55 3590 69 C 3590 84 3656 96 3739 96 H 4306 C 4395 96 4469 83 4469 68 C 4469 53 4402 41 4317 40 C 4311 40 4305 39 4304 38 C 4285 23 4197 12 4094 12 C 4027 12 3967 17 3928 24 C 3924 25 3916 25 3912 25 C 3897 24 3881 24 3864 24 C 3797 24 3741 31 3735 41 Z" stroke="#5f6368" fill="#f1f3f4" style="stroke-width:2;" /></g><text x="4025.360000" y="75.516000" fill="#0A0F25" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">　IP-VPN網　</text></g><g class="bl9jbG91ZF9fbW9iaWxl node-cloud"><g class="shape" ><path d="M 1533 41 C 1533 42 1531 43 1529 43 C 1502 44 1481 55 1481 69 C 1481 84 1505 96 1535 96 H 1741 C 1774 96 1800 83 1800 68 C 1800 53 1775 41 1745 40 C 1743 40 1741 39 1740 38 C 1733 23 1701 12 1664 12 C 1639 12 1618 17 1604 24 C 1602 25 1600 25 1598 25 C 1593 24 1587 24 1580 24 C 1555 24 1535 31 1533 41 Z" stroke="#5f6368" fill="#f1f3f4" style="stroke-width:2;" /></g><text x="1639.040000" y="75.516000" fill="#0A0F25" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">　モバイル閉域網　</text></g><g class="bl9zaXRlX19odWJ3 node-site"><g class="shape" ><rect x="3108.000000" y="1069.000000" width="145.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="3180.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">西日本ハブ</text></g><g class="bl9zaXRlX19icjAz node-site"><g class="shape" ><rect x="177.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="227.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店03</text></g><g class="bl9zaXRlX19icjA0 node-site"><g class="shape" ><rect x="3879.000000" y="1069.000000" width="102.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="3930.000000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店04</text></g><g class="bl9zaXRlX19icjA1 node-site"><g class="shape" ><rect x="4079.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="4129.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店05</text></g><g class="bl9zaXRlX19icjA2 node-site"><g class="shape" ><rect x="673.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="723.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店06</text></g><g class="bl9zaXRlX19icjA3 node-site"><g class="shape" ><rect x="4279.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="4329.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店07</text></g><g class="bl9zaXRlX19icjA4 node-site"><g class="shape" ><rect x="4479.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="4529.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店08</text></g><g class="bl9zaXRlX19icjA5 node-site"><g class="shape" ><rect x="1107.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="1157.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店09</text></g><g class="bl9zaXRlX19icjEw node-site"><g class="shape" ><rect x="4679.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="4729.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店10</text></g><g class="bl9zaXRlX19icjEx node-site"><g class="shape" ><rect x="4879.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="4929.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店11</text></g><g class="bl9zaXRlX19icjEy node-site"><g class="shape" ><rect x="1541.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="1591.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店12</text></g><g class="bl9zaXRlX19icjEz node-site"><g class="shape" ><rect x="5079.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="5129.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店13</text></g><g class="bl9zaXRlX19icjE0 node-site"><g class="shape" ><rect x="5279.000000" y="1069.000000" width="102.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="5330.000000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店14</text></g><g class="bl9zaXRlX19icjE1 node-site"><g class="shape" ><rect x="2587.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="2637.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店15</text></g><g class="bl9zaXRlX19icjE2 node-site"><g class="shape" ><rect x="5479.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="5529.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店16</text></g><g class="bl9zaXRlX19icjE3 node-site"><g class="shape" ><rect x="5679.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="5729.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店17</text></g><g class="bl9zaXRlX19icjE4 node-site"><g class="shape" ><rect x="3633.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="3683.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店18</text></g><g class="bl9zaXRlX19icjE5 node-site"><g class="shape" ><rect x="5879.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="5929.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店19</text></g><g class="bl9zaXRlX19icjIw node-site"><g class="shape" ><rect x="6079.000000" y="1069.000000" width="101.000000" height="66.000000" stroke="#b58105" fill="#fff8e1" style="stroke-width:2;" /></g><text x="6129.500000" y="1107.500000" fill="#4a3a08" class="text-bold" style="text-anchor:middle;font-size:16px">支店20</text></g><g class="bGJsXzA= edge-label"><g class="shape" ><rect x="1990.000000" y="876.000000" width="165.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="2072.500000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 1G</text></g><g class="bGJsXzE= edge-label"><g class="shape" ><rect x="2175.000000" y="876.000000" width="165.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="2257.500000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 1G</text></g><g class="bGJsXzI= edge-label"><g class="shape" ><rect x="1748.000000" y="876.000000" width="222.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="1859.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 100M</text></g><g class="bGJsXzM= edge-label"><g class="shape" ><rect x="3036.000000" y="876.000000" width="165.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="3118.500000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 1G</text></g><g class="bGJsXzQ= edge-label"><g class="shape" ><rect x="3221.000000" y="876.000000" width="165.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="3303.500000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 1G</text></g><g class="bGJsXzU= edge-label"><g class="shape" ><rect x="2794.000000" y="876.000000" width="222.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="2905.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 100M</text></g><g class="bGJsXzY= edge-label"><g class="shape" ><rect x="246.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="336.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzc= edge-label"><g class="shape" ><rect x="12.000000" y="876.000000" width="214.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="119.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 50M</text></g><g class="bGJsXzg= edge-label"><g class="shape" ><rect x="3840.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="3930.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzk= edge-label"><g class="shape" ><rect x="4040.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="4130.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzEw edge-label"><g class="shape" ><rect x="680.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="770.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzEx edge-label"><g class="shape" ><rect x="446.000000" y="876.000000" width="214.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="553.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 50M</text></g><g class="bGJsXzEy edge-label"><g class="shape" ><rect x="4240.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="4330.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzEz edge-label"><g class="shape" ><rect x="4440.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="4530.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzE0 edge-label"><g class="shape" ><rect x="1114.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="1204.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzE1 edge-label"><g class="shape" ><rect x="880.000000" y="876.000000" width="214.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="987.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 50M</text></g><g class="bGJsXzE2 edge-label"><g class="shape" ><rect x="4640.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="4730.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzE3 edge-label"><g class="shape" ><rect x="4840.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="4930.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzE4 edge-label"><g class="shape" ><rect x="1548.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="1638.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzE5 edge-label"><g class="shape" ><rect x="1314.000000" y="876.000000" width="214.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="1421.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 50M</text></g><g class="bGJsXzIw edge-label"><g class="shape" ><rect x="5040.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="5130.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzIx edge-label"><g class="shape" ><rect x="5240.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="5330.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzIy edge-label"><g class="shape" ><rect x="2594.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="2684.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzIz edge-label"><g class="shape" ><rect x="2360.000000" y="876.000000" width="214.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="2467.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 50M</text></g><g class="bGJsXzI0 edge-label"><g class="shape" ><rect x="5440.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="5530.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzI1 edge-label"><g class="shape" ><rect x="5640.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="5730.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzI2 edge-label"><g class="shape" ><rect x="3640.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="3730.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzI3 edge-label"><g class="shape" ><rect x="3406.000000" y="876.000000" width="214.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="3513.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">SB モバイル閉域網 50M</text></g><g class="bGJsXzI4 edge-label"><g class="shape" ><rect x="5840.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="5930.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="bGJsXzI5 edge-label"><g class="shape" ><rect x="6040.000000" y="876.000000" width="180.000000" height="63.000000" stroke="transparent" fill="transparent" style="stroke-width:2;" /></g><text x="6130.000000" y="912.500000" fill="#5f6368" class="text-bold" style="text-anchor:middle;font-size:14px">NTT Com IP-VPN 100M</text></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8wKVswXQ== edge-wan-circuit"><path d="M 3781.002072 98.999999 L 3781.297047 526.000002 S 3781.303955 536.000000 3771.303955 536.000000 L 2082.500000 536.000000 S 2072.500000 536.000000 2072.500000 546.000000 L 2072.500000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8wIC0tIG5fc2l0ZV9faHViZSlbMF0= edge-wan-circuit"><path d="M 2135.352051 942.000000 L 2135.352051 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xKVswXQ== edge-wan-circuit"><path d="M 3819.997336 98.999999 L 3819.573820 576.000004 S 3819.564941 586.000000 3809.564941 586.000000 L 2267.500000 586.000000 S 2257.500000 586.000000 2257.500000 596.000000 L 2257.500000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xIC0tIG5fc2l0ZV9faHViZSlbMF0= edge-wan-circuit"><path d="M 2257.500000 942.000000 L 2257.500000 969.000000 S 2257.500000 979.000000 2247.500000 979.000000 L 2181.602051 979.000000 S 2171.602051 979.000000 2171.602051 989.000000 L 2171.602051 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfMilbMF0= edge-wan-circuit"><path d="M 1657.998032 98.999999 L 1657.783537 426.000002 S 1657.776978 436.000000 1667.776978 436.000000 L 1849.000000 436.000000 S 1859.000000 436.000000 1859.000000 446.000000 L 1859.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yIC0tIG5fc2l0ZV9faHViZSlbMF0= edge-wan-circuit"><path d="M 1859.000000 942.000000 L 1859.000000 1019.000000 S 1859.000000 1029.000000 1869.000000 1029.000000 L 2089.102051 1029.000000 S 2099.102051 1029.000000 2099.102051 1039.000000 L 2099.102051 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8zKVswXQ== edge-wan-circuit"><path d="M 3896.000437 99.000000 L 3896.084481 676.000000 S 3896.085938 686.000000 3886.085938 686.000000 L 3128.500000 686.000000 S 3118.500000 686.000000 3118.500000 696.000000 L 3118.500000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8zIC0tIG5fc2l0ZV9faHVidylbMF0= edge-wan-circuit"><path d="M 3181.352051 942.000000 L 3181.352051 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF80KVswXQ== edge-wan-circuit"><path d="M 3934.001626 99.000000 L 3934.341503 726.000001 S 3934.346924 736.000000 3924.346924 736.000000 L 3313.500000 736.000000 S 3303.500000 736.000000 3303.500000 746.000000 L 3303.500000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF80IC0tIG5fc2l0ZV9faHVidylbMF0= edge-wan-circuit"><path d="M 3303.500000 942.000000 L 3303.500000 969.000000 S 3303.500000 979.000000 3293.500000 979.000000 L 3227.602051 979.000000 S 3217.602051 979.000000 3217.602051 989.000000 L 3217.602051 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfNSlbMF0= edge-wan-circuit"><path d="M 1728.997599 98.999999 L 1728.895944 226.000003 S 1728.887939 236.000000 1738.887939 236.000000 L 2895.000000 236.000000 S 2905.000000 236.000000 2905.000000 246.000000 L 2905.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF81IC0tIG5fc2l0ZV9faHVidylbMF0= edge-wan-circuit"><path d="M 2905.000000 942.000000 L 2905.000000 1019.000000 S 2905.000000 1029.000000 2915.000000 1029.000000 L 3135.102051 1029.000000 S 3145.102051 1029.000000 3145.102051 1039.000000 L 3145.102051 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF82KVswXQ== edge-wan-circuit"><path d="M 3628.007879 89.999990 L 3628.233746 176.000034 S 3628.260010 186.000000 3618.260010 186.000000 L 346.000000 186.000000 S 336.000000 186.000000 336.000000 196.000000 L 336.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF82IC0tIG5fc2l0ZV9fYnIwMylbMF0= edge-wan-circuit"><path d="M 336.000000 942.000000 L 336.000000 969.000000 S 336.000000 979.000000 326.000000 979.000000 L 254.332993 979.000000 S 244.332993 979.000000 244.332993 989.000000 L 244.332993 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfNylbMF0= edge-wan-circuit"><path d="M 1515.968220 96.999832 L 1515.660987 126.000561 S 1515.555054 136.000000 1505.555054 136.000000 L 129.000000 136.000000 S 119.000000 136.000000 119.000000 146.000000 L 119.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF83IC0tIG5fc2l0ZV9fYnIwMylbMF0= edge-wan-circuit"><path d="M 119.000000 942.000000 L 119.000000 969.000000 S 119.000000 979.000000 129.000000 979.000000 L 200.666000 979.000000 S 210.666000 979.000000 210.666000 989.000000 L 210.666000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF84KVswXQ== edge-wan-circuit"><path d="M 4010.999468 99.000000 L 4010.870668 826.000000 S 4010.868896 836.000000 4000.868896 836.000000 L 3940.000000 836.000000 S 3930.000000 836.000000 3930.000000 846.000000 L 3930.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF84IC0tIG5fc2l0ZV9fYnIwNClbMF0= edge-wan-circuit"><path d="M 3930.000000 942.000000 L 3930.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF85KVswXQ== edge-wan-circuit"><path d="M 4049.000722 99.000000 L 4049.127478 626.000000 S 4049.129883 636.000000 4059.129883 636.000000 L 4120.000000 636.000000 S 4130.000000 636.000000 4130.000000 646.000000 L 4130.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF85IC0tIG5fc2l0ZV9fYnIwNSlbMF0= edge-wan-circuit"><path d="M 4130.000000 942.000000 L 4130.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xMClbMF0= edge-wan-circuit"><path d="M 3666.992554 95.999991 L 3666.545815 276.000031 S 3666.520996 286.000000 3656.520996 286.000000 L 780.000000 286.000000 S 770.000000 286.000000 770.000000 296.000000 L 770.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xMCAtLSBuX3NpdGVfX2JyMDYpWzBd edge-wan-circuit"><path d="M 741.184998 942.000000 L 741.184998 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfMTEpWzBd edge-wan-circuit"><path d="M 1551.002378 98.999999 L 1551.103036 226.000003 S 1551.110962 236.000000 1541.110962 236.000000 L 563.000000 236.000000 S 553.000000 236.000000 553.000000 246.000000 L 553.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xMSAtLSBuX3NpdGVfX2JyMDYpWzBd edge-wan-circuit"><path d="M 553.000000 942.000000 L 553.000000 969.000000 S 553.000000 979.000000 563.000000 979.000000 L 697.518982 979.000000 S 707.518982 979.000000 707.518982 989.000000 L 707.518982 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xMilbMF0= edge-wan-circuit"><path d="M 4087.002395 98.999999 L 4087.383131 576.000003 S 4087.391113 586.000000 4097.391113 586.000000 L 4320.000000 586.000000 S 4330.000000 586.000000 4330.000000 596.000000 L 4330.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xMiAtLSBuX3NpdGVfX2JyMDcpWzBd edge-wan-circuit"><path d="M 4330.000000 942.000000 L 4330.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xMylbMF0= edge-wan-circuit"><path d="M 4125.997626 98.999999 L 4125.659768 526.000003 S 4125.651855 536.000000 4135.651855 536.000000 L 4520.000000 536.000000 S 4530.000000 536.000000 4530.000000 546.000000 L 4530.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xMyAtLSBuX3NpdGVfX2JyMDgpWzBd edge-wan-circuit"><path d="M 4530.000000 942.000000 L 4530.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xNClbMF0= edge-wan-circuit"><path d="M 3704.997752 97.999999 L 3704.789474 376.000003 S 3704.781982 386.000000 3694.781982 386.000000 L 1214.000000 386.000000 S 1204.000000 386.000000 1204.000000 396.000000 L 1204.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xNCAtLSBuX3NpdGVfX2JyMDkpWzBd edge-wan-circuit"><path d="M 1175.185059 942.000000 L 1175.185059 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfMTUpWzBd edge-wan-circuit"><path d="M 1586.995825 98.999997 L 1586.679932 326.000010 S 1586.666016 336.000000 1576.666016 336.000000 L 997.000000 336.000000 S 987.000000 336.000000 987.000000 346.000000 L 987.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xNSAtLSBuX3NpdGVfX2JyMDkpWzBd edge-wan-circuit"><path d="M 987.000000 942.000000 L 987.000000 969.000000 S 987.000000 979.000000 997.000000 979.000000 L 1131.519043 979.000000 S 1141.519043 979.000000 1141.519043 989.000000 L 1141.519043 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xNilbMF0= edge-wan-circuit"><path d="M 4163.999331 99.000000 L 4163.915315 476.000000 S 4163.913086 486.000000 4173.913086 486.000000 L 4720.000000 486.000000 S 4730.000000 486.000000 4730.000000 496.000000 L 4730.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xNiAtLSBuX3NpdGVfX2JyMTApWzBd edge-wan-circuit"><path d="M 4730.000000 942.000000 L 4730.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xNylbMF0= edge-wan-circuit"><path d="M 4202.001525 99.000000 L 4202.167768 426.000001 S 4202.172852 436.000000 4212.172852 436.000000 L 4920.000000 436.000000 S 4930.000000 436.000000 4930.000000 446.000000 L 4930.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xNyAtLSBuX3NpdGVfX2JyMTEpWzBd edge-wan-circuit"><path d="M 4930.000000 942.000000 L 4930.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8xOClbMF0= edge-wan-circuit"><path d="M 3743.000331 99.000000 L 3743.041867 476.000000 S 3743.042969 486.000000 3733.042969 486.000000 L 1648.000000 486.000000 S 1638.000000 486.000000 1638.000000 496.000000 L 1638.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xOCAtLSBuX3NpdGVfX2JyMTIpWzBd edge-wan-circuit"><path d="M 1609.185059 942.000000 L 1609.185059 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfMTkpWzBd edge-wan-circuit"><path d="M 1622.001959 98.999999 L 1622.215515 426.000002 S 1622.222046 436.000000 1612.222046 436.000000 L 1431.000000 436.000000 S 1421.000000 436.000000 1421.000000 446.000000 L 1421.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8xOSAtLSBuX3NpdGVfX2JyMTIpWzBd edge-wan-circuit"><path d="M 1421.000000 942.000000 L 1421.000000 969.000000 S 1421.000000 979.000000 1431.000000 979.000000 L 1565.519043 979.000000 S 1575.519043 979.000000 1575.519043 989.000000 L 1575.519043 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yMClbMF0= edge-wan-circuit"><path d="M 4240.004490 98.999997 L 4240.419114 376.000011 S 4240.434082 386.000000 4250.434082 386.000000 L 5120.000000 386.000000 S 5130.000000 386.000000 5130.000000 396.000000 L 5130.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yMCAtLSBuX3NpdGVfX2JyMTMpWzBd edge-wan-circuit"><path d="M 5130.000000 942.000000 L 5130.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yMSlbMF0= edge-wan-circuit"><path d="M 4278.996185 98.999998 L 4278.707540 326.000008 S 4278.694824 336.000000 4288.694824 336.000000 L 5320.000000 336.000000 S 5330.000000 336.000000 5330.000000 346.000000 L 5330.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yMSAtLSBuX3NpdGVfX2JyMTQpWzBd edge-wan-circuit"><path d="M 5330.000000 942.000000 L 5330.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yMilbMF0= edge-wan-circuit"><path d="M 3857.999033 99.000000 L 3857.829151 626.000001 S 3857.825928 636.000000 3847.825928 636.000000 L 2694.000000 636.000000 S 2684.000000 636.000000 2684.000000 646.000000 L 2684.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yMiAtLSBuX3NpdGVfX2JyMTUpWzBd edge-wan-circuit"><path d="M 2655.185059 942.000000 L 2655.185059 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfMjMpWzBd edge-wan-circuit"><path d="M 1693.004163 98.999997 L 1693.319133 326.000010 S 1693.333008 336.000000 1703.333008 336.000000 L 2457.000000 336.000000 S 2467.000000 336.000000 2467.000000 346.000000 L 2467.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yMyAtLSBuX3NpdGVfX2JyMTUpWzBd edge-wan-circuit"><path d="M 2467.000000 942.000000 L 2467.000000 969.000000 S 2467.000000 979.000000 2477.000000 979.000000 L 2611.519043 979.000000 S 2621.519043 979.000000 2621.519043 989.000000 L 2621.519043 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yNClbMF0= edge-wan-circuit"><path d="M 4316.999306 99.000000 L 4316.958368 276.000000 S 4316.956055 286.000000 4326.956055 286.000000 L 5520.000000 286.000000 S 5530.000000 286.000000 5530.000000 296.000000 L 5530.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yNCAtLSBuX3NpdGVfX2JyMTYpWzBd edge-wan-circuit"><path d="M 5530.000000 942.000000 L 5530.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yNSlbMF0= edge-wan-circuit"><path d="M 4355.004613 97.999996 L 4355.201421 226.000012 S 4355.216797 236.000000 4365.216797 236.000000 L 5720.000000 236.000000 S 5730.000000 236.000000 5730.000000 246.000000 L 5730.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yNSAtLSBuX3NpdGVfX2JyMTcpWzBd edge-wan-circuit"><path d="M 5730.000000 942.000000 L 5730.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yNilbMF0= edge-wan-circuit"><path d="M 3972.998295 99.000000 L 3972.613593 776.000002 S 3972.607910 786.000000 3962.607910 786.000000 L 3740.000000 786.000000 S 3730.000000 786.000000 3730.000000 796.000000 L 3730.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yNiAtLSBuX3NpdGVfX2JyMTgpWzBd edge-wan-circuit"><path d="M 3701.185059 942.000000 L 3701.185059 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX21vYmlsZSAtLSBsYmxfMjcpWzBd edge-wan-circuit"><path d="M 1764.031710 96.999832 L 1764.338269 126.000559 S 1764.443970 136.000000 1774.443970 136.000000 L 3503.000000 136.000000 S 3513.000000 136.000000 3513.000000 146.000000 L 3513.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yNyAtLSBuX3NpdGVfX2JyMTgpWzBd edge-wan-circuit"><path d="M 3513.000000 942.000000 L 3513.000000 969.000000 S 3513.000000 979.000000 3523.000000 979.000000 L 3657.519043 979.000000 S 3667.519043 979.000000 3667.519043 989.000000 L 3667.519043 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yOClbMF0= edge-wan-circuit"><path d="M 4393.015095 93.999962 L 4393.427709 176.000127 S 4393.478027 186.000000 4403.478027 186.000000 L 5920.000000 186.000000 S 5930.000000 186.000000 5930.000000 196.000000 L 5930.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yOCAtLSBuX3NpdGVfX2JyMTkpWzBd edge-wan-circuit"><path d="M 5930.000000 942.000000 L 5930.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KG5fY2xvdWRfX2lwdnBuIC0tIGxibF8yOSlbMF0= edge-wan-circuit"><path d="M 4431.984326 88.999959 L 4431.791015 126.000136 S 4431.738770 136.000000 4441.738770 136.000000 L 6120.000000 136.000000 S 6130.000000 136.000000 6130.000000 146.000000 L 6130.000000 873.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><g class="KGxibF8yOSAtLSBuX3NpdGVfX2JyMjApWzBd edge-wan-circuit"><path d="M 6130.000000 942.000000 L 6130.000000 1066.000000" stroke="#1a73e8" fill="none" class="connection" style="stroke-width:4;" mask="url(#d2-522310084)" /></g><mask id="d2-522310084" maskUnits="userSpaceOnUse" x="-89" y="-160" width="6410" height="1396">
+<rect x="-89" y="-160" width="6410" height="1396" fill="white"></rect>
+
+</mask></svg></svg>

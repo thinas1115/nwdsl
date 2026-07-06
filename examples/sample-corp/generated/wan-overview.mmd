@@ -10,7 +10,7 @@ flowchart TB
   cloud__internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G"| site__hq
   cloud__internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G"| site__osk
   cloud__internet ---|"IPsec バックアップVPN"| site__hq
-  cloud__internet --- site__osk
+  cloud__internet ---|"IPsec バックアップVPN"| site__osk
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
   classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19

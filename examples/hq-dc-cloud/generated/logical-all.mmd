@@ -19,12 +19,14 @@ flowchart TB
   internet(("インターネット"))
   wide_ether(("広域Ethernet網"))
   internet ---|"Site-to-Site VPN (DX障害時のバックアップ)"| dc_fw01
-  internet --- aws_vgw01
+  internet ---|"Site-to-Site VPN (DX障害時のバックアップ)"| aws_vgw01
   wide_ether ---|"OSPF"| hq_rt01
-  wide_ether --- dc_rt01
+  wide_ether ---|"OSPF"| dc_rt01
   wide_ether ---|"OSPF"| hq_rt02
-  wide_ether --- dc_rt01
+  wide_ether ---|"OSPF"| dc_rt01
   dc_rt01 ---|"BGP (DX上)"| aws_vgw01
+  hq_rt01 --- hq_sw01
+  hq_rt02 --- hq_sw01
   hq_sw01 --- seg__hq_users
   dc_srv01 --- seg__dc_servers
   dc_srv02 --- seg__dc_servers
@@ -49,4 +51,5 @@ flowchart TB
   class seg__hq_users,seg__dc_servers,seg__aws_vpc_app node_segment
   linkStyle 0,1 stroke:#7b1fa2,stroke-width:2px,stroke-dasharray:6 4
   linkStyle 2,3,4,5,6 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
-  linkStyle 7,8,9,10 stroke:#0f766e,stroke-width:1.5px
+  linkStyle 7,8 stroke:#4a4a4a,stroke-width:2px
+  linkStyle 9,10,11,12 stroke:#0f766e,stroke-width:1.5px

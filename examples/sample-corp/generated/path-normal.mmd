@@ -22,11 +22,11 @@ flowchart TB
   internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/0)"| hq_rt02
   internet ---|"NTT西日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/1)"| osk_rt01
   internet ---|"IPsec バックアップVPN"| hq_rt02
-  internet --- osk_rt01
+  internet ---|"IPsec バックアップVPN"| osk_rt01
   ipvpn ---|"BGP"| hq_rt01
-  ipvpn --- osk_rt01
+  ipvpn ---|"BGP"| osk_rt01
   ipvpn ---|"BGP"| hq_rt01
-  ipvpn --- ngy_rt01
+  ipvpn ---|"BGP"| ngy_rt01
   hq_sw01 --- seg__hq_server
   hq_sw01 --- seg__hq_client
   osk_rt01 --- seg__osk_lan

@@ -43,9 +43,9 @@ flowchart TB
   osk_rt01 ---|"OSPF Area 2 (大阪)"| osk_core01
   osk_rt02 ---|"OSPF Area 2 (大阪)"| osk_core01
   ipvpn ---|"BGP"| hq_rt01
-  ipvpn --- osk_rt01
+  ipvpn ---|"BGP"| osk_rt01
   ipvpn ---|"BGP"| hq_rt01
-  ipvpn --- ngy_rt01
+  ipvpn ---|"BGP"| ngy_rt01
   hq_core01 --- seg__hq_srv
   hq_core02 --- seg__hq_srv
   osk_core01 --- seg__osk_lan

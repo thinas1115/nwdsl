@@ -18,7 +18,7 @@ flowchart TB
   hq_fw02 ---|"OSPF Area 0"| hq_core02
   hq_core01 ---|"OSPF Area 0"| hq_core02
   ipvpn ---|"BGP"| hq_rt01
-  ipvpn --- osk_rt01
+  ipvpn ---|"BGP"| osk_rt01
   hq_core01 --- seg__hq_server
   hq_core02 --- seg__hq_server
   hq_core01 --- seg__hq_client

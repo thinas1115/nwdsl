@@ -49,6 +49,6 @@ lbl_3: "③ IPsec" {class: edge-label; style.font-color: "#c5221f"; style.bold: 
 n_internet -- lbl_3 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_3 -> s_fukuoka.n_fk_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 n_internet -- s_tokyo.n_tk_rt01: "IPsec本線 (経路は静的)" {class: edge-tunnel; style.opacity: 0.15}
-n_internet -- s_fukuoka.n_fk_rt01 {class: edge-tunnel; style.opacity: 0.15}
+n_internet -- s_fukuoka.n_fk_rt01: "IPsec本線 (経路は静的)" {class: edge-tunnel; style.opacity: 0.15}
 s_tokyo.n_tk_rt01 -- s_tokyo.n_seg__tk_lan {class: edge-segment; source-arrowhead.label: "lan1"; style.opacity: 0.15}
 s_fukuoka.n_fk_rt01 -- s_fukuoka.n_seg__fk_lan {class: edge-segment; source-arrowhead.label: "lan1"; style.opacity: 0.15}

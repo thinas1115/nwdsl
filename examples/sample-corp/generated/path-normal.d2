@@ -60,11 +60,11 @@ lbl_6: "NTT西日本 フレッツ光ネクスト + OCN 1G\n(Gi0/0/1)" {class: ed
 n_internet -- lbl_6 {class: edge-wan-circuit; style.opacity: 0.15}
 lbl_6 -- s_osk.n_osk_rt01 {class: edge-wan-circuit; style.opacity: 0.15}
 n_internet -- s_hq.n_hq_rt02: "IPsec バックアップVPN" {class: edge-tunnel; style.opacity: 0.15}
-n_internet -- s_osk.n_osk_rt01 {class: edge-tunnel; style.opacity: 0.15}
+n_internet -- s_osk.n_osk_rt01: "IPsec バックアップVPN" {class: edge-tunnel; style.opacity: 0.15}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-n_ipvpn -- s_osk.n_osk_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- s_osk.n_osk_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
-n_ipvpn -- n_ngy_rt01 {class: edge-logical; style.opacity: 0.15}
+n_ipvpn -- n_ngy_rt01: "BGP" {class: edge-logical; style.opacity: 0.15}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_server {class: edge-segment; source-arrowhead.label: "Vlan10"; style.opacity: 0.15}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_client {class: edge-segment; source-arrowhead.label: "Vlan20"; style.opacity: 0.15}
 s_osk.n_osk_rt01 -- s_osk.n_seg__osk_lan {class: edge-segment; source-arrowhead.label: "Gi0/1/0"; style.opacity: 0.15}

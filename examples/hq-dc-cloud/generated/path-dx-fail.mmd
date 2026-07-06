@@ -35,9 +35,9 @@ flowchart TB
   internet ---|"Site-to-Site VPN (DX障害時のバックアップ)"| dc_fw01
   internet -->|"⑦ BGP Site-to-Site VPN経由"| aws_vgw01
   wide_ether ---|"OSPF"| hq_rt01
-  wide_ether --- dc_rt01
+  wide_ether ---|"OSPF"| dc_rt01
   wide_ether ---|"OSPF"| hq_rt02
-  wide_ether --- dc_rt01
+  wide_ether ---|"OSPF"| dc_rt01
   dc_rt01 ---|"BGP (DX上)"| aws_vgw01
   hq_sw01 --- seg__hq_users
   dc_srv01 --- seg__dc_servers

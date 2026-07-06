@@ -10,9 +10,9 @@ flowchart TB
   cloud__internet ---|"NTT東 フレッツ光 + OCN 1G"| site__hq
   cloud__internet ---|"NTT西 フレッツ光 + OCN 1G"| site__osk
   cloud__ipvpn ---|"BGP"| site__hq
-  cloud__ipvpn --- site__osk
+  cloud__ipvpn ---|"BGP"| site__osk
   cloud__ipvpn ---|"BGP"| site__hq
-  cloud__ipvpn --- site__ngy
+  cloud__ipvpn ---|"BGP"| site__ngy
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
   classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19

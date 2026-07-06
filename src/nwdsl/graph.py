@@ -36,7 +36,8 @@ class RenderEdge:
     dst_label: Optional[str] = None
     circuit: Optional[str] = None    # 経由回線ID (障害マーク用)
     domain: Optional[str] = None     # 所属ルーティングドメイン (色分け用)
-    continuation: bool = False       # via分割の後半 (ラベル・凡例名の重複表示を抑止)
+    continuation: bool = False       # via分割の後半 (domain凡例名フォールバックの重複表示を抑止。
+                                      # description由来のlabelは雲の両側で意図的に揃える。ADR-0005)
     emphasis: Optional[str] = None   # None | "path" | "disabled" | "dim" | "failed"
     seq: Optional[int] = None        # 経路上のホップ番号 (1始まり)
     directed: bool = False           # True なら矢印付きで描く
@@ -156,7 +157,7 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                                     role=via_cloud.kind))
                 graph.edges.append(RenderEdge(mapped[0], via_id, link.type, label,
                                               domain=link.domain))
-                graph.edges.append(RenderEdge(via_id, mapped[1], link.type, None,
+                graph.edges.append(RenderEdge(via_id, mapped[1], link.type, label,
                                               domain=link.domain, continuation=True))
             else:
                 graph.edges.append(RenderEdge(mapped[0], mapped[1], link.type, label,
@@ -199,7 +200,7 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                                     role=cloud.kind))
                 graph.edges.append(RenderEdge(ep_nodes[0], cloud.id, link.type, label,
                                               domain=link.domain))
-                graph.edges.append(RenderEdge(cloud.id, ep_nodes[1], link.type, None,
+                graph.edges.append(RenderEdge(cloud.id, ep_nodes[1], link.type, label,
                                               domain=link.domain, continuation=True))
             else:
                 edge = RenderEdge(ep_nodes[0], ep_nodes[1], link.type, label,
@@ -225,6 +226,34 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                     continue
                 add_node(RenderNode(id=dev.id, label=_device_label(doc, dev.id),
                                     kind="device", role=dev.role, site=dev.site))
+
+        # ---- 孤立機器を実在のlan-cableで補完接続 ----
+        # 上のループで追加された機器 (例: L3スイッチ) が現ビューのlayersでは
+        # 誰とも繋がらず「外部から浮いている」ように見えることがある。実際には
+        # lan-cableで他機器と繋がっているはずなので、その配線を通常のlan-cable
+        # 描画 (黒細線+IF名) で補って「どう到達するか」を示す。
+        connected = {n for e in graph.edges for n in (e.src, e.dst)}
+        for dev in doc.devices:
+            if dev.id not in nodes or dev.id in connected:
+                continue
+            for link in doc.links:
+                if link.type != "lan-cable":
+                    continue
+                ep_ids = [parse_endpoint(ep)[0] for ep in link.endpoints]
+                if dev.id not in ep_ids:
+                    continue
+                other = next((e for e in ep_ids if e != dev.id), None)
+                if other is None or other not in nodes:
+                    continue
+                ifnames = {parse_endpoint(ep)[0]: parse_endpoint(ep)[1]
+                          for ep in link.endpoints}
+                edge = RenderEdge(ep_ids[0], ep_ids[1], link.type,
+                                  _edge_label(doc, link, ifnames))
+                edge.src_label = ifnames.get(ep_ids[0])
+                edge.dst_label = ifnames.get(ep_ids[1])
+                graph.edges.append(edge)
+                connected.add(dev.id)
+                connected.add(other)
 
         # ---- L3情報の表示 (論理ビューでは自動有効、show_l3 で表示範囲を制御) ----
         raw_l3 = view.show_l3

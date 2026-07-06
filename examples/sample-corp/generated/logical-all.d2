@@ -50,11 +50,13 @@ n_internet: "　インターネット　" {class: node-cloud}
 n_ipvpn: "　NTT Com IP-VPN網　" {class: node-cloud}
 
 n_internet -- s_hq.n_hq_rt02: "IPsec バックアップVPN" {class: edge-tunnel}
-n_internet -- s_osk.n_osk_rt01 {class: edge-tunnel}
+n_internet -- s_osk.n_osk_rt01: "IPsec バックアップVPN" {class: edge-tunnel}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical}
-n_ipvpn -- s_osk.n_osk_rt01 {class: edge-logical}
+n_ipvpn -- s_osk.n_osk_rt01: "BGP" {class: edge-logical}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical}
-n_ipvpn -- s_ngy.n_ngy_rt01 {class: edge-logical}
+n_ipvpn -- s_ngy.n_ngy_rt01: "BGP" {class: edge-logical}
+s_hq.n_hq_rt01 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/1"}
+s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_server {class: edge-segment; source-arrowhead.label: "Vlan10"}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_client {class: edge-segment; source-arrowhead.label: "Vlan20"}
 s_osk.n_osk_rt01 -- s_osk.n_seg__osk_lan {class: edge-segment; source-arrowhead.label: "Gi0/1/0"}

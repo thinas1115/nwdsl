@@ -44,4 +44,4 @@ lbl_4: "キャリアB DC IXインターネット 1G" {class: edge-label}
 n_cloud__internet -- lbl_4 {class: edge-wan-circuit}
 lbl_4 -- n_site__dc {class: edge-wan-circuit}
 n_cloud__internet -- n_site__dc: "Site-to-Site VPN (DX障害時のバックアップ)" {class: edge-tunnel}
-n_cloud__internet -- n_site__aws {class: edge-tunnel}
+n_cloud__internet -- n_site__aws: "Site-to-Site VPN (DX障害時のバックアップ)" {class: edge-tunnel}

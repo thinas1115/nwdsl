@@ -9,7 +9,7 @@ flowchart TB
   end
   internet(("インターネット"))
   internet ---|"IPsec本線 (経路は静的)"| tk_rt01
-  internet --- fk_rt01
+  internet ---|"IPsec本線 (経路は静的)"| fk_rt01
   tk_rt01 --- seg__tk_lan
   fk_rt01 --- seg__fk_lan
 

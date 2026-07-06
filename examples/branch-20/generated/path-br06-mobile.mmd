@@ -36,46 +36,46 @@ flowchart TB
   ipvpn ---|"NTT Com IP-VPN 1G<br>(Gi0/2)"| hube_rt02
   mobile -->|"③"| hube_rt02
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br03_rt01
+  ipvpn ---|"BGP"| br03_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br04_rt01
+  ipvpn ---|"BGP"| br04_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br05_rt01
-  br06_sw01 -->|"①"| br06_rt01
+  ipvpn ---|"BGP"| br05_rt01
+  br06_rt01 -->|"①"| br06_sw01
   ipvpn ---|"NTT Com IP-VPN 100M<br>(Gi0/2)"| br06_rt01
-  br06_rt01 -->|"② BGP モバイル閉域網へ切替"| mobile
+  mobile -->|"② BGP モバイル閉域網へ切替"| br06_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br06_rt01
+  ipvpn ---|"BGP"| br06_rt01
   ipvpn ---|"BGP"| hubw_rt01
-  ipvpn --- br06_rt01
+  ipvpn ---|"BGP"| br06_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br07_rt01
+  ipvpn ---|"BGP"| br07_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br08_rt01
+  ipvpn ---|"BGP"| br08_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br09_rt01
+  ipvpn ---|"BGP"| br09_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br10_rt01
+  ipvpn ---|"BGP"| br10_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br11_rt01
+  ipvpn ---|"BGP"| br11_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br12_rt01
+  ipvpn ---|"BGP"| br12_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br13_rt01
+  ipvpn ---|"BGP"| br13_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br14_rt01
+  ipvpn ---|"BGP"| br14_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br15_rt01
+  ipvpn ---|"BGP"| br15_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br16_rt01
+  ipvpn ---|"BGP"| br16_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br17_rt01
+  ipvpn ---|"BGP"| br17_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br18_rt01
+  ipvpn ---|"BGP"| br18_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br19_rt01
+  ipvpn ---|"BGP"| br19_rt01
   ipvpn ---|"BGP"| hube_rt01
-  ipvpn --- br20_rt01
+  ipvpn ---|"BGP"| br20_rt01
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
   classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19

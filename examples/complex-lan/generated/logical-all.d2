@@ -48,7 +48,7 @@ s_hq.n_hq_fw01 -- s_hq.n_hq_core01: "OSPF Area 0" {class: edge-logical; style.st
 s_hq.n_hq_fw02 -- s_hq.n_hq_core02: "OSPF Area 0" {class: edge-logical; style.stroke: "#e8710a"}
 s_hq.n_hq_core01 -- s_hq.n_hq_core02: "OSPF Area 0" {class: edge-logical; style.stroke: "#e8710a"}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical}
-n_ipvpn -- s_osk.n_osk_rt01 {class: edge-logical}
+n_ipvpn -- s_osk.n_osk_rt01: "BGP" {class: edge-logical}
 s_hq.n_hq_core01 -- s_hq.n_seg__hq_server {class: edge-segment; source-arrowhead.label: "Vlan10"}
 s_hq.n_hq_core02 -- s_hq.n_seg__hq_server {class: edge-segment; source-arrowhead.label: "Vlan10"}
 s_hq.n_hq_core01 -- s_hq.n_seg__hq_client {class: edge-segment; source-arrowhead.label: "Vlan20"}
