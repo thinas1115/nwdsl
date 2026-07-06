@@ -63,7 +63,6 @@ n_internet -- s_hq.n_hq_rt02: "IPsec バックアップVPN" {class: edge-tunnel;
 n_internet -- s_osk.n_osk_rt01: "IPsec バックアップVPN" {class: edge-tunnel; style.opacity: 0.15}
 n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
 n_ipvpn -- s_osk.n_osk_rt01: "BGP" {class: edge-logical; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
-n_ipvpn -- s_hq.n_hq_rt01: "BGP" {class: edge-logical; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
 n_ipvpn -- n_ngy_rt01: "BGP" {class: edge-logical; style.stroke: "#c5221f"; style.stroke-dash: 4; style.opacity: 0.55}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_server {class: edge-segment; source-arrowhead.label: "Vlan10"; style.opacity: 0.15}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_client {class: edge-segment; source-arrowhead.label: "Vlan20"; style.opacity: 0.15}

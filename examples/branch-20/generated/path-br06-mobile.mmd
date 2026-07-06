@@ -37,44 +37,26 @@ flowchart TB
   mobile -->|"③"| hube_rt02
   ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br03_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br04_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br05_rt01
   br06_rt01 -->|"①"| br06_sw01
   ipvpn ---|"NTT Com IP-VPN 100M<br>(Gi0/2)"| br06_rt01
   mobile -->|"② BGP モバイル閉域網へ切替"| br06_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br06_rt01
   ipvpn ---|"BGP"| hubw_rt01
-  ipvpn ---|"BGP"| br06_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br07_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br08_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br09_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br10_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br11_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br12_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br13_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br14_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br15_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br16_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br17_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br18_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br19_rt01
-  ipvpn ---|"BGP"| hube_rt01
   ipvpn ---|"BGP"| br20_rt01
 
   classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
@@ -94,6 +76,6 @@ flowchart TB
   class hube_srv01 role_other
   class mobile node_cloud
   class br06_sw01 role_l2switch
-  linkStyle 0,3,4,6,7,8,9,10,11,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46 stroke:#e8eaed,stroke-width:1px
-  linkStyle 1,2,5,12,14 stroke:#c5221f,stroke-width:4px
-  linkStyle 13 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 0,3,4,6,7,8,9,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,2,5,10,12 stroke:#c5221f,stroke-width:4px
+  linkStyle 11 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4

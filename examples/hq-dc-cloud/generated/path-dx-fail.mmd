@@ -37,7 +37,6 @@ flowchart TB
   wide_ether ---|"OSPF"| hq_rt01
   wide_ether ---|"OSPF"| dc_rt01
   wide_ether ---|"OSPF"| hq_rt02
-  wide_ether ---|"OSPF"| dc_rt01
   dc_rt01 ---|"BGP (DX上)"| aws_vgw01
   hq_sw01 --- seg__hq_users
   dc_srv01 --- seg__dc_servers
@@ -61,6 +60,6 @@ flowchart TB
   class dc_fw01 role_firewall
   class wide_ether,internet node_cloud
   linkStyle 0,2,3,7,9,11,13 stroke:#c5221f,stroke-width:4px
-  linkStyle 1,4,5,6,8,12,14,15,16,17,19,20,21,22 stroke:#e8eaed,stroke-width:1px
+  linkStyle 1,4,5,6,8,12,14,15,16,18,19,20,21 stroke:#e8eaed,stroke-width:1px
   linkStyle 10 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 18 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 17 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4

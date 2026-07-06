@@ -80,7 +80,6 @@ n_internet -> s_aws.n_aws_vgw01: "⑦ BGP Site-to-Site VPN経由" {class: edge-t
 n_wide_ether -- s_hq.n_hq_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
 n_wide_ether -- s_dc.n_dc_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
 n_wide_ether -- s_hq.n_hq_rt02: "OSPF" {class: edge-logical; style.opacity: 0.15}
-n_wide_ether -- s_dc.n_dc_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
 s_dc.n_dc_rt01 -- s_aws.n_aws_vgw01: "BGP (DX上)" {class: edge-logical; style.stroke: "#9aa0a6"; style.stroke-dash: 4; style.opacity: 0.4}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_users {class: edge-segment; source-arrowhead.label: "Vlan100"; style.opacity: 0.15}
 s_dc.n_dc_srv01 -- s_dc.n_seg__dc_servers {class: edge-segment; source-arrowhead.label: "eno1"; style.opacity: 0.15}

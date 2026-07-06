@@ -25,7 +25,6 @@ flowchart TB
   internet ---|"IPsec バックアップVPN"| osk_rt01
   ipvpn ---|"BGP"| hq_rt01
   ipvpn ---|"BGP"| osk_rt01
-  ipvpn ---|"BGP"| hq_rt01
   ipvpn ---|"BGP"| ngy_rt01
   hq_sw01 --- seg__hq_server
   hq_sw01 --- seg__hq_client
@@ -50,5 +49,5 @@ flowchart TB
   class ngy_rt01,seg__hq_server,seg__hq_client,seg__osk_lan node_dim
   linkStyle 0 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
   linkStyle 1,2,5,6 stroke:#c5221f,stroke-width:4px
-  linkStyle 3,4,9,10,11,12 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 7,8,13,14,15 stroke:#e8eaed,stroke-width:1px
+  linkStyle 3,4,9,10,11 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 7,8,12,13,14 stroke:#e8eaed,stroke-width:1px

@@ -44,7 +44,6 @@ flowchart TB
   osk_rt02 ---|"OSPF Area 2 (大阪)"| osk_core01
   ipvpn ---|"BGP"| hq_rt01
   ipvpn ---|"BGP"| osk_rt01
-  ipvpn ---|"BGP"| hq_rt01
   ipvpn ---|"BGP"| ngy_rt01
   hq_core01 --- seg__hq_srv
   hq_core02 --- seg__hq_srv
@@ -76,8 +75,8 @@ flowchart TB
   class hq_core01,hq_core02,hq_dist01,hq_dist02,hq_dist03,hq_dist04,osk_core01 role_l3switch
   class ipvpn node_cloud
   class seg__hq_srv,seg__osk_lan,seg__ngy_lan,seg__hq_fl1,seg__hq_fl2,seg__hq_fl3,seg__hq_fl4 node_segment
-  linkStyle 15,16,17,18 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
-  linkStyle 19,20,21,22,23,24,25,26 stroke:#0f766e,stroke-width:1.5px
+  linkStyle 15,16,17 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
+  linkStyle 18,19,20,21,22,23,24,25 stroke:#0f766e,stroke-width:1.5px
   linkStyle 0,1,2,3,4 stroke:#e8710a,stroke-width:2px,stroke-dasharray:3 3
   classDef dom0 fill:#ffffff,stroke:#e8710a,color:#e8710a
   class lg0 dom0

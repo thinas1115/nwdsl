@@ -161,7 +161,7 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
                                               domain=link.domain, continuation=True))
             else:
                 graph.edges.append(RenderEdge(mapped[0], mapped[1], link.type, label,
-                                              domain=link.domain))
+                                              circuit=link.circuit, domain=link.domain))
     else:
         # ---- 機器レベルの図 ----
         view_ifs: set[tuple[str, str]] = set()  # このビューに現れた接続のIF
@@ -318,8 +318,32 @@ def _resolve_topology_view(doc: Document, view: View) -> RenderGraph:
     used_domains = {e.domain for e in graph.edges if e.domain}
     graph.domains = {d.id: d.name for d in doc.domains if d.id in used_domains}
     _bundle_parallel_cables(graph)
+    _dedupe_duplicate_edges(graph)
     _orient_edges(doc, graph)
     return graph
+
+
+def _dedupe_duplicate_edges(graph: RenderGraph) -> None:
+    """viaで雲越えに分割した際、複数の別リンクが同じ雲側スタブに収束すると
+    見た目上完全に同一なエッジが重複して描かれる (例: 同じ雲を経由する複数の
+    BGPピアは、雲から見て手前側では同じ1本の線のはずが、リンクごとに別
+    エッジとして生成されるため2本重なって描かれる)。lan-cableはLAG本数を
+    ×N表示する_bundle_parallel_cablesに任せ、それ以外の型で見た目上完全に
+    区別できないエッジは1本に統合する。
+    """
+    seen: set[tuple] = set()
+    deduped: list[RenderEdge] = []
+    for edge in graph.edges:
+        if edge.type == "lan-cable":
+            deduped.append(edge)
+            continue
+        key = (frozenset((edge.src, edge.dst)), edge.type, edge.label, edge.domain,
+              edge.continuation, edge.src_label, edge.dst_label, edge.circuit)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(edge)
+    graph.edges = deduped
 
 
 def _bundle_parallel_cables(graph: RenderGraph) -> None:
