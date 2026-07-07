@@ -64,6 +64,10 @@ devices:
         segment: hq-client
       - name: Gi1/0/3
         description: hq-srv01へ
+      - name: Gi1/0/4
+        description: hq-srv02へ
+      - name: Gi1/0/5
+        description: hq-srv03へ
   - id: hq-srv01
     site: hq
     role: server
@@ -72,6 +76,24 @@ devices:
       - name: eno1
         description: サーバセグメントへ
         ipv4: 10.1.10.5/24
+        segment: hq-server
+  - id: hq-srv02
+    site: hq
+    role: server
+    platform: PowerEdge R760
+    interfaces:
+      - name: eno1
+        description: サーバセグメントへ
+        ipv4: 10.1.10.6/24
+        segment: hq-server
+  - id: hq-srv03
+    site: hq
+    role: server
+    platform: PowerEdge R760
+    interfaces:
+      - name: eno1
+        description: サーバセグメントへ
+        ipv4: 10.1.10.7/24
         segment: hq-server
 
   # ---- 大阪支店 ----
@@ -174,6 +196,10 @@ links:
     endpoints: ["ngy-rt01:Gi0/1/0", "ngy-sw01:Gi1/0/1"]
   - type: lan-cable
     endpoints: ["hq-sw01:Gi1/0/3", "hq-srv01:eno1"]
+  - type: lan-cable
+    endpoints: ["hq-sw01:Gi1/0/4", "hq-srv02:eno1"]
+  - type: lan-cable
+    endpoints: ["hq-sw01:Gi1/0/5", "hq-srv03:eno1"]
 
   # ---- WANアクセス回線 ----
   - type: wan-circuit

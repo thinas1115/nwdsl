@@ -4,6 +4,8 @@ flowchart TB
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300<br>Vlan10: 10.1.10.1/24<br>Vlan20: 10.1.20.1/24"]
     hq_rt02["hq-rt02<br>Cisco ISR4331<br>Gi0/0/0: 203.0.113.10/29<br>Gi0/0/1: 10.1.0.3/24<br>Tunnel0: 172.31.0.1/30"]
     hq_srv01["hq-srv01<br>PowerEdge R760<br>eno1: 10.1.10.5/24"]
+    hq_srv02["hq-srv02<br>PowerEdge R760<br>eno1: 10.1.10.6/24"]
+    hq_srv03["hq-srv03<br>PowerEdge R760<br>eno1: 10.1.10.7/24"]
     seg__hq_server(["本社サーバ<br>VLAN 10 / 10.1.10.0/24"])
     seg__hq_client(["本社クライアント<br>VLAN 20 / 10.1.20.0/24"])
   end
@@ -19,6 +21,8 @@ flowchart TB
   hq_rt02 -->|"① HSRP standbyがactive昇格"| hq_sw01
   osk_rt01 -->|"④"| osk_sw01
   hq_sw01 --- hq_srv01
+  hq_sw01 --- hq_srv02
+  hq_sw01 --- hq_srv03
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M<br>(Gi0/0/0)"| hq_rt01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M<br>(Gi0/0/0)"| osk_rt01
   internet -->|"② IPsec インターネット網経由"| hq_rt02
@@ -46,10 +50,10 @@ flowchart TB
   class hq_rt01,hq_rt02,osk_rt01 role_router
   class hq_sw01 role_l3switch
   class osk_sw01 role_l2switch
-  class hq_srv01,ngy_rt01,seg__hq_server,seg__hq_client,seg__osk_lan node_dim
+  class hq_srv01,hq_srv02,hq_srv03,ngy_rt01,seg__hq_server,seg__hq_client,seg__osk_lan node_dim
   class ipvpn node_failed
   class internet node_cloud
   linkStyle 0 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
-  linkStyle 1,2,6,7 stroke:#c5221f,stroke-width:4px
-  linkStyle 3,8,9,13,14,15 stroke:#e8eaed,stroke-width:1px
-  linkStyle 4,5,10,11,12 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  linkStyle 1,2,8,9 stroke:#c5221f,stroke-width:4px
+  linkStyle 3,4,5,10,11,15,16,17 stroke:#e8eaed,stroke-width:1px
+  linkStyle 6,7,12,13,14 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4

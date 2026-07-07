@@ -156,7 +156,7 @@ links:
 | サンプル | 規模 | 見どころ |
 |---|---|---|
 | [two-site-ipsec](examples/two-site-ipsec/) | 2拠点4台 | 最小実務構成 (フレッツ+IPsecのみ、ヤマハ機、静的経路) |
-| [sample-corp](examples/sample-corp/) | 3拠点7台 | 標準サンプル (IP-VPN+VPNバックアップ+HSRP+正常/障害経路) |
+| [sample-corp](examples/sample-corp/) | 3拠点10台 | 標準サンプル (IP-VPN+VPNバックアップ+HSRP+正常/障害経路+セグメント内包表示) |
 | [hq-dc-cloud](examples/hq-dc-cloud/) | 3拠点13台 | ハイブリッド構成 (広域Ether+AWS Direct Connect+VPNバックアップ、DX障害経路) |
 | [complex-lan](examples/complex-lan/) | 2拠点19台 | 多段LAN (FW/コア冗長→ディストリ→アクセス、DMZ) |
 | [branch-20](examples/branch-20/) | 20拠点44台 | 多拠点ハブ&スポーク (東西DRハブ+モバイル閉域網バックアップ)。概要図は内蔵SVG推奨 |

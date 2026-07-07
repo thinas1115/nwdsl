@@ -19,7 +19,7 @@ def doc():
 
 def test_sites_table_counts_devices(doc):
     md = sites_table(doc)
-    assert "| hq | 本社 | 東京都千代田区 | 4 |" in md
+    assert "| hq | 本社 | 東京都千代田区 | 6 |" in md
 
 
 def test_interfaces_table_has_derived_peers(doc):

@@ -4,12 +4,16 @@ flowchart TB
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
     hq_rt02["hq-rt02<br>Cisco ISR4331"]
     hq_srv01["hq-srv01<br>PowerEdge R760"]
+    hq_srv02["hq-srv02<br>PowerEdge R760"]
+    hq_srv03["hq-srv03<br>PowerEdge R760"]
   end
   ipvpn(("NTT Com IP-VPN網"))
   internet(("インターネット"))
   hq_rt01 --- hq_sw01
   hq_rt02 --- hq_sw01
   hq_sw01 --- hq_srv01
+  hq_sw01 --- hq_srv02
+  hq_sw01 --- hq_srv03
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M<br>(Gi0/0/0)"| hq_rt01
   internet ---|"NTT東日本 フレッツ光ネクスト + OCN 1G<br>(Gi0/0/0)"| hq_rt02
 
@@ -26,7 +30,7 @@ flowchart TB
   classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
   class hq_rt01,hq_rt02 role_router
   class hq_sw01 role_l3switch
-  class hq_srv01 role_other
+  class hq_srv01,hq_srv02,hq_srv03 role_other
   class ipvpn,internet node_cloud
-  linkStyle 0,1,2 stroke:#4a4a4a,stroke-width:2px
-  linkStyle 3,4 stroke:#1a73e8,stroke-width:4px
+  linkStyle 0,1,2,3,4 stroke:#4a4a4a,stroke-width:2px
+  linkStyle 5,6 stroke:#1a73e8,stroke-width:4px

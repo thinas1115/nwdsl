@@ -4,6 +4,8 @@ flowchart TB
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
     hq_rt02["hq-rt02<br>Cisco ISR4331"]
     hq_srv01["hq-srv01<br>PowerEdge R760"]
+    hq_srv02["hq-srv02<br>PowerEdge R760"]
+    hq_srv03["hq-srv03<br>PowerEdge R760"]
   end
   subgraph sg_osk["大阪支店"]
     osk_rt01["osk-rt01<br>Cisco ISR1100"]
@@ -20,6 +22,8 @@ flowchart TB
   osk_rt01 --- osk_sw01
   ngy_rt01 --- ngy_sw01
   hq_sw01 --- hq_srv01
+  hq_sw01 --- hq_srv02
+  hq_sw01 --- hq_srv03
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 100M<br>(Gi0/0/0)"| hq_rt01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M<br>(Gi0/0/0)"| osk_rt01
   ipvpn ---|"NTTコミュニケーションズ IP-VPN 50M<br>(Gi0/0/0)"| ngy_rt01
@@ -40,7 +44,7 @@ flowchart TB
   class hq_rt01,hq_rt02,osk_rt01,ngy_rt01 role_router
   class hq_sw01 role_l3switch
   class osk_sw01,ngy_sw01 role_l2switch
-  class hq_srv01 role_other
+  class hq_srv01,hq_srv02,hq_srv03 role_other
   class ipvpn,internet node_cloud
-  linkStyle 0,1,2,3,4 stroke:#4a4a4a,stroke-width:2px
-  linkStyle 5,6,7,8,9 stroke:#1a73e8,stroke-width:4px
+  linkStyle 0,1,2,3,4,5,6 stroke:#4a4a4a,stroke-width:2px
+  linkStyle 7,8,9,10,11 stroke:#1a73e8,stroke-width:4px

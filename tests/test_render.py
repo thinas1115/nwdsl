@@ -24,8 +24,8 @@ def _view(doc, view_id):
 def test_physical_all_has_all_devices_and_clouds(doc):
     g = resolve_view(doc, _view(doc, "physical-all"))
     ids = {n.id for n in g.nodes}
-    assert {"hq-rt01", "hq-rt02", "hq-sw01", "hq-srv01", "osk-rt01", "osk-sw01",
-            "ngy-rt01", "ngy-sw01", "ipvpn", "internet"} == ids
+    assert {"hq-rt01", "hq-rt02", "hq-sw01", "hq-srv01", "hq-srv02", "hq-srv03",
+            "osk-rt01", "osk-sw01", "ngy-rt01", "ngy-sw01", "ipvpn", "internet"} == ids
     assert len(g.groups) == 3
     # 物理図に logical / tunnel は含まれない
     assert all(e.type in ("lan-cable", "wan-circuit") for e in g.edges)
@@ -45,7 +45,8 @@ def test_include_sites_filters_and_keeps_clouds(doc):
     g = resolve_view(doc, _view(doc, "hq-physical"))
     ids = {n.id for n in g.nodes}
     assert "osk-rt01" not in ids and "ngy-rt01" not in ids
-    assert {"hq-rt01", "hq-rt02", "hq-sw01", "hq-srv01", "ipvpn", "internet"} == ids
+    assert {"hq-rt01", "hq-rt02", "hq-sw01", "hq-srv01", "hq-srv02", "hq-srv03",
+            "ipvpn", "internet"} == ids
 
 
 def test_cross_boundary_link_shows_external_device(doc):
