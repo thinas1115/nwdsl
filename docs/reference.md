@@ -220,8 +220,9 @@ nwdsl は「構成図・経路図・設計書表を生成するための最小NW
 
 ## CLI
 
-コピペで動く実行例(リポジトリ直下、`uv sync` 済みの前提。自分のファイルに使うときはパスを差し替える)。
-`uv` を使わない場合は `pip install -e .` の上で `.\.venv\Scripts\Activate.ps1` を実行するか、各コマンドの `uv run nwdsl` を `.\.venv\Scripts\nwdsl.exe` に読み替える:
+コピペで動く実行例(リポジトリ直下、自分のファイルに使うときはパスを差し替える)。
+
+**uv の場合** (`uv sync` 済みの前提)
 
 ```powershell
 uv run nwdsl validate examples\sample-corp\network.yaml            # 整合性検査
@@ -234,6 +235,21 @@ uv run nwdsl tables   examples\sample-corp\network.yaml --section circuits      
 uv run nwdsl schema   -o nwdsl.schema.json
 uv run nwdsl serve                          # playground (http://127.0.0.1:8321/) を起動
 uv run nwdsl serve --port 9000 --no-browser # ポート指定 / ブラウザ自動起動なし
+```
+
+**pip の場合** (`pip install -e .` + `Activate.ps1` 済みの前提。`nwdsl` が見つからない場合は `.\.venv\Scripts\nwdsl.exe` に読み替える)
+
+```powershell
+nwdsl validate examples\sample-corp\network.yaml            # 整合性検査
+nwdsl validate examples\sample-corp\network.yaml --strict   # 警告もエラー扱い
+nwdsl render   examples\sample-corp\network.yaml -o diagrams                # 全ビュー出力
+nwdsl render   examples\sample-corp\network.yaml -o diagrams --view wan-overview --format d2
+nwdsl render   examples\stress\ring.yaml -o diagrams --format svg   # 内蔵SVGエンジン (D2不要, ADR-0008)
+nwdsl tables   examples\sample-corp\network.yaml -o diagrams\tables.md      # 6表すべて
+nwdsl tables   examples\sample-corp\network.yaml --section circuits         # 回線一覧のみ標準出力
+nwdsl schema   -o nwdsl.schema.json
+nwdsl serve                          # playground (http://127.0.0.1:8321/) を起動
+nwdsl serve --port 9000 --no-browser # ポート指定 / ブラウザ自動起動なし
 ```
 
 `serve` は編集→自動描画の playground。SVG プレビューには D2 バイナリが必要 (PATH または リポジトリ `.tools/` から自動検出)。D2 が無い環境では図ソースの表示のみになる。docs/ と examples/ はカレントディレクトリ基準で検出するため、リポジトリ直下での起動を推奨。
