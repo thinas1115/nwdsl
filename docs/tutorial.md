@@ -7,11 +7,12 @@
 
 ```powershell
 git clone <this-repo> ; cd nw-config-dsl
-python -m venv .venv
-.\.venv\Scripts\pip install -e .
+uv sync                        # .venv作成 + 依存関係インストール (uvが無い場合は下記参照)
 .\.venv\Scripts\Activate.ps1   # nwdsl コマンドを直接使えるようにする (pip install -e . だけではPATHが通らない)
-nwdsl --help    # 実行ポリシーでActivate.ps1が弾かれる場合は .\.venv\Scripts\nwdsl.exe --help と読み替える
+nwdsl --help    # 実行ポリシーでActivate.ps1が弾かれる場合は .\.venv\Scripts\nwdsl.exe --help か uv run nwdsl --help と読み替える
 ```
+
+[uv](https://docs.astral.sh/uv/) が無い場合は `python -m venv .venv` → `.\.venv\Scripts\pip install -e .` でも同じ手順が使える。
 
 図をSVG化する場合は [D2](https://github.com/terrastruct/d2/releases) のバイナリを入れておく(無くても内蔵SVGエンジンでこのチュートリアルは進められる)。
 Windowsは `.\scripts\install_d2.ps1` を実行するとリポジトリの `.tools\` に取得され自動検出される(`.tools\` は`.gitignore`対象なのでclone直後は各自実行が必要)。

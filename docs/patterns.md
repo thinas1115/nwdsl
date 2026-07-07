@@ -166,3 +166,29 @@ views:
 ```
 
 - 拠点数が多い場合、`physical-all` は読みにくくなる。全社は `collapse_sites`、詳細は拠点別ビューに分けるのが定石
+
+## 11. セグメント配下の端末をボックス内に表示 (D2のみ)
+
+```yaml
+devices:
+  - id: hq-srv01
+    site: hq
+    role: server
+    interfaces:
+      - {name: eno1, ipv4: 10.1.10.5/24, segment: hq-server}
+```
+
+- `role: server` の機器が、参照セグメントが1つだけの場合、論理図でそのセグメントの箱の中に入れ子で描画される([ADR-0009](adr/0009-segment-nesting.md))
+- 複数セグメントに跨る機器やルーター/L3スイッチは対象外(従来通りGW接続の線で描画)
+- 内蔵SVGエンジンは今のところ非対応(単一ノードとして描画される)。完成例は [examples/sample-corp/](../examples/sample-corp/) の `hq-srv01`〜`03`
+
+## 12. 複数ビュー間で拠点の左右順序を揃える
+
+```yaml
+views:
+  - {id: physical-all, title: 全社物理構成図, layers: [lan-cable, wan-circuit], order: declared}
+  - {id: logical-all,  title: 全社論理構成図, layers: [logical, tunnel],        order: declared}
+```
+
+- `order: declared` を付けたビュー同士は、拠点の左右位置が `sites` の宣言順で揃う
+- **内蔵SVGエンジンのみ有効**。D2(ELK)はクロス最小化ヒューリスティック任せで順序を保証できないため、物理図と論理図で拠点の並びを揃えたい場合は内蔵SVGを使う([ADR-0005 補遺3](adr/0005-layout-bfs-orientation.md))
