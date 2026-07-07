@@ -106,6 +106,8 @@ nwdsl schema   -o nwdsl.schema.json                      # エディタ補完用
 - YAML editor のシンタックスハイライト、左右ペイン幅のドラッグ調整
 - チュートリアル・リファレンス・パターン集・FAQ・ADR の閲覧(各ページに Markdown をそのままコピーするボタンあり。AIに読み込ませる用途を想定)
 
+![playground: 左ペインのYAMLを編集すると右ペインで検証+描画がリアルタイムに更新される](docs/images/nwdsl-ui.png)
+
 SVG 化には [D2](https://github.com/terrastruct/d2/releases)(単一バイナリ)を使う。`.\scripts\install_d2.ps1` 済みなら `.tools\` から自動検出される(`nwdsl serve` 経由)ので、CLIから直接呼ぶ場合だけ以下のようにパスを指定する:
 
 ```powershell
