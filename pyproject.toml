@@ -1,6 +1,6 @@
 [project]
 name = "nwdsl"
-version = "0.2.0"
+version = "0.3.0"
 description = "ネットワーク構成記述DSL: YAMLソースから構成図(D2/Mermaid/内蔵SVG)と設計書向け表(Markdown)を生成する"
 readme = "README.md"
 license = { file = "LICENSE" }
