@@ -13,8 +13,16 @@
 | `circuit.multi-use` | 1契約を複数linkが参照 | 1契約=1結線。回線が2本あるなら circuits も2つ定義する |
 | `path.hop-not-adjacent` | 経路の隣接ホップを結ぶlinkが無い | 経路は実在の link 上しか通れない。中間ホップ (cloudやSW) の書き漏れが典型 |
 | `circuit.unused` (警告) | active な回線が未使用 | 解約済みなら `status: decommissioned` に。移行中ならそのままでよい |
+| `ref.redundancy-member` | 冗長グループのメンバー機器が無い | `members[].device` のIDタイポを確認 |
+| `redundancy.fhrp-only` | stack に protocol/group/vip を指定 | それらはFHRP用。スタックは `kind: stack` + members だけでよい |
+| `redundancy.vip-segment` (警告) | VIPがメンバーIFのどのCIDRにも含まれない | VIPの打ち間違いが典型。IF の `ipv4` かセグメントの `ipv4` と照合する |
+| `domain.attr-mismatch` | area/asn とプロトコル種別の不一致 | `area` は `protocol: ospf`、`asn` は `protocol: bgp` と組で書く |
+| `redistribution.device-not-in-domain` (警告) | 再配布機器が両ドメインのlink端点でない | 該当機器に from/to 両ドメインの logical link を張る (static等で意図的なら無視可) |
 
 ## Q&A
+
+**Q. `redundancy_group` (文字列) を書いたらスキーマ違反になった**
+v0.2 で廃止された ([ADR-0010](adr/0010-redundancy-groups.md))。トップレベルの `redundancy_groups` エンティティに移行する (機器側のフィールドは削除し、グループに `members` でぶら下げる。`protocol`/`vip`/`role` は任意)。移行すると図に点線枠・Act/Sbyバッジが出るようになり、VIPが表にも載る。書き方は [patterns.md §1](patterns.md)。
 
 **Q. 図が崩れる/重なるときは?**
 まずエンジンを切り替える (playground右上 or CLI `--format`)。木構造系はD2が最も整い、リング・leaf-spine・多拠点概要・確実性優先なら内蔵SVG (重なりゼロを機械検証済み)。Markdownに埋め込むならMermaid。

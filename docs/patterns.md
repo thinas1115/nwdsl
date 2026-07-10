@@ -4,20 +4,28 @@
 
 ## 1. WANルーター冗長 (HSRP/VRRP ペア)
 
+`redundancy_groups` にグループを1つ宣言する([ADR-0010](adr/0010-redundancy-groups.md))。
+
 ```yaml
 devices:
-  - id: hq-rt01
-    site: hq
-    role: router
-    redundancy_group: hq-wan   # ペアに同じグループ名を付けるだけ
-  - id: hq-rt02
-    site: hq
-    role: router
-    redundancy_group: hq-wan
+  - {id: hq-rt01, site: hq, role: router}
+  - {id: hq-rt02, site: hq, role: router}
+redundancy_groups:
+  - id: hq-wan
+    kind: fhrp            # 既定値なので省略可
+    protocol: hsrp
+    group: 1
+    vip: 10.1.0.1         # 仮想IP。所属セグメントはCIDR包含で自動導出
+    members:
+      - {device: hq-rt01, role: active}
+      - {device: hq-rt02, role: standby}
 ```
 
-- 仮想IPは代表して active 側 IF の `description` に書く(例: `HSRP VIP 10.1.0.1`)
-- どちらが active かは経路 (`paths`) の `protocol: HSRP` 注記で表現する
+- 図では2台が点線枠 (`HSRP grp1 VIP 10.1.0.1`) で囲まれ、ノード名に `(Act)` / `(Sby)` が付く
+- VIP はIP設計表 (セグメント一覧のGW列) にも自動で載る
+- VLANごとにHSRPグループを分ける場合はグループを複数書く (`examples/complex-lan` の
+  `hq-core-v10` / `hq-core-v20`)。図の枠は自動で1つに統合される
+- 障害時にどう切り替わるかは従来通り経路 (`paths`) の `protocol: HSRP` 注記で表現する
 
 ## 2. マルチポイント網への接続 (IP-VPN / 広域Ethernet)
 
@@ -86,15 +94,35 @@ links:
 
 - FW の役割 (`role: firewall`) で図が赤系に塗られ、境界が一目で分かる
 
-## 6. LAG / スタック間リンク (並列リンク)
+## 6. LAG / スタック構成 (物理=2筐体・論理=1筐体)
 
-同じ機器ペア間に複数の `lan-cable` を書くだけ。図では自動で1本に束ねられ `×N` 表示になる (メンバーIFの対応は接続一覧の表に残る)。
+並列リンクは同じ機器ペア間に複数の `lan-cable` を書くだけ。図では自動で1本に束ねられ `×N` 表示になる (メンバーIFの対応は接続一覧の表に残る)。
 
 ```yaml
 links:
   - {type: lan-cable, endpoints: ["core01:Te1/0/49", "core02:Te1/0/49"]}
   - {type: lan-cable, endpoints: ["core01:Te1/0/50", "core02:Te1/0/50"]}
 ```
+
+スタック (StackWise/VSS等) は `kind: stack` のグループを宣言する。**物理図では2筐体+点線枠、論理ビューでは1ノード (`スタック×N` 表示) に自動で畳まれる**([ADR-0010](adr/0010-redundancy-groups.md))。
+
+```yaml
+redundancy_groups:
+  - id: dc-core
+    kind: stack
+    name: dc-core        # 畳んだときのノード名
+    members:
+      - {device: dc-core01}
+      - {device: dc-core02}
+```
+
+- スタック間リンク (メンバー同士の lan-cable) は畳むと自己ループになり消える
+- 両筐体にまたがるクロススタックLAGは、畳むと対向から1論理リンク×Nに自動集約される
+- 畳みの制御は `views[].merge_stacks` (省略時は論理ビューで自動ON)。物理レイヤのビューに
+  `merge_stacks: true` を明示すると「スタック集約後の配線図」も描ける
+- vPC/MLAGのpeer-linkのように**2管理面のまま**にしたい場合は `kind: fhrp` で枠表示だけ使い、
+  peer-link は `description: vPC peer-link` を付けた lan-cable で表す
+- 完成例: [examples/stack-core/](../examples/stack-core/)
 
 ## 7. 中継拠点 (拠点—網A—拠点—網B—拠点)
 
@@ -143,8 +171,8 @@ views:
 
 ```yaml
 domains:
-  - {id: area0, name: OSPF Area 0 (バックボーン)}
-  - {id: area1, name: OSPF Area 1 (支店側)}
+  - {id: area0, protocol: ospf, area: 0}   # 表示名 "OSPF Area 0" を自動生成
+  - {id: area1, protocol: ospf, area: 1, name: OSPF Area 1 (支店側)}  # name指定で表記を変える
 
 links:
   - {type: logical, endpoints: ["rt01", "core01"], domain: area0}
@@ -152,6 +180,54 @@ links:
 ```
 
 - 色はレンダラが自動割当(DSLに色は書かない)。BGP等ドメイン外の隣接は従来どおり `description` でラベル
+- BGPは `{id: as65000, protocol: bgp, asn: 65000}`(表示名 `BGP AS65000` を自動生成)
+- 機器のエリア所属は logical link の端点であることから導出される。接続を持たないスタブ機器も
+  GW への logical link を書けば面塗り・凡例の対象になる
+
+## 9b. ルート再配布 (OSPF↔BGP等)
+
+ドメイン境界の機器 (ASBR) での再配布は `redistributions` に書く([ADR-0011](adr/0011-routing-domains.md))。
+
+```yaml
+redistributions:
+  - from: area0
+    to: as65000
+    devices: [hq-rt01, hq-rt02]   # 冗長ASBRは複数書く
+    mutual: true                  # 相互再配布。一方向なら省略 (from→to)
+```
+
+- 図では機器ノードに `再配布: OSPF Area 0 ⇄ BGP AS65000` のバッジ行が付く
+  (from/to のドメインが見える論理系ビューのみ。物理図は汚れない)
+- 表は「ルーティング一覧」の再配布表に載る
+
+## 9c. デフォルトルート・スタティックの向き
+
+「default → FW」のような向きのある論理隣接は `direction: forward` で矢印にする([ADR-0012](adr/0012-directed-logical.md))。
+
+```yaml
+links:
+  - type: logical
+    endpoints: ["hq-core01", "hq-fw01"]   # endpoints[0] → endpoints[1] の向き
+    description: default
+    direction: forward
+```
+
+- 宛先プレフィックスの列挙はスコープ外。「設計意図として太い1本」を示す用途に絞る
+
+## 9d. STP の active/blocking (L2冗長)
+
+STPの root/blocking は「構成」ではなく動作状態なのでスキーマには持たせない。L2の通信が
+実際にどちらのリンクを通るかを示したいときは、経路 (`paths`) に `protocol: STP` を注記する。
+
+```yaml
+paths:
+  - id: l2-normal
+    title: クライアント→サーバ (L2正常時)
+    hops:
+      - {node: acc01}
+      - {node: core01, protocol: STP, note: root側リンクがforwarding}
+      - {node: srv-sw01}
+```
 
 ## 10. ビューの定番セット
 

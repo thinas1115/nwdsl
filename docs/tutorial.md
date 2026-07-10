@@ -37,7 +37,7 @@ Windowsは `.\scripts\install_d2.ps1` を実行するとリポジトリの `.too
 `network.yaml` を作る:
 
 ```yaml
-nwdsl: "0.1"
+nwdsl: "0.2"
 
 network:
   name: my-first-network
@@ -185,7 +185,19 @@ views:
 `nwdsl render` で4つの図ソースが生成される。**同じトポロジ定義から、レイヤ・範囲・抽象度の宣言だけで4種類の図が導出される**のが nwdsl の中心機能。
 
 - VPNトンネル(IPsec等)は `type: tunnel` で書く(端点は Tunnel IF でも機器でも可)
-- HSRP/VRRP ペアは両方の機器に同じ `redundancy_group: <名前>` を書く
+- HSRP/VRRP ペアやスタックは `redundancy_groups` にグループを宣言する (書き方は [patterns.md §1](patterns.md)):
+
+```yaml
+redundancy_groups:
+  - id: hq-wan
+    protocol: hsrp
+    vip: 10.1.1.254
+    members:
+      - {device: hq-rt01, role: active}
+      - {device: hq-rt02, role: standby}
+```
+
+  図では2台が点線枠で囲まれて `(Act)`/`(Sby)` が付き、VIP はIP設計表にも載る
 
 ## 4. 通信経路を描く(正常時/障害時)
 
@@ -221,7 +233,7 @@ uv run nwdsl tables network.yaml -o tables.md
 uv run nwdsl tables network.yaml --section circuits --section interfaces  # 部分出力
 ```
 
-拠点一覧・機器一覧・インターフェース一覧・回線一覧・接続一覧・セグメント一覧が Markdown 表で出力される。インターフェース一覧の「接続先」や回線一覧の「収容先」は links から自動導出されるため、**図と表が食い違うことは構造的にない**。
+拠点一覧・機器一覧・冗長グループ一覧・インターフェース一覧・回線一覧・接続一覧・セグメント一覧・ルーティング一覧が Markdown 表で出力される (冗長・ルーティングは定義がある場合のみ)。インターフェース一覧の「接続先」や回線一覧の「収容先」は links から自動導出されるため、**図と表が食い違うことは構造的にない**。
 
 ## 6. バリデーションを味方にする
 
@@ -243,7 +255,7 @@ uv run nwdsl schema -o nwdsl.schema.json
 
 ```yaml
 # yaml-language-server: $schema=./nwdsl.schema.json
-nwdsl: "0.1"
+nwdsl: "0.2"
 ...
 ```
 
