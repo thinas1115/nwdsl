@@ -22,6 +22,7 @@ classes: {
   node-segment: {style.fill: "#e2f5f0"; style.stroke: "#0f766e"; style.font-color: "#0b3d38"; style.border-radius: 12}
   node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
   group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  group-redundancy: {style.fill: "transparent"; style.stroke: "#64748b"; style.stroke-dash: 4; style.font-color: "#475569"}
   edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
   edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
   edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
@@ -134,6 +135,11 @@ def render_d2(graph: RenderGraph) -> str:
     # 描くため、拠点の平坦なメンバー一覧からは除外する
     nested_device_ids = {dev_id for members in graph.segment_members.values()
                          for dev_id in members}
+    # 冗長グループ (ADR-0010): メンバーは拠点直下ではなく点線枠サブコンテナに描く
+    red_in_site: dict[str, list] = {}
+    for rg in graph.redundancy:
+        red_in_site.setdefault(rg.site, []).append(rg)
+    framed_device_ids = {m for rg in graph.redundancy for m in rg.members}
 
     for site_id, site_label in graph.groups:
         members = grouped.get(site_id, [])
@@ -145,8 +151,21 @@ def render_d2(graph: RenderGraph) -> str:
         # WAN線が上からコンテナに入るため、タイトルは線の通り道の外 (外側左上) に置く。
         # 内側配置や外側中央では狭い拠点でIFラベル・回線と衝突することを実測で確認済み
         lines.append("  label.near: outside-top-left")
+        for rg in red_in_site.get(site_id, []):
+            rkey = f"rg_{_key(rg.id)}"
+            lines.append(f'  {rkey}: "{_label(rg.label)}" {{')
+            lines.append("    class: group-redundancy")
+            for member_id in rg.members:
+                member = nodes_by_id.get(member_id)
+                if member is None:
+                    continue
+                mkey = f"n_{_key(member_id)}"
+                node_path[member_id] = f"{gkey}.{rkey}.{mkey}"
+                lines.append(f'    {mkey}: "{_label(_node_label(member))}" '
+                             f'{{{_node_attrs(member, min_widths.get(member_id))}}}')
+            lines.append("  }")
         for node in members:
-            if node.id in nested_device_ids:
+            if node.id in nested_device_ids or node.id in framed_device_ids:
                 continue
             nkey = f"n_{_key(node.id)}"
             node_path[node.id] = f"{gkey}.{nkey}"

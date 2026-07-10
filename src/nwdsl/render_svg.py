@@ -175,6 +175,28 @@ def _domain_hulls(graph: RenderGraph, layout, dmap: dict[str, str]) -> list[str]
     return parts
 
 
+def _redundancy_frames(graph: RenderGraph, layout) -> list[str]:
+    """冗長グループの点線枠 (ADR-0010)。メンバー配置矩形の外接枠として描く。"""
+    parts: list[str] = []
+    for rg in graph.redundancy:
+        boxes = [layout.placed[m] for m in rg.members if m in layout.placed]
+        if len(boxes) < 2:
+            continue
+        pad = 9.0
+        x0 = min(b.x for b in boxes) - pad
+        y0 = min(b.y for b in boxes) - pad
+        x1 = max(b.x + b.w for b in boxes) + pad
+        y1 = max(b.y + b.h for b in boxes) + pad
+        parts.append(
+            f'<rect x="{x0:.1f}" y="{y0:.1f}" width="{x1 - x0:.1f}" '
+            f'height="{y1 - y0:.1f}" rx="6" fill="none" stroke="#64748b" '
+            f'stroke-width="1.3" stroke-dasharray="5 4"/>')
+        parts.append(
+            f'<text x="{x0 + 4:.1f}" y="{y0 - 5:.1f}" font-size="11.5" '
+            f'font-weight="600" fill="#475569">{_esc(rg.label)}</text>')
+    return parts
+
+
 def _legend(graph: RenderGraph, layout, dmap: dict[str, str]) -> list[str]:
     if not graph.domains:
         return []
@@ -211,6 +233,7 @@ def render_svg(graph: RenderGraph) -> str:
             f'<text x="{box.x + 4:.1f}" y="{box.y - 8:.1f}" font-size="14.5" '
             f'font-weight="600" fill="#33475b">{_esc(box.label)}</text>')
     parts.extend(_domain_hulls(graph, layout, dmap))  # 面塗りは拠点枠の上・線の下
+    parts.extend(_redundancy_frames(graph, layout))   # 冗長枠も同レイヤ
     marker_ids: set[str] = set()
     edge_parts: list[str] = []
     for r in sorted(layout.routed, key=lambda r: 1 if r.edge.emphasis == "path" else 0):

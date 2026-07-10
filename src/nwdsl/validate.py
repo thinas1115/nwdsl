@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import ipaddress
 from collections import Counter
 from dataclasses import dataclass
 from typing import Literal
@@ -164,6 +165,11 @@ def validate_document(doc: Document) -> list[Issue]:
                 issues.append(Issue("error", "ref.via",
                                     f"link {label}: via '{link.via}' が clouds に存在しません"))
 
+        if link.direction == "forward" and link.type != "logical":
+            issues.append(Issue("error", "link.direction-forbidden",
+                                f"link {label}: direction は logical でのみ指定できます "
+                                f"(物理配線・トンネルは無向)"))
+
         # --- 物理ポートの二重使用 ---
         if link.type in PHYSICAL_LINK_TYPES:
             for ep in link.endpoints:
@@ -187,14 +193,107 @@ def validate_document(doc: Document) -> list[Issue]:
                                 f"circuit '{cct.id}' が{n}本の link から参照されています "
                                 f"(1契約=1結線。複数回線は circuits を分けてください)"))
 
+    # ---- redundancy_groups (ADR-0010) ----
+    _check_duplicates(issues, [g.id for g in doc.redundancy_groups], "redundancy_groups")
+    segment_by_id = {s.id: s for s in doc.segments}
+    stack_membership: Counter[str] = Counter()
+    for grp in doc.redundancy_groups:
+        member_ids = [m.device for m in grp.members]
+        for dup, n in Counter(member_ids).items():
+            if n > 1:
+                issues.append(Issue("error", "redundancy.member-duplicate",
+                                    f"redundancy_group '{grp.id}': 機器 '{dup}' が{n}回参照されています"))
+        member_sites: set[str] = set()
+        for m in grp.members:
+            dev = device_by_id.get(m.device)
+            if dev is None:
+                issues.append(Issue("error", "ref.redundancy-member",
+                                    f"redundancy_group '{grp.id}' のメンバー '{m.device}' が "
+                                    f"devices に存在しません"))
+            else:
+                member_sites.add(dev.site)
+            if grp.kind == "stack":
+                stack_membership[m.device] += 1
+        if grp.kind == "stack":
+            for attr in ("protocol", "group", "vip"):
+                if getattr(grp, attr) is not None:
+                    issues.append(Issue("error", "redundancy.fhrp-only",
+                                        f"redundancy_group '{grp.id}': {attr} は kind: fhrp で"
+                                        f"のみ指定できます"))
+        if len(member_sites) > 1:
+            issues.append(Issue("warning", "redundancy.cross-site",
+                                f"redundancy_group '{grp.id}' のメンバーが複数拠点にまたがって"
+                                f"います ({' / '.join(sorted(member_sites))})。図の枠表示は同一拠点のみ対応"))
+        if grp.vip is not None:
+            # VIPはメンバーIFのネットワーク (IF自身のCIDR、または所属セグメントの
+            # CIDR) のどれかに含まれるはず。含まれないVIPは書き間違いの可能性が高い
+            vip_addr = ipaddress.ip_address(grp.vip)
+            member_ifs = [intf
+                          for m in grp.members if m.device in device_by_id
+                          for intf in device_by_id[m.device].interfaces]
+            networks = [ipaddress.ip_interface(i.ipv4).network
+                        for i in member_ifs if i.ipv4]
+            networks += [ipaddress.ip_network(segment_by_id[i.segment].ipv4)
+                         for i in member_ifs
+                         if i.segment in segment_by_id and segment_by_id[i.segment].ipv4]
+            if not any(vip_addr in net for net in networks):
+                issues.append(Issue("warning", "redundancy.vip-segment",
+                                    f"redundancy_group '{grp.id}' の vip '{grp.vip}' が、メンバー"
+                                    f"IFのどのネットワーク (IF/セグメントのCIDR) にも含まれません"))
+    for dev_id, n in stack_membership.items():
+        if n > 1:
+            issues.append(Issue("error", "redundancy.multi-stack",
+                                f"機器 '{dev_id}' が{n}個の stack グループに所属しています "
+                                f"(stack への所属は1機器1グループまで)"))
+
     # ---- domains ----
     _check_duplicates(issues, [d.id for d in doc.domains], "domains")
     domain_ids = {d.id for d in doc.domains}
+    for dom in doc.domains:
+        if dom.name is None and dom.protocol is None:
+            issues.append(Issue("error", "domain.name-required",
+                                f"domain '{dom.id}': name か protocol のどちらかは必須です "
+                                f"(凡例の表示名を決められません)"))
+        if dom.area is not None and dom.protocol != "ospf":
+            issues.append(Issue("error", "domain.attr-mismatch",
+                                f"domain '{dom.id}': area は protocol: ospf でのみ指定できます"))
+        if dom.asn is not None and dom.protocol != "bgp":
+            issues.append(Issue("error", "domain.attr-mismatch",
+                                f"domain '{dom.id}': asn は protocol: bgp でのみ指定できます"))
     for i, link in enumerate(doc.links):
         if link.domain is not None and link.domain not in domain_ids:
             issues.append(Issue("error", "ref.domain",
                                 f"link {_link_label(i, link)}: domain '{link.domain}' が "
                                 f"domains に存在しません"))
+
+    # ---- redistributions (ADR-0011) ----
+    # domain -> そのdomainのlink端点になっている機器ID集合 (所属の実在チェック用)
+    domain_devices: dict[str, set[str]] = {}
+    for link in doc.links:
+        if link.domain is None:
+            continue
+        for ep in link.endpoints:
+            node, _ = parse_endpoint(ep)
+            if node in device_by_id:
+                domain_devices.setdefault(link.domain, set()).add(node)
+    for r in doc.redistributions:
+        r_label = f"redistribution ({r.from_} → {r.to})"
+        for dom_id in (r.from_, r.to):
+            if dom_id not in domain_ids:
+                issues.append(Issue("error", "ref.redistribution-domain",
+                                    f"{r_label}: domain '{dom_id}' が domains に存在しません"))
+        if r.from_ == r.to:
+            issues.append(Issue("error", "redistribution.same-domain",
+                                f"{r_label}: from と to が同一ドメインです"))
+        for dev_id in r.devices:
+            if dev_id not in device_by_id:
+                issues.append(Issue("error", "ref.redistribution-device",
+                                    f"{r_label}: devices の機器 '{dev_id}' が devices に存在しません"))
+            elif not (dev_id in domain_devices.get(r.from_, set())
+                      and dev_id in domain_devices.get(r.to, set())):
+                issues.append(Issue("warning", "redistribution.device-not-in-domain",
+                                    f"{r_label}: 機器 '{dev_id}' が from/to 両ドメインの link 端点に"
+                                    f"なっていません (static 等 link を張らない流儀なら無視可)"))
 
     # ---- paths ----
     _check_duplicates(issues, [p.id for p in doc.paths], "paths")

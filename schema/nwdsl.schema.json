@@ -180,19 +180,6 @@
           "description": "管理IPアドレス (CIDR形式)",
           "title": "Mgmt Ipv4"
         },
-        "redundancy_group": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "冗長グループ名 (HSRP/VRRPペア・スタック等で同名を指定)",
-          "title": "Redundancy Group"
-        },
         "description": {
           "anyOf": [
             {
@@ -224,7 +211,7 @@
     },
     "Domain": {
       "additionalProperties": false,
-      "description": "ルーティングドメイン (OSPFエリア / BGP AS / VRF等)。\n\n図では所属エッジの色分け+凡例で表現される (エリア名を線1本ずつにラベル\nしない、実務の描き方に合わせるため)。内蔵SVGエンジンでは所属機器を囲む\n半透明の面塗りとしても描かれる。色はレンダラが自動割当し、DSLでは指定しない。",
+      "description": "ルーティングドメイン (OSPFエリア / BGP AS / VRF等)。\n\n図では所属エッジの色分け+凡例で表現される (エリア名を線1本ずつにラベル\nしない、実務の描き方に合わせるため)。内蔵SVGエンジンでは所属機器を囲む\n半透明の面塗りとしても描かれる。色はレンダラが自動割当し、DSLでは指定しない。\n表示名は name、または protocol/area/asn から自動生成 (ADR-0011)。",
       "properties": {
         "id": {
           "description": "ドメインID (ファイル内で一意)",
@@ -232,9 +219,68 @@
           "type": "string"
         },
         "name": {
-          "description": "表示名 (例: OSPF Area 0)。凡例・面塗りラベルに使用",
-          "title": "Name",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "表示名 (例: OSPF Area 0)。省略時は protocol/area/asn から自動生成",
+          "title": "Name"
+        },
+        "protocol": {
+          "anyOf": [
+            {
+              "enum": [
+                "ospf",
+                "bgp",
+                "eigrp",
+                "rip",
+                "static",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ルーティングプロトコル種別",
+          "title": "Protocol"
+        },
+        "area": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "OSPFエリア識別子 (protocol: ospf のみ。'0' / '0.0.0.0' 両形式可)",
+          "title": "Area"
+        },
+        "asn": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "BGP AS番号 (protocol: bgp のみ)",
+          "title": "Asn"
         },
         "description": {
           "anyOf": [
@@ -251,8 +297,7 @@
         }
       },
       "required": [
-        "id",
-        "name"
+        "id"
       ],
       "title": "Domain",
       "type": "object"
@@ -387,6 +432,16 @@
           "default": null,
           "description": "経由する網のID (clouds を参照。logical/tunnel のみ)。論理図で『網の雲を通るピアリング』として描かれる",
           "title": "Via"
+        },
+        "direction": {
+          "default": "both",
+          "description": "forward=endpoints[0]→endpoints[1] の矢印で描く (logical のみ。デフォルトルート等の向きの表現、ADR-0012) / both=無向 (既定)",
+          "enum": [
+            "forward",
+            "both"
+          ],
+          "title": "Direction",
+          "type": "string"
         },
         "description": {
           "anyOf": [
@@ -550,6 +605,198 @@
         "node"
       ],
       "title": "PathHop",
+      "type": "object"
+    },
+    "Redistribution": {
+      "additionalProperties": false,
+      "description": "ルート再配布 (ドメイン間の関係)。ADR-0011。\n\n図では on の機器ノードに『再配布: A → B』(mutual なら ⇄) のバッジ行が付く。",
+      "properties": {
+        "from": {
+          "description": "再配布元ドメインID (domains を参照)",
+          "title": "From",
+          "type": "string"
+        },
+        "to": {
+          "description": "再配布先ドメインID (domains を参照)",
+          "title": "To",
+          "type": "string"
+        },
+        "devices": {
+          "description": "再配布を実施する機器ID (複数可 = 冗長ASBR)",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Devices",
+          "type": "array"
+        },
+        "mutual": {
+          "default": false,
+          "description": "true なら相互再配布 (from⇄to)。既定は from→to の一方向",
+          "title": "Mutual",
+          "type": "boolean"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "補足",
+          "title": "Description"
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "devices"
+      ],
+      "title": "Redistribution",
+      "type": "object"
+    },
+    "RedundancyGroup": {
+      "additionalProperties": false,
+      "description": "冗長グループ (HSRP/VRRPペア / スタック)。ADR-0010。\n\nkind: fhrp は図で点線枠+Act/Sbyバッジ、kind: stack は論理ビューで\n1ノードに畳める (View.merge_stacks)。priority値・preempt等のコンフィグ\n詳細はスコープ外。",
+      "properties": {
+        "id": {
+          "description": "冗長グループID (ファイル内で一意)",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "default": "fhrp",
+          "description": "fhrp=HSRP/VRRP等のGW冗長 / stack=スタック・シャーシ冗長",
+          "enum": [
+            "fhrp",
+            "stack"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "表示名 (stack を畳んだときのノード名。省略時は id)",
+          "title": "Name"
+        },
+        "protocol": {
+          "anyOf": [
+            {
+              "enum": [
+                "hsrp",
+                "vrrp",
+                "glbp",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "FHRPプロトコル (kind: fhrp のみ)。枠ラベルに表示",
+          "title": "Protocol"
+        },
+        "group": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "FHRPグループ番号 (kind: fhrp のみ、任意)",
+          "title": "Group"
+        },
+        "vip": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "仮想IP (kind: fhrp のみ。CIDRなしの単一アドレス。所属セグメントはCIDR包含で自動導出される)",
+          "title": "Vip"
+        },
+        "members": {
+          "description": "メンバー機器 (2台以上)",
+          "items": {
+            "$ref": "#/$defs/RedundancyMember"
+          },
+          "minItems": 2,
+          "title": "Members",
+          "type": "array"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "補足",
+          "title": "Description"
+        }
+      },
+      "required": [
+        "id",
+        "members"
+      ],
+      "title": "RedundancyGroup",
+      "type": "object"
+    },
+    "RedundancyMember": {
+      "additionalProperties": false,
+      "description": "冗長グループの1メンバー。",
+      "properties": {
+        "device": {
+          "description": "メンバー機器ID (devices を参照)",
+          "title": "Device",
+          "type": "string"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "enum": [
+                "active",
+                "standby"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "FHRPでの役割 (active / standby)。図でノードに (Act)/(Sby) を表示",
+          "title": "Role"
+        }
+      },
+      "required": [
+        "device"
+      ],
+      "title": "RedundancyMember",
       "type": "object"
     },
     "Segment": {
@@ -785,6 +1032,19 @@
           "description": "L3情報 (IFのIPv4一覧とセグメントノード) の表示。view=このビューに現れる接続のIFのみ (true と同義) / used=いずれかのlinkで使用中のIF / all=IPv4を持つ全IF / false=非表示。省略時は layers に logical を含むビューで view モードが自動有効",
           "title": "Show L3"
         },
+        "merge_stacks": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "kind: stack の冗長グループを1ノードに畳む (ADR-0010)。省略時は純粋なL3ビュー (show_l3 の自動判定と同条件) で自動有効。物理図では通常 false (2筐体+点線枠で描く)",
+          "title": "Merge Stacks"
+        },
         "description": {
           "anyOf": [
             {
@@ -797,6 +1057,16 @@
           "default": null,
           "description": "補足",
           "title": "Description"
+        },
+        "order": {
+          "default": "auto",
+          "description": "拠点の左右順序。auto=クロス最小化で見た目を最適化 (既定) / declared=sites の宣言順で固定しビュー間の順序を一致させる。内蔵SVGエンジンのみ有効、D2(ELK)では保証されない",
+          "enum": [
+            "auto",
+            "declared"
+          ],
+          "title": "Order",
+          "type": "string"
         }
       },
       "required": [
@@ -811,7 +1081,7 @@
   "description": "DSL ファイル全体。",
   "properties": {
     "nwdsl": {
-      "description": "スキーマバージョン (現在は '0.1')",
+      "description": "スキーマバージョン (現在は '0.2'。'0.1' も受理)",
       "title": "Nwdsl",
       "type": "string"
     },
@@ -860,11 +1130,25 @@
       "title": "Segments",
       "type": "array"
     },
+    "redundancy_groups": {
+      "items": {
+        "$ref": "#/$defs/RedundancyGroup"
+      },
+      "title": "Redundancy Groups",
+      "type": "array"
+    },
     "domains": {
       "items": {
         "$ref": "#/$defs/Domain"
       },
       "title": "Domains",
+      "type": "array"
+    },
+    "redistributions": {
+      "items": {
+        "$ref": "#/$defs/Redistribution"
+      },
+      "title": "Redistributions",
       "type": "array"
     },
     "paths": {

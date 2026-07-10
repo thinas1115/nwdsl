@@ -85,12 +85,28 @@ def render_mermaid(graph: RenderGraph) -> str:
     for node in graph.nodes:
         (grouped.setdefault(node.site, []) if node.site else ungrouped).append(node)
 
+    # 冗長グループ (ADR-0010): メンバーは拠点subgraph内の入れ子subgraphに描く
+    red_in_site: dict[str, list] = {}
+    for rg in graph.redundancy:
+        red_in_site.setdefault(rg.site, []).append(rg)
+    framed_device_ids = {m for rg in graph.redundancy for m in rg.members}
+    nodes_by_id = {n.id: n for n in graph.nodes}
+
     for site_id, site_label in graph.groups:
         members = grouped.get(site_id, [])
         if not members:
             continue
         lines.append(f'  subgraph sg_{_key(site_id)}["{_label(site_label)}"]')
+        for rg in red_in_site.get(site_id, []):
+            lines.append(f'    subgraph rg_{_key(rg.id)}["{_label(rg.label)}"]')
+            for member_id in rg.members:
+                member = nodes_by_id.get(member_id)
+                if member is not None:
+                    lines.append(f"      {_node_decl(member)}")
+            lines.append("    end")
         for node in members:
+            if node.id in framed_device_ids:
+                continue
             lines.append(f"    {_node_decl(node)}")
         lines.append("  end")
 
@@ -140,5 +156,8 @@ def render_mermaid(graph: RenderGraph) -> str:
                          f"stroke:{color},stroke-width:2px,stroke-dasharray:3 3")
         lines.append(f"  classDef dom{k} fill:#ffffff,stroke:{color},color:{color}")
         lines.append(f"  class lg{k} dom{k}")
+    for rg in graph.redundancy:  # 冗長枠は点線の透明subgraph
+        lines.append(f"  style rg_{_key(rg.id)} fill:none,stroke:#64748b,"
+                     f"stroke-dasharray:4 4,color:#475569")
 
     return "\n".join(lines) + "\n"
