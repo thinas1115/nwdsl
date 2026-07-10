@@ -1,6 +1,6 @@
 # complex-lan: 本社LANを多段化した構成 (レイアウト破綻の検証用)
 #   WAN境界(ルーター冗長) → FW冗長 → コアL3冗長 → ディストリ → アクセス複数 → サーバ/DMZ
-nwdsl: "0.1"
+nwdsl: "0.2"
 
 network:
   name: complex-lan-corp
@@ -19,7 +19,6 @@ devices:
     site: hq
     role: router
     platform: Cisco ISR4451
-    redundancy_group: hq-wan
     interfaces:
       - {name: Gi0/0/0, description: IP-VPNアクセス回線}
       - {name: Gi0/0/1, description: FW01へ}
@@ -27,7 +26,6 @@ devices:
     site: hq
     role: router
     platform: Cisco ISR4451
-    redundancy_group: hq-wan
     interfaces:
       - {name: Gi0/0/0, description: インターネット回線}
       - {name: Gi0/0/1, description: FW02へ}
@@ -37,7 +35,6 @@ devices:
     site: hq
     role: firewall
     platform: Palo Alto PA-3410
-    redundancy_group: hq-fw
     interfaces:
       - {name: eth1/1, description: rt01へ}
       - {name: eth1/2, description: コアSW01へ, ipv4: 10.1.255.1/29}
@@ -46,7 +43,6 @@ devices:
     site: hq
     role: firewall
     platform: Palo Alto PA-3410
-    redundancy_group: hq-fw
     interfaces:
       - {name: eth1/1, description: rt02へ}
       - {name: eth1/2, description: コアSW02へ}
@@ -56,28 +52,26 @@ devices:
     site: hq
     role: l3switch
     platform: Catalyst 9500
-    redundancy_group: hq-core
     interfaces:
       - {name: Te1/0/1, description: FW01へ, ipv4: 10.1.255.2/29}
       - {name: Te1/0/2, description: コア間リンク, ipv4: 10.1.254.1/30}
       - {name: Te1/0/3, description: ディストリ01へ}
       - {name: Te1/0/4, description: ディストリ02へ}
       - {name: Te1/0/5, description: サーバSWへ}
-      - {name: Vlan10, description: サーバセグメントGW (HSRP VIP .1), ipv4: 10.1.10.2/24, segment: hq-server}
-      - {name: Vlan20, description: クライアントセグメントGW (HSRP VIP .1), ipv4: 10.1.20.2/24, segment: hq-client}
+      - {name: Vlan10, description: サーバセグメントGW, ipv4: 10.1.10.2/24, segment: hq-server}
+      - {name: Vlan20, description: クライアントセグメントGW, ipv4: 10.1.20.2/24, segment: hq-client}
   - id: hq-core02
     site: hq
     role: l3switch
     platform: Catalyst 9500
-    redundancy_group: hq-core
     interfaces:
       - {name: Te1/0/1, description: FW02へ, ipv4: 10.1.255.3/29}
       - {name: Te1/0/2, description: コア間リンク, ipv4: 10.1.254.2/30}
       - {name: Te1/0/3, description: ディストリ01へ}
       - {name: Te1/0/4, description: ディストリ02へ}
       - {name: Te1/0/5, description: サーバSWへ}
-      - {name: Vlan10, description: サーバセグメントGW (HSRP standby), ipv4: 10.1.10.3/24, segment: hq-server}
-      - {name: Vlan20, description: クライアントセグメントGW (HSRP standby), ipv4: 10.1.20.3/24, segment: hq-client}
+      - {name: Vlan10, description: サーバセグメントGW, ipv4: 10.1.10.3/24, segment: hq-server}
+      - {name: Vlan20, description: クライアントセグメントGW, ipv4: 10.1.20.3/24, segment: hq-client}
 
   # ---- ディストリビューションスイッチ ----
   - id: hq-dist01
@@ -225,8 +219,38 @@ links:
   - {type: logical, endpoints: ["hq-core01", "hq-core02"], domain: area0}
   - {type: logical, endpoints: ["hq-rt01", "osk-rt01"], via: ipvpn, description: BGP}
 
+redundancy_groups:
+  - id: hq-wan
+    kind: fhrp
+    members:
+      - {device: hq-rt01}
+      - {device: hq-rt02}
+  - id: hq-fw
+    kind: fhrp
+    protocol: other
+    members:
+      - {device: hq-fw01, role: active}
+      - {device: hq-fw02, role: standby}
+  # コアペアはVLAN別にHSRPグループを分ける (図では1つの枠に統合される)
+  - id: hq-core-v10
+    kind: fhrp
+    protocol: hsrp
+    group: 10
+    vip: 10.1.10.1
+    members:
+      - {device: hq-core01, role: active}
+      - {device: hq-core02, role: standby}
+  - id: hq-core-v20
+    kind: fhrp
+    protocol: hsrp
+    group: 20
+    vip: 10.1.20.1
+    members:
+      - {device: hq-core01, role: active}
+      - {device: hq-core02, role: standby}
+
 domains:
-  - {id: area0, name: OSPF Area 0}
+  - {id: area0, protocol: ospf, area: 0}
 
 segments:
   - {id: hq-server, site: hq, vlan: 10, ipv4: 10.1.10.0/24, name: 本社サーバ}

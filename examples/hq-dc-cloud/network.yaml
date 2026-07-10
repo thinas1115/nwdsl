@@ -1,6 +1,6 @@
 # hq-dc-cloud: 本社 + データセンター + AWS (Direct Connect + インターネットVPNバックアップ)
 #   オンプレとクラウドの混在構成。DX障害時の迂回経路つき
-nwdsl: "0.1"
+nwdsl: "0.2"
 
 network:
   name: hq-dc-cloud
@@ -23,7 +23,6 @@ devices:
     site: hq
     role: router
     platform: Cisco C8300
-    redundancy_group: hq-wan
     interfaces:
       - {name: Gi0/0/0, description: 広域Etherアクセス, ipv4: 10.255.0.1/29}
       - {name: Gi0/0/1, description: コアSWへ, ipv4: 10.10.0.2/24}
@@ -31,7 +30,6 @@ devices:
     site: hq
     role: router
     platform: Cisco C8300
-    redundancy_group: hq-wan
     interfaces:
       - {name: Gi0/0/0, description: 広域Etherアクセス, ipv4: 10.255.0.2/29}
       - {name: Gi0/0/1, description: コアSWへ, ipv4: 10.10.0.3/24}
@@ -138,6 +136,15 @@ links:
   - {type: logical, endpoints: ["hq-rt01", "dc-rt01"], via: wide-ether, description: OSPF}
   - {type: logical, endpoints: ["hq-rt02", "dc-rt01"], via: wide-ether, description: OSPF}
   - {type: logical, endpoints: ["dc-rt01", "aws-vgw01"], description: BGP (DX上)}
+
+redundancy_groups:
+  - id: hq-wan
+    kind: fhrp
+    protocol: hsrp
+    vip: 10.10.0.1
+    members:
+      - {device: hq-rt01, role: active}
+      - {device: hq-rt02, role: standby}
 
 segments:
   - {id: hq-users, site: hq, vlan: 100, ipv4: 10.10.100.0/24, name: 本社ユーザ}

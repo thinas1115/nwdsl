@@ -1,9 +1,13 @@
 flowchart TB
   subgraph sg_hq["本社"]
-    hq_fw01["hq-fw01<br>Palo Alto PA-3410<br>eth1/3: 192.168.100.1/24"]
-    hq_core01["hq-core01<br>Catalyst 9500<br>Vlan10: 10.1.10.2/24<br>Vlan20: 10.1.20.2/24"]
-    hq_fw02["hq-fw02<br>Palo Alto PA-3410"]
-    hq_core02["hq-core02<br>Catalyst 9500<br>Vlan10: 10.1.10.3/24<br>Vlan20: 10.1.20.3/24"]
+    subgraph rg_hq_fw["冗長ペア"]
+      hq_fw01["hq-fw01 (Act)<br>Palo Alto PA-3410<br>eth1/3: 192.168.100.1/24"]
+      hq_fw02["hq-fw02 (Sby)<br>Palo Alto PA-3410"]
+    end
+    subgraph rg_hq_core_v10__hq_core_v20["HSRP grp10 VIP 10.1.10.1 / HSRP grp20 VIP 10.1.20.1"]
+      hq_core01["hq-core01 (Act)<br>Catalyst 9500<br>Vlan10: 10.1.10.2/24<br>Vlan20: 10.1.20.2/24"]
+      hq_core02["hq-core02 (Sby)<br>Catalyst 9500<br>Vlan10: 10.1.10.3/24<br>Vlan20: 10.1.20.3/24"]
+    end
     hq_rt01["hq-rt01<br>Cisco ISR4451"]
     seg__hq_server(["本社サーバ<br>VLAN 10 / 10.1.10.0/24"])
     seg__hq_client(["本社クライアント<br>VLAN 20 / 10.1.20.0/24"])
@@ -50,3 +54,5 @@ flowchart TB
   linkStyle 0,1,2 stroke:#e8710a,stroke-width:2px,stroke-dasharray:3 3
   classDef dom0 fill:#ffffff,stroke:#e8710a,color:#e8710a
   class lg0 dom0
+  style rg_hq_fw fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569
+  style rg_hq_core_v10__hq_core_v20 fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569

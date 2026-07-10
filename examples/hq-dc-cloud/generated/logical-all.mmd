@@ -11,8 +11,10 @@ flowchart TB
     seg__aws_vpc_app(["VPC アプリ用<br>10.100.0.0/16"])
   end
   subgraph sg_hq["本社"]
-    hq_rt01["hq-rt01<br>Cisco C8300"]
-    hq_rt02["hq-rt02<br>Cisco C8300"]
+    subgraph rg_hq_wan["HSRP VIP 10.10.0.1"]
+      hq_rt01["hq-rt01 (Act)<br>Cisco C8300"]
+      hq_rt02["hq-rt02 (Sby)<br>Cisco C8300"]
+    end
     hq_sw01["hq-sw01<br>Catalyst 9300<br>Vlan100: 10.10.100.1/24"]
     seg__hq_users(["本社ユーザ<br>VLAN 100 / 10.10.100.0/24"])
   end
@@ -50,3 +52,4 @@ flowchart TB
   linkStyle 2,3,4,5 stroke:#188038,stroke-width:2px,stroke-dasharray:3 3
   linkStyle 6,7 stroke:#4a4a4a,stroke-width:2px
   linkStyle 8,9 stroke:#0f766e,stroke-width:1.5px
+  style rg_hq_wan fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569

@@ -1,8 +1,10 @@
 flowchart TB
   subgraph sg_hube["東日本ハブ"]
-    hube_rt01["hube-rt01<br>Cisco C8300"]
+    subgraph rg_hube_wan["冗長ペア"]
+      hube_rt01["hube-rt01<br>Cisco C8300"]
+      hube_rt02["hube-rt02<br>Cisco C8300"]
+    end
     hube_core01["hube-core01<br>Catalyst 9500"]
-    hube_rt02["hube-rt02<br>Cisco C8300"]
     hube_srv01["hube-srv01<br>基幹サーバ"]
   end
   ipvpn(("IP-VPN網"))
@@ -31,3 +33,4 @@ flowchart TB
   class ipvpn,mobile node_cloud
   linkStyle 0,1,2 stroke:#4a4a4a,stroke-width:2px
   linkStyle 3,4,5 stroke:#1a73e8,stroke-width:4px
+  style rg_hube_wan fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569

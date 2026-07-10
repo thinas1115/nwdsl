@@ -14,6 +14,7 @@ classes: {
   node-segment: {style.fill: "#e2f5f0"; style.stroke: "#0f766e"; style.font-color: "#0b3d38"; style.border-radius: 12}
   node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
   group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  group-redundancy: {style.fill: "transparent"; style.stroke: "#64748b"; style.stroke-dash: 4; style.font-color: "#475569"}
   edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
   edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
   edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
@@ -25,9 +26,12 @@ classes: {
 s_hq: "本社" {
   class: group-site
   label.near: outside-top-left
-  n_hq_rt01: "hq-rt01\nCisco C8300\nGi0/0/0: 10.255.0.1/29\nGi0/0/1: 10.10.0.2/24" {class: role-router}
+  rg_hq_wan: "HSRP VIP 10.10.0.1" {
+    class: group-redundancy
+    n_hq_rt01: "hq-rt01 (Act)\nCisco C8300\nGi0/0/0: 10.255.0.1/29\nGi0/0/1: 10.10.0.2/24" {class: role-router}
+    n_hq_rt02: "hq-rt02 (Sby)\nCisco C8300\nGi0/0/0: 10.255.0.2/29\nGi0/0/1: 10.10.0.3/24" {class: role-router; style.opacity: 0.3}
+  }
   n_hq_sw01: "hq-sw01\nCatalyst 9300\nVlan100: 10.10.100.1/24" {class: role-l3switch; width: 180}
-  n_hq_rt02: "hq-rt02\nCisco C8300\nGi0/0/0: 10.255.0.2/29\nGi0/0/1: 10.10.0.3/24" {class: role-router; style.opacity: 0.3}
   n_seg__hq_users: "本社ユーザ\nVLAN 100 / 10.10.100.0/24" {class: node-segment; style.opacity: 0.3}
 }
 
@@ -56,8 +60,8 @@ s_aws: "AWS ap-northeast-1" {
 n_wide_ether: "　広域Ethernet網　" {class: node-cloud}
 n_internet: "　インターネット　" {class: node-cloud; style.opacity: 0.3}
 
-s_hq.n_hq_rt01 -> s_hq.n_hq_sw01: "① HSRP active側GW" {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-s_hq.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"; style.opacity: 0.15}
+s_hq.rg_hq_wan.n_hq_rt01 -> s_hq.n_hq_sw01: "① HSRP active側GW" {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/1"; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+s_hq.rg_hq_wan.n_hq_rt02 -- s_hq.n_hq_sw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/0/1"; target-arrowhead.label: "Gi1/0/2"; style.opacity: 0.15}
 s_dc.n_dc_rt01 -- s_dc.n_dc_core01 {class: edge-lan-cable; source-arrowhead.label: "Te0/0/1"; target-arrowhead.label: "Eth1/1"; style.opacity: 0.15}
 s_dc.n_dc_fw01 -- s_dc.n_dc_core01 {class: edge-lan-cable; source-arrowhead.label: "internal1"; target-arrowhead.label: "Eth1/2"; style.opacity: 0.15}
 s_dc.n_dc_core01 -- s_dc.n_dc_srvsw01 {class: edge-lan-cable; source-arrowhead.label: "Eth1/3"; target-arrowhead.label: "Gi1/0/1"; style.opacity: 0.15}
@@ -65,10 +69,10 @@ s_dc.n_dc_srvsw01 -- s_dc.n_seg__dc_servers.n_dc_srv01 {class: edge-lan-cable; s
 s_dc.n_dc_srvsw01 -- s_dc.n_seg__dc_servers.n_dc_srv02 {class: edge-lan-cable; source-arrowhead.label: "Gi1/0/12"; target-arrowhead.label: "eno1"; style.opacity: 0.15}
 lbl_7: "② OSPF" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
 n_wide_ether -- lbl_7 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
-lbl_7 -> s_hq.n_hq_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
+lbl_7 -> s_hq.rg_hq_wan.n_hq_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_8: "キャリアA 広域Ethernet 1G\n(Gi0/0/0)" {class: edge-label; style.opacity: 0.15}
 n_wide_ether -- lbl_8 {class: edge-wan-circuit; style.opacity: 0.15}
-lbl_8 -- s_hq.n_hq_rt02 {class: edge-wan-circuit; style.opacity: 0.15}
+lbl_8 -- s_hq.rg_hq_wan.n_hq_rt02 {class: edge-wan-circuit; style.opacity: 0.15}
 lbl_9: "③" {class: edge-label; style.font-color: "#c5221f"; style.bold: true}
 n_wide_ether -- lbl_9 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
 lbl_9 -> s_dc.n_dc_rt01 {class: edge-wan-circuit; style.stroke: "#c5221f"; style.stroke-width: 4; style.animated: true}
@@ -80,9 +84,9 @@ n_internet -- lbl_11 {class: edge-wan-circuit; style.opacity: 0.15}
 lbl_11 -- s_dc.n_dc_fw01 {class: edge-wan-circuit; style.opacity: 0.15}
 n_internet -- s_dc.n_dc_fw01: "Site-to-Site VPN (DX障害時のバックアップ)" {class: edge-tunnel; style.opacity: 0.15}
 n_internet -- s_aws.n_aws_vgw01: "Site-to-Site VPN (DX障害時のバックアップ)" {class: edge-tunnel; style.opacity: 0.15}
-n_wide_ether -- s_hq.n_hq_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
+n_wide_ether -- s_hq.rg_hq_wan.n_hq_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
 n_wide_ether -- s_dc.n_dc_rt01: "OSPF" {class: edge-logical; style.opacity: 0.15}
-n_wide_ether -- s_hq.n_hq_rt02: "OSPF" {class: edge-logical; style.opacity: 0.15}
+n_wide_ether -- s_hq.rg_hq_wan.n_hq_rt02: "OSPF" {class: edge-logical; style.opacity: 0.15}
 s_dc.n_dc_rt01 -- s_aws.n_aws_vgw01: "BGP (DX上)" {class: edge-logical; style.opacity: 0.15}
 s_hq.n_hq_sw01 -- s_hq.n_seg__hq_users {class: edge-segment; source-arrowhead.label: "Vlan100"; style.opacity: 0.15}
 s_aws.n_aws_vgw01 -- s_aws.n_seg__aws_vpc_app {class: edge-segment; source-arrowhead.label: "vpc1"; style.opacity: 0.15}

@@ -1,8 +1,10 @@
 flowchart TB
   subgraph sg_hq["本社"]
-    hq_rt01["hq-rt01<br>Cisco C8300<br>Gi0/0/0: 10.255.0.1/29<br>Gi0/0/1: 10.10.0.2/24"]
+    subgraph rg_hq_wan["HSRP VIP 10.10.0.1"]
+      hq_rt01["hq-rt01 (Act)<br>Cisco C8300<br>Gi0/0/0: 10.255.0.1/29<br>Gi0/0/1: 10.10.0.2/24"]
+      hq_rt02["hq-rt02 (Sby)<br>Cisco C8300<br>Gi0/0/0: 10.255.0.2/29<br>Gi0/0/1: 10.10.0.3/24"]
+    end
     hq_sw01["hq-sw01<br>Catalyst 9300<br>Vlan100: 10.10.100.1/24"]
-    hq_rt02["hq-rt02<br>Cisco C8300<br>Gi0/0/0: 10.255.0.2/29<br>Gi0/0/1: 10.10.0.3/24"]
     seg__hq_users(["本社ユーザ<br>VLAN 100 / 10.10.100.0/24"])
   end
   subgraph sg_dc["DCコロケーション"]
@@ -61,3 +63,4 @@ flowchart TB
   linkStyle 1,4,5,6,8,12,14,15,16,18,19 stroke:#e8eaed,stroke-width:1px
   linkStyle 10 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
   linkStyle 17 stroke:#9aa0a6,stroke-width:2px,stroke-dasharray:4 4
+  style rg_hq_wan fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569

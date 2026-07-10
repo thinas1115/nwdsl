@@ -1,0 +1,92 @@
+# stack-core: コアスタックの描き分け実演 (ADR-0010)
+#   physical      … 2筐体+点線枠 (スタックリンク×2が見える)
+#   logical       … OSPF論理図。スタックは1筐体 (dc-core) に畳まれる
+#   cabling-merged… merge_stacks を明示ONにした配線図。クロススタックLAGが×2に束なる
+nwdsl: "0.2"
+
+network:
+  name: stack-core
+  description: コアスタック構成 (物理図=2筐体 / 論理図=1筐体) の実演
+
+sites:
+  - {id: dc, name: データセンター}
+
+devices:
+  - id: dc-rt01
+    site: dc
+    role: router
+    platform: Cisco C8300
+    interfaces:
+      - {name: Gi0/0/0, description: 対外回線, ipv4: 192.0.2.1/30}
+      - {name: Gi0/0/1, description: コアへ (メンバー1), ipv4: 10.20.0.1/24}
+      - {name: Gi0/0/2, description: コアへ (メンバー2)}
+  - id: dc-core01
+    site: dc
+    role: l3switch
+    platform: Catalyst 9500 (スタックメンバー1)
+    interfaces:
+      - {name: Te1/0/49, description: スタックリンク}
+      - {name: Te1/0/50, description: スタックリンク}
+      - {name: Te1/0/1, description: rt01へ, ipv4: 10.20.0.2/24}
+      - {name: Te1/0/2, description: アクセスSWへ}
+      - {name: Vlan10, description: サーバセグメントGW, ipv4: 10.20.10.1/24, segment: dc-srv}
+  - id: dc-core02
+    site: dc
+    role: l3switch
+    platform: Catalyst 9500 (スタックメンバー2)
+    interfaces:
+      - {name: Te2/0/49, description: スタックリンク}
+      - {name: Te2/0/50, description: スタックリンク}
+      - {name: Te2/0/1, description: rt01へ}
+      - {name: Te2/0/2, description: アクセスSWへ}
+  - id: dc-acc01
+    site: dc
+    role: l2switch
+    platform: Catalyst 9200
+    interfaces:
+      - {name: Gi1/0/49, description: コア (メンバー1) へ}
+      - {name: Gi1/0/50, description: コア (メンバー2) へ}
+      - {name: Gi1/0/1, description: サーバへ}
+  - id: dc-srv01
+    site: dc
+    role: server
+    platform: PowerEdge R760
+    interfaces:
+      - {name: eno1, ipv4: 10.20.10.5/24, segment: dc-srv}
+
+segments:
+  - {id: dc-srv, site: dc, vlan: 10, ipv4: 10.20.10.0/24, name: サーバセグメント}
+
+redundancy_groups:
+  - id: dc-core
+    kind: stack
+    name: dc-core
+    members:
+      - {device: dc-core01}
+      - {device: dc-core02}
+
+domains:
+  - {id: area0, protocol: ospf, area: 0}
+
+links:
+  # スタックリンク (論理ビューでは自己ループになり消える)
+  - {type: lan-cable, endpoints: ["dc-core01:Te1/0/49", "dc-core02:Te2/0/49"]}
+  - {type: lan-cable, endpoints: ["dc-core01:Te1/0/50", "dc-core02:Te2/0/50"]}
+  # クロススタックLAG: ルーター→両筐体 (畳むと×2に束なる)
+  - {type: lan-cable, endpoints: ["dc-rt01:Gi0/0/1", "dc-core01:Te1/0/1"]}
+  - {type: lan-cable, endpoints: ["dc-rt01:Gi0/0/2", "dc-core02:Te2/0/1"]}
+  # アクセスSWのデュアルホーム (同上)
+  - {type: lan-cable, endpoints: ["dc-acc01:Gi1/0/49", "dc-core01:Te1/0/2"]}
+  - {type: lan-cable, endpoints: ["dc-acc01:Gi1/0/50", "dc-core02:Te2/0/2"]}
+  - {type: lan-cable, endpoints: ["dc-srv01:eno1", "dc-acc01:Gi1/0/1"]}
+  # 論理隣接 (メンバーどちらを書いても畳み後は同じノードに解決される)
+  - {type: logical, endpoints: ["dc-rt01", "dc-core01"], domain: area0}
+
+views:
+  - {id: physical, title: 物理構成図, layers: [lan-cable]}
+  - {id: logical, title: 論理構成図, layers: [logical]}
+  - id: cabling-merged
+    title: 配線図 (スタック集約)
+    layers: [lan-cable]
+    merge_stacks: true
+    description: クロススタックLAGが対向から1論理リンク×2に見えることの実演

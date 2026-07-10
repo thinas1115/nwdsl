@@ -1,5 +1,5 @@
 # このファイルは generate.py により生成 (手編集しない)
-nwdsl: '0.1'
+nwdsl: '0.2'
 network:
   name: scale-50
   description: 3拠点・50台の描画スケール検証
@@ -22,7 +22,6 @@ devices:
   - name: Gi0/1
   - name: Gi0/2
     description: WANアクセス回線
-  redundancy_group: hq-wan
 - id: hq-fw01
   site: hq
   role: firewall
@@ -31,7 +30,6 @@ devices:
   - name: Gi0/1
   - name: Gi0/2
   - name: Gi0/3
-  redundancy_group: hq-fw
 - id: hq-core01
   site: hq
   role: l3switch
@@ -48,7 +46,6 @@ devices:
     description: セグメントGW
     ipv4: 10.50.20.2/24
     segment: hq-srv
-  redundancy_group: hq-core
 - id: hq-srvsw01
   site: hq
   role: l2switch
@@ -66,7 +63,6 @@ devices:
   - name: Gi0/1
   - name: Gi0/2
     description: WANアクセス回線
-  redundancy_group: hq-wan
 - id: hq-fw02
   site: hq
   role: firewall
@@ -74,7 +70,6 @@ devices:
   interfaces:
   - name: Gi0/1
   - name: Gi0/2
-  redundancy_group: hq-fw
 - id: hq-core02
   site: hq
   role: l3switch
@@ -91,7 +86,6 @@ devices:
     description: セグメントGW
     ipv4: 10.50.20.3/24
     segment: hq-srv
-  redundancy_group: hq-core
 - id: hq-srvsw02
   site: hq
   role: l2switch
@@ -801,12 +795,39 @@ segments:
   vlan: 104
   ipv4: 10.50.14.0/24
   name: 本社4Fユーザ
+redundancy_groups:
+- id: hq-wan
+  kind: fhrp
+  members:
+  - {device: hq-rt01}
+  - {device: hq-rt02}
+- id: hq-fw
+  kind: fhrp
+  protocol: other
+  members:
+  - {device: hq-fw01, role: active}
+  - {device: hq-fw02, role: standby}
+- id: hq-core
+  kind: fhrp
+  protocol: hsrp
+  group: 20
+  vip: 10.50.20.1
+  members:
+  - {device: hq-core01, role: active}
+  - {device: hq-core02, role: standby}
+
 domains:
 - id: area0
+  protocol: ospf
+  area: 0
   name: OSPF Area 0 (バックボーン)
 - id: area1
+  protocol: ospf
+  area: 1
   name: OSPF Area 1 (本社アクセス)
 - id: area2
+  protocol: ospf
+  area: 2
   name: OSPF Area 2 (大阪)
 views:
 - id: physical-all

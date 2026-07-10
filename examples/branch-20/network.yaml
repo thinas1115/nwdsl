@@ -1,5 +1,5 @@
 # このファイルは generate.py により生成 (手編集しない)
-nwdsl: '0.1'
+nwdsl: '0.2'
 network:
   name: branch-20
   description: 20拠点ハブ&スポーク (東西DRハブ + モバイルバックアップ)
@@ -55,7 +55,6 @@ devices:
   - name: Gi0/1
   - name: Gi0/2
     description: IP-VPNアクセス回線
-  redundancy_group: hube-wan
 - id: hube-rt02
   site: hube
   role: router
@@ -66,7 +65,6 @@ devices:
     description: IP-VPNアクセス回線
   - name: Gi0/3
     description: モバイル閉域網アクセス回線
-  redundancy_group: hube-wan
 - id: hube-core01
   site: hube
   role: l3switch
@@ -89,7 +87,6 @@ devices:
   - name: Gi0/1
   - name: Gi0/2
     description: IP-VPNアクセス回線
-  redundancy_group: hubw-wan
 - id: hubw-rt02
   site: hubw
   role: router
@@ -100,7 +97,6 @@ devices:
     description: IP-VPNアクセス回線
   - name: Gi0/3
     description: モバイル閉域網アクセス回線
-  redundancy_group: hubw-wan
 - id: hubw-core01
   site: hubw
   role: l3switch
@@ -507,6 +503,18 @@ circuits:
   provider: NTT Com
   service: IP-VPN
   bandwidth: 100M
+redundancy_groups:
+- id: hube-wan
+  kind: fhrp
+  members:
+  - {device: hube-rt01}
+  - {device: hube-rt02}
+- id: hubw-wan
+  kind: fhrp
+  members:
+  - {device: hubw-rt01}
+  - {device: hubw-rt02}
+
 links:
 - type: lan-cable
   endpoints:

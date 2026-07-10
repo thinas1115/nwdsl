@@ -1,8 +1,10 @@
 flowchart TB
   subgraph sg_hq["本社"]
-    hq_rt01["hq-rt01<br>Cisco ISR4331"]
+    subgraph rg_hq_wan_rt["HSRP grp1 VIP 10.1.0.1"]
+      hq_rt01["hq-rt01 (Act)<br>Cisco ISR4331"]
+      hq_rt02["hq-rt02 (Sby)<br>Cisco ISR4331"]
+    end
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300"]
-    hq_rt02["hq-rt02<br>Cisco ISR4331"]
     hq_srv01["hq-srv01<br>PowerEdge R760"]
     hq_srv02["hq-srv02<br>PowerEdge R760"]
     hq_srv03["hq-srv03<br>PowerEdge R760"]
@@ -34,3 +36,4 @@ flowchart TB
   class ipvpn,internet node_cloud
   linkStyle 0,1,2,3,4 stroke:#4a4a4a,stroke-width:2px
   linkStyle 5,6 stroke:#1a73e8,stroke-width:4px
+  style rg_hq_wan_rt fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569

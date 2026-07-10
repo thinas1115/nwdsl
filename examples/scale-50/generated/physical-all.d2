@@ -14,6 +14,7 @@ classes: {
   node-segment: {style.fill: "#e2f5f0"; style.stroke: "#0f766e"; style.font-color: "#0b3d38"; style.border-radius: 12}
   node-external: {style.fill: "#ffffff"; style.stroke: "#9aa0a6"; style.stroke-dash: 3}
   group-site: {style.fill: "#f7f9fc"; style.stroke: "#8fa8c4"; style.font-color: "#33475b"}
+  group-redundancy: {style.fill: "transparent"; style.stroke: "#64748b"; style.stroke-dash: 4; style.font-color: "#475569"}
   edge-label: {style.fill: "transparent"; style.stroke: "transparent"; style.font-size: 14; style.font-color: "#5f6368"; style.italic: true}
   edge-lan-cable: {style.stroke: "#4a4a4a"; style.stroke-width: 2}
   edge-wan-circuit: {style.stroke: "#1a73e8"; style.stroke-width: 4}
@@ -25,12 +26,21 @@ classes: {
 s_hq: "本社" {
   class: group-site
   label.near: outside-top-left
-  n_hq_rt01: "hq-rt01\nCisco ISR4451" {class: role-router}
-  n_hq_fw01: "hq-fw01\nPA-3410" {class: role-firewall; width: 180}
-  n_hq_rt02: "hq-rt02\nCisco ISR4451" {class: role-router}
-  n_hq_fw02: "hq-fw02\nPA-3410" {class: role-firewall}
-  n_hq_core01: "hq-core01\nCatalyst 9500" {class: role-l3switch; width: 540}
-  n_hq_core02: "hq-core02\nCatalyst 9500" {class: role-l3switch; width: 450}
+  rg_hq_wan: "冗長ペア" {
+    class: group-redundancy
+    n_hq_rt01: "hq-rt01\nCisco ISR4451" {class: role-router}
+    n_hq_rt02: "hq-rt02\nCisco ISR4451" {class: role-router}
+  }
+  rg_hq_fw: "冗長ペア" {
+    class: group-redundancy
+    n_hq_fw01: "hq-fw01 (Act)\nPA-3410" {class: role-firewall; width: 180}
+    n_hq_fw02: "hq-fw02 (Sby)\nPA-3410" {class: role-firewall}
+  }
+  rg_hq_core: "HSRP grp20 VIP 10.50.20.1" {
+    class: group-redundancy
+    n_hq_core01: "hq-core01 (Act)\nCatalyst 9500" {class: role-l3switch; width: 540}
+    n_hq_core02: "hq-core02 (Sby)\nCatalyst 9500" {class: role-l3switch; width: 450}
+  }
   n_hq_dist01: "hq-dist01\nCatalyst 9300" {class: role-l3switch; width: 270}
   n_hq_dist02: "hq-dist02\nCatalyst 9300" {class: role-l3switch; width: 270}
   n_hq_dist03: "hq-dist03\nCatalyst 9300" {class: role-l3switch; width: 270}
@@ -90,19 +100,19 @@ s_ngy: "名古屋営業所" {
 n_ipvpn: "　IP-VPN網　" {class: node-cloud}
 n_internet: "　インターネット　" {class: node-cloud}
 
-s_hq.n_hq_rt01 -- s_hq.n_hq_fw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_rt02 -- s_hq.n_hq_fw02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_fw01 -- s_hq.n_hq_core01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_fw02 -- s_hq.n_hq_core02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_core01 -- s_hq.n_hq_core02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/2"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/2"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/2"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist03 {class: edge-lan-cable; source-arrowhead.label: "Gi0/5"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist03 {class: edge-lan-cable; source-arrowhead.label: "Gi0/5"; target-arrowhead.label: "Gi0/2"}
-s_hq.n_hq_core01 -- s_hq.n_hq_dist04 {class: edge-lan-cable; source-arrowhead.label: "Gi0/6"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_core02 -- s_hq.n_hq_dist04 {class: edge-lan-cable; source-arrowhead.label: "Gi0/6"; target-arrowhead.label: "Gi0/2"}
+s_hq.rg_hq_wan.n_hq_rt01 -- s_hq.rg_hq_fw.n_hq_fw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_wan.n_hq_rt02 -- s_hq.rg_hq_fw.n_hq_fw02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_fw.n_hq_fw01 -- s_hq.rg_hq_core.n_hq_core01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_fw.n_hq_fw02 -- s_hq.rg_hq_core.n_hq_core02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_core.n_hq_core01 -- s_hq.rg_hq_core.n_hq_core02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/2"}
+s_hq.rg_hq_core.n_hq_core01 -- s_hq.n_hq_dist01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_core.n_hq_core02 -- s_hq.n_hq_dist01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/2"}
+s_hq.rg_hq_core.n_hq_core01 -- s_hq.n_hq_dist02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_core.n_hq_core02 -- s_hq.n_hq_dist02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/2"}
+s_hq.rg_hq_core.n_hq_core01 -- s_hq.n_hq_dist03 {class: edge-lan-cable; source-arrowhead.label: "Gi0/5"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_core.n_hq_core02 -- s_hq.n_hq_dist03 {class: edge-lan-cable; source-arrowhead.label: "Gi0/5"; target-arrowhead.label: "Gi0/2"}
+s_hq.rg_hq_core.n_hq_core01 -- s_hq.n_hq_dist04 {class: edge-lan-cable; source-arrowhead.label: "Gi0/6"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_core.n_hq_core02 -- s_hq.n_hq_dist04 {class: edge-lan-cable; source-arrowhead.label: "Gi0/6"; target-arrowhead.label: "Gi0/2"}
 s_hq.n_hq_dist01 -- s_hq.n_hq_acc01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_dist01 -- s_hq.n_hq_acc02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_dist01 -- s_hq.n_hq_acc03 {class: edge-lan-cable; source-arrowhead.label: "Gi0/5"; target-arrowhead.label: "Gi0/1"}
@@ -113,14 +123,14 @@ s_hq.n_hq_dist03 -- s_hq.n_hq_acc07 {class: edge-lan-cable; source-arrowhead.lab
 s_hq.n_hq_dist03 -- s_hq.n_hq_acc08 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_dist03 -- s_hq.n_hq_acc09 {class: edge-lan-cable; source-arrowhead.label: "Gi0/5"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_dist04 -- s_hq.n_hq_acc10 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_core01 -- s_hq.n_hq_srvsw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/7"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_core02 -- s_hq.n_hq_srvsw02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/7"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_core.n_hq_core01 -- s_hq.n_hq_srvsw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/7"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_core.n_hq_core02 -- s_hq.n_hq_srvsw02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/7"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_srvsw01 -- s_hq.n_hq_srvsw02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/2"}
 s_hq.n_hq_srvsw01 -- s_hq.n_hq_srv01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_srvsw01 -- s_hq.n_hq_srv02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_srvsw02 -- s_hq.n_hq_srv03 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_srvsw02 -- s_hq.n_hq_srv04 {class: edge-lan-cable; source-arrowhead.label: "Gi0/4"; target-arrowhead.label: "Gi0/1"}
-s_hq.n_hq_fw01 -- s_hq.n_hq_dmzsw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
+s_hq.rg_hq_fw.n_hq_fw01 -- s_hq.n_hq_dmzsw01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_dmzsw01 -- s_hq.n_hq_dmzsrv01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/2"; target-arrowhead.label: "Gi0/1"}
 s_hq.n_hq_dmzsw01 -- s_hq.n_hq_dmzsrv02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/3"; target-arrowhead.label: "Gi0/1"}
 s_osk.n_osk_rt01 -- s_osk.n_osk_core01 {class: edge-lan-cable; source-arrowhead.label: "Gi0/1"; target-arrowhead.label: "Gi0/1"}
@@ -144,7 +154,7 @@ s_ngy.n_ngy_sw01 -- s_ngy.n_ngy_srv01 {class: edge-lan-cable; source-arrowhead.l
 s_ngy.n_ngy_sw01 -- s_ngy.n_ngy_srv02 {class: edge-lan-cable; source-arrowhead.label: "Gi0/8"; target-arrowhead.label: "Gi0/1"}
 lbl_52: "NTT Com IP-VPN 1G\n(Gi0/2)" {class: edge-label}
 n_ipvpn -- lbl_52 {class: edge-wan-circuit}
-lbl_52 -- s_hq.n_hq_rt01 {class: edge-wan-circuit}
+lbl_52 -- s_hq.rg_hq_wan.n_hq_rt01 {class: edge-wan-circuit}
 lbl_53: "NTT Com IP-VPN 200M\n(Gi0/2)" {class: edge-label}
 n_ipvpn -- lbl_53 {class: edge-wan-circuit}
 lbl_53 -- s_osk.n_osk_rt01 {class: edge-wan-circuit}
@@ -153,7 +163,7 @@ n_ipvpn -- lbl_54 {class: edge-wan-circuit}
 lbl_54 -- s_ngy.n_ngy_rt01 {class: edge-wan-circuit}
 lbl_55: "NTT東 フレッツ光 + OCN 1G\n(Gi0/2)" {class: edge-label}
 n_internet -- lbl_55 {class: edge-wan-circuit}
-lbl_55 -- s_hq.n_hq_rt02 {class: edge-wan-circuit}
+lbl_55 -- s_hq.rg_hq_wan.n_hq_rt02 {class: edge-wan-circuit}
 lbl_56: "NTT西 フレッツ光 + OCN 1G\n(Gi0/2)" {class: edge-label}
 n_internet -- lbl_56 {class: edge-wan-circuit}
 lbl_56 -- s_osk.n_osk_rt02 {class: edge-wan-circuit}

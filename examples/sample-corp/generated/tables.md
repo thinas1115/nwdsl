@@ -14,8 +14,8 @@
 
 | 機器ID | 拠点 | 役割 | 機種 | 冗長グループ | 管理IP | 備考 |
 |---|---|---|---|---|---|---|
-| hq-rt01 | 本社 | ルーター | Cisco ISR4331 | hq-wan-rt | - | - |
-| hq-rt02 | 本社 | ルーター | Cisco ISR4331 | hq-wan-rt | - | - |
+| hq-rt01 | 本社 | ルーター | Cisco ISR4331 | hq-wan-rt (active) | - | - |
+| hq-rt02 | 本社 | ルーター | Cisco ISR4331 | hq-wan-rt (standby) | - | - |
 | hq-sw01 | 本社 | L3スイッチ | Cisco Catalyst 9300 | - | - | - |
 | hq-srv01 | 本社 | サーバー | PowerEdge R760 | - | - | - |
 | hq-srv02 | 本社 | サーバー | PowerEdge R760 | - | - | - |
@@ -25,14 +25,20 @@
 | ngy-rt01 | 名古屋営業所 | ルーター | Cisco ISR1100 | - | - | - |
 | ngy-sw01 | 名古屋営業所 | L2スイッチ | Cisco Catalyst 1000 | - | - | - |
 
+## 冗長グループ一覧
+
+| グループID | 種別 | プロトコル | グループ番号 | VIP | メンバー | 備考 |
+|---|---|---|---|---|---|---|
+| hq-wan-rt | FHRP | HSRP | 1 | 10.1.0.1 | hq-rt01 (active) / hq-rt02 (standby) | - |
+
 ## インターフェース一覧
 
 | 機器 | インターフェース | IPv4 | セグメント | 接続先 | 説明 |
 |---|---|---|---|---|---|
 | hq-rt01 | Gi0/0/0 | 172.16.255.1/30 | - | NTT Com IP-VPN網 | IP-VPNアクセス回線 |
-| hq-rt01 | Gi0/0/1 | 10.1.0.2/24 | - | hq-sw01 Gi1/0/1 | コアSWへ (HSRP VIP 10.1.0.1) |
+| hq-rt01 | Gi0/0/1 | 10.1.0.2/24 | - | hq-sw01 Gi1/0/1 | コアSWへ |
 | hq-rt02 | Gi0/0/0 | 203.0.113.10/29 | - | インターネット | インターネット回線 (IPsec用) |
-| hq-rt02 | Gi0/0/1 | 10.1.0.3/24 | - | hq-sw01 Gi1/0/2 | コアSWへ (HSRP VIP 10.1.0.1) |
+| hq-rt02 | Gi0/0/1 | 10.1.0.3/24 | - | hq-sw01 Gi1/0/2 | コアSWへ |
 | hq-rt02 | Tunnel0 | 172.31.0.1/30 | - | - | 大阪向けIPsecトンネル |
 | hq-sw01 | Gi1/0/1 | - | - | hq-rt01 Gi0/0/1 | hq-rt01へ |
 | hq-sw01 | Gi1/0/2 | - | - | hq-rt02 Gi0/0/1 | hq-rt02へ |

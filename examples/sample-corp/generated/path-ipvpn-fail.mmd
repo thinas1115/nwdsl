@@ -1,8 +1,10 @@
 flowchart TB
   subgraph sg_hq["本社"]
-    hq_rt01["hq-rt01<br>Cisco ISR4331<br>Gi0/0/0: 172.16.255.1/30<br>Gi0/0/1: 10.1.0.2/24"]
+    subgraph rg_hq_wan_rt["HSRP grp1 VIP 10.1.0.1"]
+      hq_rt01["hq-rt01 (Act)<br>Cisco ISR4331<br>Gi0/0/0: 172.16.255.1/30<br>Gi0/0/1: 10.1.0.2/24"]
+      hq_rt02["hq-rt02 (Sby)<br>Cisco ISR4331<br>Gi0/0/0: 203.0.113.10/29<br>Gi0/0/1: 10.1.0.3/24<br>Tunnel0: 172.31.0.1/30"]
+    end
     hq_sw01["hq-sw01<br>Cisco Catalyst 9300<br>Vlan10: 10.1.10.1/24<br>Vlan20: 10.1.20.1/24"]
-    hq_rt02["hq-rt02<br>Cisco ISR4331<br>Gi0/0/0: 203.0.113.10/29<br>Gi0/0/1: 10.1.0.3/24<br>Tunnel0: 172.31.0.1/30"]
     hq_srv01["hq-srv01<br>PowerEdge R760<br>eno1: 10.1.10.5/24"]
     hq_srv02["hq-srv02<br>PowerEdge R760<br>eno1: 10.1.10.6/24"]
     hq_srv03["hq-srv03<br>PowerEdge R760<br>eno1: 10.1.10.7/24"]
@@ -57,3 +59,4 @@ flowchart TB
   linkStyle 1,2,8,9 stroke:#c5221f,stroke-width:4px
   linkStyle 3,4,5,10,11,15,16,17 stroke:#e8eaed,stroke-width:1px
   linkStyle 6,7,12,13,14 stroke:#c5221f,stroke-width:2px,stroke-dasharray:4 4
+  style rg_hq_wan_rt fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569

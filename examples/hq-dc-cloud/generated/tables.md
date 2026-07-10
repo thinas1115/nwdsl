@@ -14,8 +14,8 @@
 
 | 機器ID | 拠点 | 役割 | 機種 | 冗長グループ | 管理IP | 備考 |
 |---|---|---|---|---|---|---|
-| hq-rt01 | 本社 | ルーター | Cisco C8300 | hq-wan | - | - |
-| hq-rt02 | 本社 | ルーター | Cisco C8300 | hq-wan | - | - |
+| hq-rt01 | 本社 | ルーター | Cisco C8300 | hq-wan (active) | - | - |
+| hq-rt02 | 本社 | ルーター | Cisco C8300 | hq-wan (standby) | - | - |
 | hq-sw01 | 本社 | L3スイッチ | Catalyst 9300 | - | - | - |
 | dc-rt01 | DCコロケーション | ルーター | Cisco C8500 | - | - | - |
 | dc-fw01 | DCコロケーション | ファイアウォール | FortiGate 600F | - | - | - |
@@ -24,6 +24,12 @@
 | dc-srv01 | DCコロケーション | サーバー | PowerEdge R760 (基幹AP) | - | - | - |
 | dc-srv02 | DCコロケーション | サーバー | PowerEdge R760 (DB) | - | - | - |
 | aws-vgw01 | AWS ap-northeast-1 | ルーター | AWS VGW/TGW | - | - | - |
+
+## 冗長グループ一覧
+
+| グループID | 種別 | プロトコル | グループ番号 | VIP | メンバー | 備考 |
+|---|---|---|---|---|---|---|
+| hq-wan | FHRP | HSRP | - | 10.10.0.1 | hq-rt01 (active) / hq-rt02 (standby) | - |
 
 ## インターフェース一覧
 

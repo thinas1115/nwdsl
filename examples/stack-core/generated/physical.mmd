@@ -1,0 +1,34 @@
+flowchart TB
+  subgraph sg_dc["データセンター"]
+    subgraph rg_dc_core["dc-core"]
+      dc_core01["dc-core01<br>Catalyst 9500 (スタックメンバー1)"]
+      dc_core02["dc-core02<br>Catalyst 9500 (スタックメンバー2)"]
+    end
+    dc_rt01["dc-rt01<br>Cisco C8300"]
+    dc_acc01["dc-acc01<br>Catalyst 9200"]
+    dc_srv01["dc-srv01<br>PowerEdge R760"]
+  end
+  dc_core01 ---|"×2"| dc_core02
+  dc_rt01 --- dc_core01
+  dc_rt01 --- dc_core02
+  dc_acc01 --- dc_core01
+  dc_acc01 --- dc_core02
+  dc_srv01 --- dc_acc01
+
+  classDef node_dim fill:#f8f9fa,stroke:#dadce0,color:#bdc1c6
+  classDef node_failed fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_router fill:#e8f0fe,stroke:#1a56b0,color:#1a2340
+  classDef role_l3switch fill:#d2e3fc,stroke:#1a56b0,color:#1a2340
+  classDef role_l2switch fill:#e6f4ea,stroke:#137333,color:#1a2e1f
+  classDef role_firewall fill:#fce8e6,stroke:#c5221f,color:#3c1a19
+  classDef role_other fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_cloud fill:#f1f3f4,stroke:#5f6368,color:#202124
+  classDef node_site fill:#fff8e1,stroke:#b58105,color:#4a3a08
+  classDef node_segment fill:#e2f5f0,stroke:#0f766e,color:#0b3d38
+  classDef node_external fill:#ffffff,stroke:#9aa0a6,stroke-dasharray:3 3,color:#5f6368
+  class dc_core01,dc_core02 role_l3switch
+  class dc_rt01 role_router
+  class dc_acc01 role_l2switch
+  class dc_srv01 role_other
+  linkStyle 0,1,2,3,4,5 stroke:#4a4a4a,stroke-width:2px
+  style rg_dc_core fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569

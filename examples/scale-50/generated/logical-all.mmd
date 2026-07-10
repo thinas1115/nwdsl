@@ -1,11 +1,17 @@
 flowchart TB
   subgraph sg_hq["本社"]
-    hq_rt01["hq-rt01<br>Cisco ISR4451"]
-    hq_fw01["hq-fw01<br>PA-3410"]
-    hq_rt02["hq-rt02<br>Cisco ISR4451"]
-    hq_fw02["hq-fw02<br>PA-3410"]
-    hq_core01["hq-core01<br>Catalyst 9500<br>Vlan20: 10.50.20.2/24"]
-    hq_core02["hq-core02<br>Catalyst 9500<br>Vlan20: 10.50.20.3/24"]
+    subgraph rg_hq_wan["冗長ペア"]
+      hq_rt01["hq-rt01<br>Cisco ISR4451"]
+      hq_rt02["hq-rt02<br>Cisco ISR4451"]
+    end
+    subgraph rg_hq_fw["冗長ペア"]
+      hq_fw01["hq-fw01 (Act)<br>PA-3410"]
+      hq_fw02["hq-fw02 (Sby)<br>PA-3410"]
+    end
+    subgraph rg_hq_core["HSRP grp20 VIP 10.50.20.1"]
+      hq_core01["hq-core01 (Act)<br>Catalyst 9500<br>Vlan20: 10.50.20.2/24"]
+      hq_core02["hq-core02 (Sby)<br>Catalyst 9500<br>Vlan20: 10.50.20.3/24"]
+    end
     hq_dist01["hq-dist01<br>Catalyst 9300<br>Vlan101: 10.50.11.1/24"]
     hq_dist02["hq-dist02<br>Catalyst 9300<br>Vlan102: 10.50.12.1/24"]
     hq_dist03["hq-dist03<br>Catalyst 9300<br>Vlan103: 10.50.13.1/24"]
@@ -86,3 +92,6 @@ flowchart TB
   linkStyle 13,14 stroke:#8430ce,stroke-width:2px,stroke-dasharray:3 3
   classDef dom2 fill:#ffffff,stroke:#8430ce,color:#8430ce
   class lg2 dom2
+  style rg_hq_wan fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569
+  style rg_hq_fw fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569
+  style rg_hq_core fill:none,stroke:#64748b,stroke-dasharray:4 4,color:#475569
